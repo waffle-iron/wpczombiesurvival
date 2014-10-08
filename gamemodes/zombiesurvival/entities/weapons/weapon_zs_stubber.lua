@@ -1,87 +1,97 @@
 AddCSLuaFile()
 
 if CLIENT then
+	SWEP.DrawCrosshair = false
 	SWEP.PrintName = "'Stubber' Rifle"
-	SWEP.Slot = 3
-	SWEP.SlotPos = 0
-
-	SWEP.ViewModelFlip = false
-
+	SWEP.CSMuzzleFlashes = true
+	
+	SWEP.AimPos = Vector(-6.68, -18.331, 3.359)
+	SWEP.AimAng = Vector(0, 0, 0)
+		
+	SWEP.SprintPos = Vector(0, 0, 1.5)
+	SWEP.SprintAng = Vector(-7.739, 28.141, 0)
+	
+	SWEP.ViewModelMovementScale = 1.15
+	
+	SWEP.DrawBlackBarsOnAim = true
+	SWEP.AimOverlay = surface.GetTextureID("swb/scope_rifle")
+	SWEP.FadeDuringAiming = true
+	SWEP.MoveWepAwayWhenAiming = true
+	SWEP.ZoomAmount = 70
+	SWEP.DelayedZoom = true
+	SWEP.SnapZoom = true
+	SWEP.SimulateCenterMuzzle = true
+	
+	SWEP.AdjustableZoom = true
+	SWEP.MinZoom = 40
+	SWEP.MaxZoom = 80
+	
+	SWEP.IconLetter = "n"
+	killicon.AddFont("swb_scout", "SWB_KillIcons", SWEP.IconLetter, Color(255, 80, 0, 150))
+	
+	SWEP.MuzzleEffect = "swb_rifle_large"
+	
 	SWEP.HUD3DBone = "v_weapon.scout_Parent"
 	SWEP.HUD3DPos = Vector(-1, -2.75, -6)
 	SWEP.HUD3DAng = Angle(0, 0, 0)
 	SWEP.HUD3DScale = 0.015
 end
 
-SWEP.Base = "weapon_zs_base"
+SWEP.PlayBackRate = 1
+SWEP.PlayBackRateSV = 1
+SWEP.FadeCrosshairOnAim = true
+SWEP.PreventQuickScoping = true
 
-SWEP.HoldType = "ar2"
+SWEP.Kind = WEAPON_HEAVY
+SWEP.AutoSpawnable = true
+SWEP.AllowDrop = true
 
-SWEP.ViewModel = "models/weapons/cstrike/c_snip_scout.mdl"
-SWEP.WorldModel = "models/weapons/w_snip_scout.mdl"
-SWEP.UseHands = true
+SWEP.SpeedDec = 25
+SWEP.BulletDiameter = 7.62
+SWEP.CaseLength = 51
 
-SWEP.ReloadSound = Sound("Weapon_Scout.ClipOut")
-SWEP.Primary.Sound = Sound("Weapon_Scout.Single")
-SWEP.Primary.Damage = 50
-SWEP.Primary.NumShots = 1
-SWEP.Primary.Delay = 1.5
-SWEP.ReloadDelay = SWEP.Primary.Delay
+SWEP.Slot = 4
+SWEP.SlotPos = 0
+SWEP.NormalHoldType = "ar2"
+SWEP.RunHoldType = "passive"
+SWEP.FireModes = {"bolt"}
+SWEP.Base = "swb_base"
+SWEP.Category = "SWB Weapons"
 
-SWEP.Primary.ClipSize = 5
-SWEP.Primary.Automatic = false
-SWEP.Primary.Ammo = "357"
-SWEP.Primary.DefaultClip = 25
+SWEP.Author			= "Spy"
+SWEP.Contact		= ""
+SWEP.Purpose		= ""
+SWEP.Instructions	= ""
 
-SWEP.Primary.Gesture = ACT_HL2MP_GESTURE_RANGE_ATTACK_CROSSBOW
-SWEP.ReloadGesture = ACT_HL2MP_GESTURE_RELOAD_SHOTGUN
+SWEP.ViewModelFOV	= 55
+SWEP.ViewModelFlip	= false
+SWEP.ViewModel		= "models/weapons/cstrike/c_snip_scout.mdl"
+SWEP.WorldModel		= "models/weapons/w_snip_scout.mdl"
+
+SWEP.Spawnable			= true
+SWEP.AdminSpawnable		= true
+
+SWEP.Primary.ClipSize		= 5
+SWEP.Primary.ClipMultiplier = 1.5
+SWEP.Primary.Automatic		= false
+SWEP.Primary.Ammo			= "357"
+GAMEMODE:SetupDefaultClip(SWEP.Primary)
+
+SWEP.FireDelay = 1.5
+SWEP.FireSound = Sound("Weapon_Scout.Single")
+SWEP.Recoil = 2
+
+SWEP.HipSpread = 0.055
+SWEP.AimSpread = 0.00015
+SWEP.VelocitySensitivity = 2
+SWEP.MaxSpreadInc = 0.05
+SWEP.SpreadPerShot = 0.05
+SWEP.SpreadCooldown = 1.25
+SWEP.Shots = 1
+SWEP.Damage = 50
+SWEP.DeployTime = 1
 
 SWEP.ConeMax = 0.075
 SWEP.ConeMin = 0
 
-SWEP.IronSightsPos = Vector(5.015, -8, 2.52)
-SWEP.IronSightsAng = Vector(0, 0, 0)
-
 SWEP.WalkSpeed = SPEED_SLOW
-
-function SWEP:IsScoped()
-	return self:GetIronsights() and self.fIronTime and self.fIronTime + 0.25 <= CurTime()
-end
-
-function SWEP:EmitFireSound()
-	self:EmitSound(self.Primary.Sound, 85, 100)
-end
-
-if CLIENT then
-	SWEP.IronsightsMultiplier = 0.25
-
-	function SWEP:GetViewModelPosition(pos, ang)
-		if self:IsScoped() then
-			return pos + ang:Up() * 256, ang
-		end
-
-		return self.BaseClass.GetViewModelPosition(self, pos, ang)
-	end
-
-	local matScope = Material("zombiesurvival/scope")
-	function SWEP:DrawHUDBackground()
-		if self:IsScoped() then
-			local scrw, scrh = ScrW(), ScrH()
-			local size = math.min(scrw, scrh)
-			surface.SetMaterial(matScope)
-			surface.SetDrawColor(255, 255, 255, 255)
-			surface.DrawTexturedRect((scrw - size) * 0.5, (scrh - size) * 0.5, size, size)
-			surface.SetDrawColor(0, 0, 0, 255)
-			if scrw > size then
-				local extra = (scrw - size) * 0.5
-				surface.DrawRect(0, 0, extra, scrh)
-				surface.DrawRect(scrw - extra, 0, extra, scrh)
-			end
-			if scrh > size then
-				local extra = (scrh - size) * 0.5
-				surface.DrawRect(0, 0, scrw, extra)
-				surface.DrawRect(0, scrh - extra, scrw, extra)
-			end
-		end
-	end
-end

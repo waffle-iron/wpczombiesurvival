@@ -8,8 +8,6 @@ SWEP.ConeMax = 0.03
 SWEP.ConeMin = 0.01
 SWEP.ConeRamp = 2
 
-SWEP.CSMuzzleFlashes = true
-
 SWEP.Primary.ClipSize = 8
 SWEP.Primary.DefaultClip = 0
 SWEP.Primary.Automatic = false

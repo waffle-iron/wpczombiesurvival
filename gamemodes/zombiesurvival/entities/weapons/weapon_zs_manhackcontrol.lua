@@ -17,8 +17,6 @@ SWEP.ViewModel = "models/weapons/c_slam.mdl"
 SWEP.WorldModel = "models/weapons/w_slam.mdl"
 SWEP.UseHands = true
 
-SWEP.EntityClass = "prop_manhack"
-
 SWEP.Primary.Delay = 0
 SWEP.Primary.ClipSize = -1
 SWEP.Primary.DefaultClip = -1
@@ -53,7 +51,7 @@ function SWEP:Think()
 	end
 
 	if SERVER then
-		for _, ent in pairs(ents.FindByClass(self.EntityClass)) do
+		for _, ent in pairs(ents.FindByClass("prop_manhack")) do
 			if ent:GetOwner() == self.Owner then
 				return
 			end

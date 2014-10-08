@@ -37,6 +37,10 @@ CLASS.HullDuck[2].y = 16
 CLASS.ViewOffset = Vector(0, 0, 40)
 CLASS.ViewOffsetDucked = Vector(0, 0, 10)
 
+if CLIENT then
+	CLASS.Icon = "zombiesurvival/killicons/flesh"
+end
+
 function CLASS:CanUse(pl)
 	return GAMEMODE:GetDynamicSpawning() and not GAMEMODE.ZombieEscape
 end

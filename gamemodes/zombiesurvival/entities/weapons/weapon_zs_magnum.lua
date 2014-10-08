@@ -1,45 +1,91 @@
 AddCSLuaFile()
 
 if CLIENT then
+	SWEP.DrawCrosshair = false
 	SWEP.PrintName = "'Ricochete' Magnum"
 	SWEP.Description = "This gun's bullets will bounce off of walls which will then deal extra damage."
-	SWEP.Slot = 1
-	SWEP.SlotPos = 0
-
-	SWEP.ViewModelFlip = false
-	SWEP.ViewModelFOV = 60
-
-	SWEP.HUD3DBone = "Python"
-	SWEP.HUD3DPos = Vector(0.85, 0, -2.5)
+	SWEP.CSMuzzleFlashes = true
+	
+	SWEP.AimPos = Vector(-3.6, -16.08, 1.44)
+	SWEP.AimAng = Vector(0.5, -0.201, 0)
+	
+	SWEP.SprintPos = Vector(1.185, -15.796, -14.254)
+	SWEP.SprintAng = Vector(64.567, 0, 0)
+	
+	SWEP.ZoomAmount = 5
+	SWEP.ViewModelMovementScale = 0.85
+	SWEP.Shell = "smallshell"
+	
+	SWEP.IconLetter = "f"
+	killicon.AddFont("swb_357", "SWB_KillIcons", SWEP.IconLetter, Color(255, 80, 0, 150))
+	
+	SWEP.MuzzleEffect = "swb_pistol_large"
+	SWEP.MuzzlePosMod = {x = 6.5, y =	30, z = -2}
+	--SWEP.PosBasedMuz = true
+	
+	SWEP.HUD3DBone = "smdimport"
+	SWEP.HUD3DPos = Vector(0.85, -2.6, 2.5)
+	SWEP.HUD3DAng = Angle(180, 0, 270)
 	SWEP.HUD3DScale = 0.015
 end
 
-SWEP.Base = "weapon_zs_base"
+SWEP.SpeedDec = 12
+SWEP.BulletDiameter = 9.1
+SWEP.CaseLength = 33
 
-SWEP.HoldType = "revolver"
+SWEP.PlayBackRate = 2
+SWEP.PlayBackRateSV = 2
 
-SWEP.ViewModel = "models/weapons/c_357.mdl"
-SWEP.WorldModel = "models/weapons/w_357.mdl"
-SWEP.UseHands = true
+SWEP.Kind = WEAPON_PISTOL
+SWEP.AutoSpawnable = true
+SWEP.AllowDrop = true
+SWEP.AmmoEnt = "item_ammo_revolver_ttt"
 
-SWEP.CSMuzzleFlashes = false
+SWEP.Slot = 1
+SWEP.SlotPos = 0
+SWEP.NormalHoldType = "pistol"
+SWEP.RunHoldType = "normal"
+SWEP.FireModes = {"double"}
+SWEP.Base = "swb_base"
+SWEP.Category = "SWB Weapons"
 
-SWEP.Primary.Sound = Sound("Weapon_357.Single")
-SWEP.Primary.Delay = 0.7
-SWEP.Primary.Damage = 59
-SWEP.Primary.NumShots = 1
+SWEP.Author			= "Spy"
+SWEP.Contact		= ""
+SWEP.Purpose		= ""
+SWEP.Instructions	= ""
 
-SWEP.Primary.ClipSize = 6
-SWEP.Primary.Automatic = false
-SWEP.Primary.Ammo = "pistol"
-SWEP.Primary.Gesture = ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL
+SWEP.ViewModelFOV	= 55
+SWEP.ViewModelFlip	= false
+SWEP.ViewModel		= "models/weapons/c_mantuna_357.mdl"
+SWEP.WorldModel		= "models/weapons/w_357.mdl"
+
+SWEP.Spawnable			= true
+SWEP.AdminSpawnable		= true
+
+SWEP.Primary.ClipSize		= 6
+SWEP.Primary.Automatic		= false
+SWEP.Primary.Ammo			= "pistol"
 GAMEMODE:SetupDefaultClip(SWEP.Primary)
+
+SWEP.FireDelay = 0.7
+SWEP.FireSound = Sound("Weapon_357.Single")
+SWEP.DrawSound = Sound("Weapon_Magnum.Spin")
+SWEP.Recoil = 3
+SWEP.Chamberable = false
+SWEP.CanRicochet = true
+
+SWEP.HipSpread = 0.048
+SWEP.AimSpread = 0.0075
+SWEP.VelocitySensitivity = 1.85
+SWEP.MaxSpreadInc = 0.06
+SWEP.SpreadPerShot = 0.015
+SWEP.SpreadCooldown = 0.5
+SWEP.Shots = 1
+SWEP.Damage = 59
+SWEP.DeployTime = 1
 
 SWEP.ConeMax = 0.075
 SWEP.ConeMin = 0.04
-
-SWEP.IronSightsPos = Vector(-4.65, 4, 0.25)
-SWEP.IronSightsAng = Vector(0, 0, 1)
 
 local function DoRicochet(attacker, hitpos, hitnormal, normal, damage)
 	attacker.RicochetBullet = true
@@ -54,3 +100,5 @@ function SWEP.BulletCallback(attacker, tr, dmginfo)
 
 	GenericBulletCallback(attacker, tr, dmginfo)
 end
+
+util.PrecacheSound("weapons/357_mantuna/357_spin1.wav")

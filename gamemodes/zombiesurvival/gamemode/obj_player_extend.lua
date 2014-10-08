@@ -155,6 +155,22 @@ function meta:GetPoints()
 	return self:GetDTInt(1)
 end
 
+function meta:SetSavedPoints(points)
+	self:SetDTInt(2, points)
+end
+
+function meta:GetSavedPoints()
+	return self:GetDTInt(2)
+end
+
+function meta:GetPointsSave()
+	if self:GetSavedPoints() >= 0 then
+		return "+"..self:GetSavedPoints()
+	else
+		return "-"..self:GetSavedPoints()
+	end
+end
+
 function meta:SetPalsy(onoff, nosend)
 	self.m_Palsy = onoff
 	if SERVER and not nosend then

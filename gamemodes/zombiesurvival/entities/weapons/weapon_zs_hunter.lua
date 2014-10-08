@@ -1,14 +1,37 @@
 AddCSLuaFile()
 
 if CLIENT then
+	SWEP.DrawCrosshair = false
 	SWEP.PrintName = "'Hunter' Rifle"
 	SWEP.Description = "Fires special large caliber rounds. The reloading time is slow but it packs a powerful punch."
-	SWEP.Slot = 3
-	SWEP.SlotPos = 0
-
-	SWEP.ViewModelFlip = false
-	SWEP.ViewModelFOV = 60
-
+	SWEP.CSMuzzleFlashes = true
+	
+	SWEP.AimPos = Vector(-7.467, -9.525, 2.279)
+	SWEP.AimAng = Vector(0, 0, 0)
+	
+	SWEP.SprintPos = Vector(0, 0, 0)
+	SWEP.SprintAng = Vector(-7.739, 28.141, 0)
+	
+	SWEP.ViewModelMovementScale = 1.25
+	
+	SWEP.DrawBlackBarsOnAim = true
+	SWEP.AimOverlay = surface.GetTextureID("swb/scope_rifle")
+	SWEP.FadeDuringAiming = true
+	SWEP.MoveWepAwayWhenAiming = true
+	SWEP.ZoomAmount = 70
+	SWEP.DelayedZoom = true
+	SWEP.SnapZoom = true
+	SWEP.SimulateCenterMuzzle = true
+	
+	SWEP.AdjustableZoom = true
+	SWEP.MinZoom = 40
+	SWEP.MaxZoom = 80
+	
+	SWEP.IconLetter = "r"
+	killicon.AddFont("swb_awp", "SWB_KillIcons", SWEP.IconLetter, Color(255, 80, 0, 150))
+	
+	SWEP.MuzzleEffect = "swb_sniper"
+	
 	SWEP.HUD3DBone = "v_weapon.awm_parent"
 	SWEP.HUD3DPos = Vector(-1.25, -3.5, -16)
 	SWEP.HUD3DAng = Angle(0, 0, 0)
@@ -26,50 +49,68 @@ sound.Add(
 	sound = "weapons/awp/awp1.wav"
 })
 
-SWEP.Base = "weapon_zs_base"
+SWEP.PlayBackRate = 1
+SWEP.PlayBackRateSV = 1
+SWEP.FadeCrosshairOnAim = true
+SWEP.PreventQuickScoping = true
 
-SWEP.HoldType = "ar2"
+SWEP.Kind = WEAPON_HEAVY
+SWEP.AutoSpawnable = true
+SWEP.AllowDrop = true
 
-SWEP.ViewModel = "models/weapons/cstrike/c_snip_awp.mdl"
-SWEP.WorldModel = "models/weapons/w_snip_awp.mdl"
-SWEP.UseHands = true
+SWEP.SpeedDec = 40
+SWEP.BulletDiameter = 8.58
+SWEP.CaseLength = 69.20
 
-SWEP.ReloadSound = Sound("Weapon_AWP.ClipOut")
-SWEP.Primary.Sound = Sound("Weapon_Hunter.Single")
-SWEP.Primary.Damage = 115
-SWEP.Primary.NumShots = 1
-SWEP.Primary.Delay = 1.5
-SWEP.ReloadDelay = SWEP.Primary.Delay
+SWEP.Slot = 3
+SWEP.SlotPos = 0
+SWEP.NormalHoldType = "ar2"
+SWEP.RunHoldType = "passive"
+SWEP.FireModes = {"bolt"}
+SWEP.Base = "swb_base"
+SWEP.Category = "SWB Weapons"
 
-SWEP.Primary.ClipSize = 1
-SWEP.Primary.Automatic = false
-SWEP.Primary.Ammo = "357"
-SWEP.Primary.DefaultClip = 15
+SWEP.Author			= "Spy"
+SWEP.Contact		= ""
+SWEP.Purpose		= ""
+SWEP.Instructions	= ""
+
+SWEP.ViewModelFOV	= 55
+SWEP.ViewModelFlip	= false
+SWEP.ViewModel		= "models/weapons/cstrike/c_snip_awp.mdl"
+SWEP.WorldModel		= "models/weapons/w_snip_awp.mdl"
+
+SWEP.Spawnable			= true
+SWEP.AdminSpawnable		= true
+
+SWEP.Primary.ClipSize		= 10
+SWEP.Primary.DefaultClip	= 10
+SWEP.Primary.Automatic		= false
+SWEP.Primary.Ammo			= "357"
+
+SWEP.ReloadDelay 			= SWEP.FireDelay
+SWEP.NoDistanceReduction 	= true
+
+SWEP.FireDelay = 1.5
+SWEP.FireSound = Sound("Weapon_Hunter.Single")
+SWEP.Recoil = 5
 
 SWEP.Primary.Gesture = ACT_HL2MP_GESTURE_RANGE_ATTACK_CROSSBOW
 SWEP.ReloadGesture = ACT_HL2MP_GESTURE_RELOAD_SHOTGUN
 
+SWEP.HipSpread = 0.06
+SWEP.AimSpread = 0.0001
+SWEP.VelocitySensitivity = 2.2
+SWEP.MaxSpreadInc = 0.05
+SWEP.SpreadPerShot = 0.05
+SWEP.SpreadCooldown = 1.44
+SWEP.Shots = 1
+SWEP.Damage = 115
+SWEP.DeployTime = 1
+SWEP.TracerName = "AR2Tracer"
+SWEP.WalkSpeed = SPEED_SLOWER
 SWEP.ConeMax = 0.115
 SWEP.ConeMin = 0
-
-SWEP.IronSightsPos = Vector(5.015, -8, 2.52)
-SWEP.IronSightsAng = Vector(0, 0, 0)
-
-SWEP.WalkSpeed = SPEED_SLOWER
-
-SWEP.TracerName = "AR2Tracer"
-
-function SWEP:IsScoped()
-	return self:GetIronsights() and self.fIronTime and self.fIronTime + 0.25 <= CurTime()
-end
-
---[[function SWEP:EmitFireSound()
-	self:EmitSound(self.Primary.Sound, 85, 80)
-end]]
-
-function SWEP:SendWeaponAnimation()
-	self:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
-end
 
 function SWEP.BulletCallback(attacker, tr, dmginfo)
 	local effectdata = EffectData()
@@ -78,38 +119,4 @@ function SWEP.BulletCallback(attacker, tr, dmginfo)
 	util.Effect("hit_hunter", effectdata)
 
 	GenericBulletCallback(attacker, tr, dmginfo)
-end
-
-if CLIENT then
-	SWEP.IronsightsMultiplier = 0.25
-
-	function SWEP:GetViewModelPosition(pos, ang)
-		if self:IsScoped() then
-			return pos + ang:Up() * 256, ang
-		end
-
-		return self.BaseClass.GetViewModelPosition(self, pos, ang)
-	end
-
-	local matScope = Material("zombiesurvival/scope")
-	function SWEP:DrawHUDBackground()
-		if self:IsScoped() then
-			local scrw, scrh = ScrW(), ScrH()
-			local size = math.min(scrw, scrh)
-			surface.SetMaterial(matScope)
-			surface.SetDrawColor(255, 255, 255, 255)
-			surface.DrawTexturedRect((scrw - size) * 0.5, (scrh - size) * 0.5, size, size)
-			surface.SetDrawColor(0, 0, 0, 255)
-			if scrw > size then
-				local extra = (scrw - size) * 0.5
-				surface.DrawRect(0, 0, extra, scrh)
-				surface.DrawRect(scrw - extra, 0, extra, scrh)
-			end
-			if scrh > size then
-				local extra = (scrh - size) * 0.5
-				surface.DrawRect(0, 0, scrw, extra)
-				surface.DrawRect(0, scrh - extra, scrw, extra)
-			end
-		end
-	end
 end

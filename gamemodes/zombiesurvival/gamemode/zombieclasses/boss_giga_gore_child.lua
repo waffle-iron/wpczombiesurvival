@@ -186,6 +186,10 @@ if SERVER then
 	end
 end
 
+if CLIENT then
+	CLASS.Icon = "zombiesurvival/killicons/gorechild"
+end
+
 if not CLIENT then return end
 
 function CLASS:ShouldDrawLocalPlayer()

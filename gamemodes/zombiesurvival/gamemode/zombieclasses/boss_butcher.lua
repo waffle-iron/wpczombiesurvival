@@ -44,6 +44,11 @@ local StepRightSounds = {
 	"npc/fast_zombie/foot3.wav",
 	"npc/fast_zombie/foot4.wav"
 }
+
+if CLIENT then
+	CLASS.Icon = "zombiesurvival/killicons/ghoul"
+end
+
 function CLASS:PlayerFootstep(pl, vFootPos, iFoot, strSoundName, fVolume, pFilter)
 	if iFoot == 0 then
 		pl:EmitSound(StepLeftSounds[mathrandom(#StepLeftSounds)], 70)

@@ -37,6 +37,7 @@ include("vgui/ppointshop.lua")
 include("vgui/dpingmeter.lua")
 include("vgui/dsidemenu.lua")
 include("vgui/zshealtharea.lua")
+include("vgui/plifeoptions.lua")
 
 include("cl_dermaskin.lua")
 include("cl_deathnotice.lua")

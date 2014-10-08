@@ -55,11 +55,7 @@ function SWEP:PrimaryAttack()
 	if not self:CanPrimaryAttack() then return end
 
 	local owner = self.Owner
-
-	owner:LagCompensation(true)
 	local ent = owner:MeleeTrace(32, 2).Entity
-	owner:LagCompensation(false)
-
 	if ent and ent:IsValid() and ent:IsPlayer() and ent:Team() == owner:Team() and ent:Alive() and gamemode.Call("PlayerCanBeHealed", ent) then
 		local health, maxhealth = ent:Health(), ent:GetMaxHealth()
 		local multiplier = owner.HumanHealMultiplier or 1
@@ -107,30 +103,16 @@ function SWEP:SecondaryAttack()
 		self.IdleAnimation = CurTime() + self:SequenceDuration()
 	end
 end
-
---[[function SWEP:Initialize()
-	if CLIENT and self:GetOwner() == LocalPlayer() and LocalPlayer():GetActiveWeapon() == self then
-		hook.Add("PostPlayerDraw", "PostPlayerDrawMedical", GAMEMODE.PostPlayerDrawMedical)
-	end
-end]]
-
+	
 function SWEP:Deploy()
 	gamemode.Call("WeaponDeployed", self.Owner, self)
 
 	self.IdleAnimation = CurTime() + self:SequenceDuration()
 
-	if CLIENT then
-		hook.Add("PostPlayerDraw", "PostPlayerDrawMedical", GAMEMODE.PostPlayerDrawMedical)
-	end
-
 	return true
 end
 
 function SWEP:Holster()
-	if CLIENT then
-		hook.Remove("PostPlayerDraw", "PostPlayerDrawMedical")
-	end
-
 	return true
 end
 
@@ -193,9 +175,5 @@ function SWEP:DrawHUD()
 		draw.SimpleText(charges, "ZSHUDFontSmall", x + wid, texty, COLOR_GREEN, TEXT_ALIGN_RIGHT)
 	else
 		draw.SimpleText(charges, "ZSHUDFontSmall", x + wid, texty, COLOR_DARKRED, TEXT_ALIGN_RIGHT)
-	end
-
-	if GetConVarNumber("crosshair") == 1 then
-		self:DrawCrosshairDot()
 	end
 end

@@ -33,8 +33,6 @@ SWEP.ViewModel = "models/weapons/c_pistol.mdl"
 SWEP.WorldModel = "models/weapons/w_pistol.mdl"
 SWEP.UseHands = true
 
-SWEP.CSMuzzleFlashes = false
-
 SWEP.ReloadSound = Sound("Weapon_Pistol.Reload")
 
 SWEP.Primary.Delay = 0.25
@@ -78,30 +76,4 @@ function SWEP:ShootBullets(dmg, numbul, cone)
 			phys:SetVelocityInstantaneous(aimvec * 2000)
 		end
 	end
-end
-
---[[function SWEP:Initialize()
-	if CLIENT and self:GetOwner() == LocalPlayer() and LocalPlayer():GetActiveWeapon() == self then
-		hook.Add("PostPlayerDraw", "PostPlayerDrawMedical", GAMEMODE.PostPlayerDrawMedical)
-	end
-end]]
-
-function SWEP:Deploy()
-	gamemode.Call("WeaponDeployed", self.Owner, self)
-
-	self.IdleAnimation = CurTime() + self:SequenceDuration()
-
-	if CLIENT then
-		hook.Add("PostPlayerDraw", "PostPlayerDrawMedical", GAMEMODE.PostPlayerDrawMedical)
-	end
-
-	return true
-end
-
-function SWEP:Holster()
-	if CLIENT then
-		hook.Remove("PostPlayerDraw", "PostPlayerDrawMedical")
-	end
-
-	return true
 end

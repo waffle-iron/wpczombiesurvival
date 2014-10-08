@@ -1,137 +1,104 @@
 AddCSLuaFile()
 
 if CLIENT then
+	SWEP.DrawCrosshair = false
 	SWEP.PrintName = "Boom Stick"
 	SWEP.Description = "This shotgun allows you to load up to four shells in the chamber at once. Hold down reload for faster loading of each shell."
-	SWEP.Slot = 3
-	SWEP.SlotPos = 0
-
-	SWEP.HUD3DBone = "ValveBiped.Gun"
-	SWEP.HUD3DPos = Vector(1.65, 0, -8)
-	SWEP.HUD3DScale = 0.025
+	SWEP.CSMuzzleFlashes = false
 	
-	SWEP.ViewModelFlip = false
+	SWEP.AimPos = Vector(-4.281, -9.247, 3.039)
+	SWEP.AimAng = Vector(0, 0, 0)
+		
+	SWEP.SprintPos = Vector(2.599, -10.32, 1.32)
+	SWEP.SprintAng = Vector(-9.101, 54.599, 0)
+	
+	SWEP.ZoomAmount = 5
+	SWEP.ViewModelMovementScale = 0.85
+	SWEP.Shell = "shotshell"
+	SWEP.ShellOnEvent = true
+	
+	SWEP.MuzzleEffect = "swb_shotgun"
+	
+	SWEP.HUD3DBone = "ValveBiped.Gun"
+	SWEP.HUD3DPos = Vector(1.4, -6, 0)
+	SWEP.HUD3DAng = Angle(180, 0, 270)
+	SWEP.HUD3DScale = 0.025
 end
 
-SWEP.Base = "weapon_zs_base"
+SWEP.PlayBackRate = 1
+SWEP.PlayBackRateSV = 1
+SWEP.SpeedDec = 30
+SWEP.BulletDiameter = 5
+SWEP.CaseLength = 10
 
-SWEP.HoldType = "shotgun"
+SWEP.Kind = WEAPON_HEAVY
+SWEP.AutoSpawnable = true
+SWEP.AllowDrop = true
+SWEP.AmmoEnt = "item_box_buckshot_ttt"
 
-SWEP.ViewModel = "models/weapons/c_shotgun.mdl"
-SWEP.WorldModel = "models/weapons/w_shotgun.mdl"
-SWEP.UseHands = true
+SWEP.Slot = 3
+SWEP.SlotPos = 0
+SWEP.NormalHoldType = "shotgun"
+SWEP.RunHoldType = "passive"
+SWEP.FireModes = {"semi"}
+SWEP.Base = "swb_base"
+SWEP.Category = "SWB Weapons"
 
-SWEP.CSMuzzleFlashes = false
+SWEP.Author			= "Spy"
+SWEP.Contact		= ""
+SWEP.Purpose		= ""
+SWEP.Instructions	= ""
 
-SWEP.ReloadDelay = 0.4
+SWEP.ViewModelFOV	= 55
+SWEP.ViewModelFlip	= false
+SWEP.ViewModel 		= "models/weapons/c_mantuna_shotgun.mdl"
+SWEP.WorldModel 	= "models/weapons/w_shotgun.mdl"
 
-SWEP.Primary.Sound = Sound("weapons/shotgun/shotgun_dbl_fire.wav")
-SWEP.Primary.Recoil = 12.5
-SWEP.Primary.Damage = 36
-SWEP.Primary.NumShots = 6
-SWEP.Primary.Delay = 1.5
+SWEP.Spawnable			= true
+SWEP.AdminSpawnable		= true
 
-SWEP.Primary.ClipSize = 4
-SWEP.Primary.Automatic = false
-SWEP.Primary.Ammo = "buckshot"
-SWEP.Primary.DefaultClip = 28
+SWEP.Primary.ClipSize 		= 4
+SWEP.Primary.ClipMultiplier = 3
+SWEP.Primary.Automatic		= false
+SWEP.Primary.Ammo			= "Buckshot"
+GAMEMODE:SetupDefaultClip(SWEP.Primary)
+
+SWEP.FireDelay = 1.5
+SWEP.FireSound = Sound("weapons/shotgun/shotgun_dbl_fire.wav")
+SWEP.ShotgunReloadSound = Sound("Weapon_Shotgun.Reload")
+SWEP.ShotgunPumpSound = Sound("Weapon_Shotgun.Special1")
+SWEP.DrawSound = Sound("Weapon_Magnum.Spin")
+SWEP.Recoil = 12.5
+SWEP.ShotgunReload = true
+SWEP.PumpAfterReload = true
+SWEP.ReloadStartWait = 0.6
+SWEP.ReloadFinishWait = 1.1
+SWEP.ReloadShellInsertWait = 0.8
+SWEP.Chamberable = false
+
+SWEP.HipSpread = 0.056
+SWEP.AimSpread = 0.023
+SWEP.ClumpSpread = 0.07
+SWEP.VelocitySensitivity = 2.2
+SWEP.MaxSpreadInc = 0.07
+SWEP.SpreadPerShot = 0.04
+SWEP.SpreadCooldown = 1.03
+SWEP.Shots = 6
+SWEP.Damage = 36
+SWEP.DeployTime = 1
+SWEP.AmmoPerShot = 4
 
 SWEP.ConeMax = 0.23
 SWEP.ConeMin = 0.2
 
 SWEP.WalkSpeed = SPEED_SLOWER
 
-function SWEP:SetIronsights()
-end
-
-SWEP.reloadtimer = 0
-SWEP.nextreloadfinish = 0
-
-function SWEP:Reload()
-	if self.reloading then return end
-
-	if self:GetNextReload() <= CurTime() and self:Clip1() < self.Primary.ClipSize and 0 < self.Owner:GetAmmoCount(self.Primary.Ammo) then
-		self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
-		self.reloading = true
-		self.reloadtimer = CurTime() + self.ReloadDelay
-		self:SendWeaponAnim(ACT_SHOTGUN_RELOAD_START)
-		self.Owner:DoReloadEvent()
-		self:SetNextReload(CurTime() + self:SequenceDuration())
-	end
-end
-
 function SWEP:PrimaryAttack()
-	if self:CanPrimaryAttack() then
-		self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
-		self:EmitSound(self.Primary.Sound)
+	local clip = self:Clip1()
 
-		local clip = self:Clip1()
-
-		self:ShootBullets(self.Primary.Damage, self.Primary.NumShots * clip, self:GetCone())
-
-		self:TakePrimaryAmmo(clip)
-		self.Owner:ViewPunch(clip * 0.5 * self.Primary.Recoil * Angle(math.Rand(-0.1, -0.1), math.Rand(-0.1, 0.1), 0))
-
-		self.Owner:SetGroundEntity(NULL)
-		self.Owner:SetVelocity(-80 * clip * self.Owner:GetAimVector())
-
-		self.IdleAnimation = CurTime() + self:SequenceDuration()
-	end
-end
-
-function SWEP:Think()
-	if self.reloading and self.reloadtimer < CurTime() then
-		self.reloadtimer = CurTime() + self.ReloadDelay
-		self:SendWeaponAnim(ACT_VM_RELOAD)
-
-		self.Owner:RemoveAmmo(1, self.Primary.Ammo, false)
-		self:SetClip1(self:Clip1() + 1)
-		self:EmitSound("Weapon_Shotgun.Reload")
-
-		if self.Primary.ClipSize <= self:Clip1() or self.Owner:GetAmmoCount(self.Primary.Ammo) <= 0 or not self.Owner:KeyDown(IN_RELOAD) then
-			self.nextreloadfinish = CurTime() + self.ReloadDelay
-			self.reloading = false
-			self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
-		end
-	end
-
-	local nextreloadfinish = self.nextreloadfinish
-	if nextreloadfinish ~= 0 and nextreloadfinish < CurTime() then
-		self:SendWeaponAnim(ACT_SHOTGUN_PUMP)
-		self:EmitSound("Weapon_Shotgun.Special1")
-		self.nextreloadfinish = 0
-	end
-
-	if self.IdleAnimation and self.IdleAnimation <= CurTime() then
-		self.IdleAnimation = nil
-		self:SendWeaponAnim(ACT_VM_IDLE)
-	end
-
-	if self:GetIronsights() and not self.Owner:KeyDown(IN_ATTACK2) then
-		self:SetIronsights(false)
-	end
-end
-
-function SWEP:CanPrimaryAttack()
-	if self.Owner:IsHolding() or self.Owner:GetBarricadeGhosting() then return false end
-
-	if self:Clip1() <= 0 then
-		self:EmitSound("Weapon_Shotgun.Empty")
-		self:SetNextPrimaryFire(CurTime() + 0.25)
-		return false
-	end
-
-	if self.reloading then
-		if self:Clip1() < self.Primary.ClipSize then
-			self:SendWeaponAnim(ACT_SHOTGUN_RELOAD_FINISH)
-		else
-			self:SendWeaponAnim(ACT_SHOTGUN_PUMP)
-			self:EmitSound("Weapon_Shotgun.Special1")
-		end
-		self.reloading = false
-		self:SetNextPrimaryFire(CurTime() + 0.25)
-		return false
-	end
-
-	return self:GetNextPrimaryFire() <= CurTime()
+	self.BaseClass.PrimaryAttack(self)
+		
+	self.Owner:ViewPunch(clip * 0.5 * self.Recoil * Angle(math.Rand(-0.1, -0.1), math.Rand(-0.1, 0.1), 0))
+	self.Owner:SetGroundEntity(NULL)
+	self.Owner:SetVelocity(-80 * clip * self.Owner:GetAimVector())
 end

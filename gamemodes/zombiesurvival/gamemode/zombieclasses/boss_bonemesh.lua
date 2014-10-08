@@ -37,6 +37,10 @@ local STEPSOUNDTIME_WATER_KNEE = STEPSOUNDTIME_WATER_KNEE
 local ACT_ZOMBIE_LEAPING = ACT_ZOMBIE_LEAPING
 local ACT_HL2MP_RUN_ZOMBIE_FAST = ACT_HL2MP_RUN_ZOMBIE_FAST
 
+if CLIENT then
+	CLASS.Icon = "zombiesurvival/killicons/creeper"
+end
+
 function CLASS:PlayerFootstep(pl, vFootPos, iFoot, strSoundName, fVolume, pFilter)
 	if iFoot == 0 then
 		pl:EmitSound("npc/antlion_guard/foot_light1.wav", 70, math.random(115, 120))

@@ -30,9 +30,6 @@ SWEP.ViewModel = "models/weapons/c_bugbait.mdl"
 SWEP.WorldModel = "models/manhack.mdl"
 SWEP.UseHands = true
 
-SWEP.DeployClass = "prop_manhack"
-SWEP.ControlWeapon = "weapon_zs_manhackcontrol"
-
 SWEP.HoldType = "grenade"
 
 SWEP.WalkSpeed = SPEED_FAST
@@ -64,7 +61,7 @@ end
 function SWEP:CanPrimaryAttack()
 	if self.Owner:IsHolding() or self.Owner:GetBarricadeGhosting() then return false end
 
-	for _, ent in pairs(ents.FindByClass("prop_manhac*")) do
+	for _, ent in pairs(ents.FindByClass("prop_manhack")) do
 		if ent:GetOwner() == self.Owner then return false end
 	end
 
@@ -88,7 +85,7 @@ function SWEP:PrimaryAttack()
 	self.NextDeploy = CurTime() + 0.75
 
 	if SERVER then
-		local ent = ents.Create(self.DeployClass)
+		local ent = ents.Create("prop_manhack")
 		if ent:IsValid() then
 			ent:SetPos(owner:GetShootPos())
 			ent:SetOwner(owner)
@@ -106,10 +103,10 @@ function SWEP:PrimaryAttack()
 				phys:SetVelocityInstantaneous(self.Owner:GetAimVector() * 200)
 			end
 
-			if not owner:HasWeapon(self.ControlWeapon) then
-				owner:Give(self.ControlWeapon)
+			if not owner:HasWeapon("weapon_zs_manhackcontrol") then
+				owner:Give("weapon_zs_manhackcontrol")
 			end
-			owner:SelectWeapon(self.ControlWeapon)
+			owner:SelectWeapon("weapon_zs_manhackcontrol")
 
 			if self:GetPrimaryAmmoCount() <= 0 then
 				owner:StripWeapon(self:GetClass())

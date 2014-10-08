@@ -1,7 +1,8 @@
-SWEP.ViewModel = "models/weapons/v_aegiskit.mdl"
+SWEP.ViewModel = "models/weapons/c_aegiskit.mdl"
 SWEP.WorldModel = "models/props_debris/wood_board06a.mdl"
 
 SWEP.AmmoIfHas = true
+SWEP.UseHands = true
 
 SWEP.Primary.ClipSize = 1
 SWEP.Primary.Automatic = false

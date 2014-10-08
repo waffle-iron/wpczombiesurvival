@@ -1,38 +1,81 @@
 AddCSLuaFile()
 
 if CLIENT then
+	SWEP.DrawCrosshair = false
 	SWEP.PrintName = "'Peashooter' Handgun"
-	SWEP.Slot = 1
-	SWEP.SlotPos = 0
-
-	SWEP.ViewModelFOV = 60
-	SWEP.ViewModelFlip = false
-
+	SWEP.CSMuzzleFlashes = true
+	
+	SWEP.AimPos = Vector(-5.949, -2.096, 2.88)
+	SWEP.AimAng = Vector(-0.401, 0, 0)
+		
+	SWEP.SprintPos = Vector(0, -17.514, -12.271)
+	SWEP.SprintAng = Vector(63.637, 0, 0)
+	
+	SWEP.ZoomAmount = 5
+	SWEP.ViewModelMovementScale = 0.85
+	SWEP.Shell = "smallshell"
+	
+	SWEP.IconLetter = "y"
+	killicon.AddFont("swb_p228", "SWB_KillIcons", SWEP.IconLetter, Color(255, 80, 0, 150))
+	
+	SWEP.MuzzleEffect = "swb_pistol_small"
+	
 	SWEP.HUD3DBone = "v_weapon.p228_Slide"
 	SWEP.HUD3DPos = Vector(-0.88, 0.35, 1)
 	SWEP.HUD3DAng = Angle(0, 0, 0)
 	SWEP.HUD3DScale = 0.015
 end
 
-SWEP.Base = "weapon_zs_base"
+SWEP.PlayBackRate = 30
+SWEP.PlayBackRateSV = 12
+SWEP.SpeedDec = 10
+SWEP.BulletDiameter = 9
+SWEP.CaseLength = 19
 
-SWEP.HoldType = "pistol"
+SWEP.Kind = WEAPON_PISTOL
+SWEP.AutoSpawnable = true
+SWEP.AllowDrop = true
+SWEP.AmmoEnt = "item_ammo_pistol_ttt"
 
-SWEP.ViewModel = "models/weapons/cstrike/c_pist_p228.mdl"
-SWEP.WorldModel = "models/weapons/w_pist_p228.mdl"
-SWEP.UseHands = true
+SWEP.Slot = 1
+SWEP.SlotPos = 0
+SWEP.NormalHoldType = "pistol"
+SWEP.RunHoldType = "normal"
+SWEP.FireModes = {"semi"}
+SWEP.Base = "swb_base"
+SWEP.Category = "SWB Weapons"
 
-SWEP.Primary.Sound = Sound("Weapon_P228.Single")
-SWEP.Primary.Damage = 16
-SWEP.Primary.NumShots = 1
-SWEP.Primary.Delay = 0.1
+SWEP.Author			= "Spy"
+SWEP.Contact		= ""
+SWEP.Purpose		= ""
+SWEP.Instructions	= ""
 
-SWEP.Primary.ClipSize = 18
-SWEP.Primary.Automatic = false
-SWEP.Primary.Ammo = "pistol"
+SWEP.ViewModelFOV	= 55
+SWEP.ViewModelFlip	= false
+SWEP.ViewModel		= "models/weapons/cstrike/c_pist_p228.mdl"
+SWEP.WorldModel		= "models/weapons/w_pist_p228.mdl"
+
+SWEP.Spawnable			= true
+SWEP.AdminSpawnable		= true
+
+SWEP.Primary.ClipSize		= 18
+SWEP.Primary.Automatic		= false
+SWEP.Primary.Ammo			= "pistol"
 GAMEMODE:SetupDefaultClip(SWEP.Primary)
+
+SWEP.FireDelay = 0.1
+SWEP.FireSound = Sound("Weapon_P228.Single")
+SWEP.Recoil = 0.7
+
+SWEP.HipSpread = 0.036
+SWEP.AimSpread = 0.0115
+SWEP.VelocitySensitivity = 1.2
+SWEP.MaxSpreadInc = 0.06
+SWEP.SpreadPerShot = 0.01
+SWEP.SpreadCooldown = 0.15
+SWEP.Shots = 1
+SWEP.Damage = 16
+SWEP.DeployTime = 1
 
 SWEP.ConeMax = 0.08
 SWEP.ConeMin = 0.015
-
-SWEP.IronSightsPos = Vector(-6, -1, 2.25)

@@ -11,7 +11,7 @@ SWEP.HoldType = "melee2"
 
 SWEP.DamageType = DMG_CLUB
 
-SWEP.ViewModel = "models/weapons/v_sledgehammer/v_sledgehammer.mdl"
+SWEP.ViewModel = "models/weapons/v_sledgehammer/c_sledgehammer.mdl"
 SWEP.WorldModel = "models/weapons/w_sledgehammer.mdl"
 
 SWEP.MeleeDamage = 75
@@ -27,6 +27,8 @@ SWEP.SwingRotation = Angle(60, 0, -80)
 SWEP.SwingOffset = Vector(0, -30, 0)
 SWEP.SwingTime = 0.75
 SWEP.SwingHoldType = "melee"
+
+SWEP.UseHands = true
 
 function SWEP:PlaySwingSound()
 	self:EmitSound("weapons/iceaxe/iceaxe_swing1.wav", 75, math.random(35, 45))

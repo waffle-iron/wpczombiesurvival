@@ -23,13 +23,14 @@ SWEP.HoldType = "melee2"
 
 SWEP.DamageType = DMG_CLUB
 
-SWEP.ViewModel = "models/weapons/v_sledgehammer/v_sledgehammer.mdl"
+SWEP.ViewModel = "models/weapons/v_sledgehammer/c_sledgehammer.mdl"
 SWEP.WorldModel = "models/weapons/w_sledgehammer.mdl"
 
 SWEP.MeleeDamage = 190
 SWEP.MeleeRange = 75
 SWEP.MeleeSize = 4
 SWEP.MeleeKnockBack = SWEP.MeleeDamage * 2
+SWEP.UseHands = true
 
 SWEP.Primary.Delay = 2.25
 

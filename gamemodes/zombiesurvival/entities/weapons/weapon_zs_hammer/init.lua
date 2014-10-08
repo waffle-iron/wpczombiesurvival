@@ -9,27 +9,29 @@ function SWEP:Reload()
 	local owner = self.Owner
 	if owner:GetBarricadeGhosting() then return end
 
+	local startpos = owner:GetShootPos()
+	local ent
+	local dist
 	local tr = owner:MeleeTrace(self.MeleeRange, self.MeleeSize, owner:GetMeleeFilter())
 	local trent = tr.Entity
 	if not trent:IsValid() or not trent:IsNailed() then return end
 
-	local ent
-	local dist
-
 	for _, e in pairs(ents.FindByClass("prop_nail")) do
 		if not e.m_PryingOut and e:GetParent() == trent then
 			local edist = e:GetActualPos():Distance(tr.HitPos)
-			if not dist or edist < dist then
+			if edist <= 8 and (not dist or edist < dist) then
 				ent = e
 				dist = edist
 			end
 		end
 	end
 
-	if not ent or not gamemode.Call("CanRemoveNail", owner, ent) then return end
+	if not ent then return end
 
-	local nailowner = ent:GetOwner()
-	if nailowner:IsValid() and nailowner ~= owner and nailowner:Team() == TEAM_HUMAN and not gamemode.Call("PlayerIsAdmin", owner) and not gamemode.Call("CanRemoveOthersNail", owner, nailowner, ent) then return end
+	if not gamemode.Call("CanRemoveNail", owner, ent) then return end
+
+	local nailowner = player.GetByUniqueID(ent:GetOwnerUID())
+	if nailowner and nailowner ~= owner and nailowner:Team() == TEAM_HUMAN and not gamemode.Call("PlayerIsAdmin", owner) and not gamemode.Call("CanRemoveOthersNail", owner, nailowner, ent) then return end
 
 	self:SetNextPrimaryFire(CurTime() + 1)
 

@@ -86,6 +86,7 @@ AddCSLuaFile("vgui/pendboard.lua")
 AddCSLuaFile("vgui/pworth.lua")
 AddCSLuaFile("vgui/ppointshop.lua")
 AddCSLuaFile("vgui/zshealtharea.lua")
+AddCSLuaFile("vgui/plifeoptions.lua")
 
 include("shared.lua")
 include("sv_options.lua")
@@ -499,6 +500,9 @@ function GM:SetupSpawnPoints()
 end
 
 function GM:PlayerPointsAdded(pl, amount)
+end
+
+function GM:PlayerPointsRemoved(pl, amount)
 end
 
 local weaponmodelstoweapon = {}
@@ -1317,6 +1321,7 @@ function GM:RestartGame()
 		pl:SetFrags(0)
 		pl:SetDeaths(0)
 		pl:SetPoints(0)
+		pl:SetSavedPoints(0)
 		pl:ChangeTeam(TEAM_HUMAN)
 		pl:DoHulls()
 		pl:SetZombieClass(self.DefaultZombieClass)
@@ -3396,7 +3401,7 @@ function GM:PlayerSpawn(pl)
 		if classtab.Model then
 			pl:SetModel(classtab.Model)
 		elseif classtab.UsePlayerModel then
-			local desiredname = pl:GetInfo("cl_playermodel")
+			local desiredname = player_manager.TranslateToPlayerModelName( pl:GetModel() )
 			if #desiredname == 0 then
 				pl:SelectRandomPlayerModel()
 			else
@@ -3404,7 +3409,7 @@ function GM:PlayerSpawn(pl)
 			end
 		elseif classtab.UsePreviousModel then
 			local curmodel = string.lower(pl:GetModel())
-			if table.HasValue(self.RestrictedModels, curmodel) or string.sub(curmodel, 1, 14) ~= "models/player/" then
+			if table.HasValue(self.RestrictedModels, curmodel) then
 				pl:SelectRandomPlayerModel()
 			end
 		elseif classtab.UseRandomModel then
@@ -3447,7 +3452,7 @@ function GM:PlayerSpawn(pl)
 		local desiredname = pl:GetInfo("cl_playermodel")
 		local modelname = player_manager.TranslatePlayerModel(#desiredname == 0 and self.RandomPlayerModels[math.random(#self.RandomPlayerModels)] or desiredname)
 		local lowermodelname = string.lower(modelname)
-		if table.HasValue(self.RestrictedModels, lowermodelname) then
+		if self.RestrictedModels[lowermodelname] then
 			modelname = "models/player/alyx.mdl"
 			lowermodelname = modelname
 		end
