@@ -57,18 +57,6 @@ function MakepLifeOptions()
 	list:AddItem(check)
 	
 	local check = vgui.Create("DCheckBoxLabel", Window)
-	check:SetText("Life: Specular")
-	check:SetConVar("mat_specular")
-	check:SizeToContents()
-	list:AddItem(check)
-	
-	local check = vgui.Create("DCheckBoxLabel", Window)
-	check:SetText("Life: Parallax Mapping")
-	check:SetConVar("mat_parallaxmap")
-	check:SizeToContents()
-	list:AddItem(check)
-	
-	local check = vgui.Create("DCheckBoxLabel", Window)
 	check:SetText("Life: Bloom")
 	check:SetConVar("Life_Bloom")
 	check:SizeToContents()

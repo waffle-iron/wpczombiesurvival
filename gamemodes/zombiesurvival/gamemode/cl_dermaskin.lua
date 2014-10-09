@@ -30,7 +30,7 @@ local color_frame_background = Color(0, 0, 0, 220)
 SKIN.color_frame_background = color_frame_background
 SKIN.color_frame_border = Color(0, 80, 0, 255)
 
-SKIN.colTextEntryText = Color(10, 10, 10)
+SKIN.colTextEntryText = Color(255, 255, 255)
 SKIN.colTextEntryTextHighlight = Color(30, 255, 0)
 SKIN.colTextEntryTextBorder = Color(70, 90, 70, 255)
 
@@ -228,6 +228,21 @@ function SKIN:PaintButton(panel, w, h)
 	surface.SetTexture(texRightEdge)
 	surface.DrawTexturedRect(w - edgesize, 0, edgesize, h)
 	surface.DrawTexturedRectRotated(math.ceil(edgesize * 0.5), math.ceil(h * 0.5), edgesize, h, 180)
+end
+
+local function PaintNotches( x, y, w, h, num )
+	if ( !num ) then return end
+	
+	local space = w / num
+	for i=0, num do
+		surface.DrawRect( x + i * space, y + 4, 1, 5 )
+	end
+end
+
+function SKIN:PaintNumSlider( panel, w, h )
+	surface.SetDrawColor( Color( 255, 255, 255, 100 ) )
+	surface.DrawRect( 8, h / 2 - 1, w - 15, 1 )
+	PaintNotches( 8, h / 2 - 1, w - 16, 1, panel.m_iNotches )
 end
 
 derma.DefineSkin("zombiesurvival", "The default Derma skin for Zombie Survival", SKIN, "Default")
