@@ -50,7 +50,7 @@ end
 
 if SERVER then
 function SWEP:OnMeleeHit(hitent, hitflesh, tr)
-	if hitent:IsValid() and hitent:IsPlayer() then
+	if hitent:IsValid() and hitent:IsPlayer() and hitent:GetZombieClassTable().Name ~= "Shade" then
 		hitent:GiveStatus("disorientation")
 	end
 end

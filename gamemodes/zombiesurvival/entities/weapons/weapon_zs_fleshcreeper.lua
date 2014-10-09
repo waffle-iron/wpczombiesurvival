@@ -10,7 +10,7 @@ SWEP.MeleeDamage = 15
 SWEP.MeleeForceScale = 1.25
 SWEP.MeleeSize = 3
 SWEP.MeleeDamageType = DMG_SLASH
-SWEP.Primary.Delay = 1.1
+SWEP.Primary.Delay = 0.75
 
 SWEP.Secondary.Automatic = false
 
@@ -79,9 +79,13 @@ function SWEP:BuildingThink()
 	local trent = tr.Entity
 
 	if trent and trent:IsValid() and trent:GetClass() == "prop_creepernest" then
-		if not (not trent:GetNestBuilt() and trent.LastBuilder and trent.LastBuild and trent.LastBuilder ~= owner and CurTime() < trent.LastBuild + 0.1) then
-			self:BuildNest(trent)
-		end
+		--[[if not trent:GetNestBuilt() and trent.LastBuilder and trent.LastBuild and trent.LastBuilder:IsValid() and trent.LastBuilder ~= owner and CurTime() < trent.LastBuild + 0.1 then
+			owner:ConCommand("-attack2")
+			self:SendMessage("nest_already_being_built")
+			return
+		end]]
+
+		self:BuildNest(trent)
 
 		return
 	end
@@ -113,6 +117,15 @@ function SWEP:BuildingThink()
 				self:SendMessage("not_enough_room_for_a_nest")
 				return
 			end
+		end
+	end
+
+	for _, ent in pairs(team.GetValidSpawnPoint(TEAM_UNDEAD)) do
+		if ent.Disabled then continue end
+
+		if util.SkewedDistance(ent:GetPos(), hitpos, 2.5) < GAMEMODE.DynamicSpawnDistBuild then
+			self:SendMessage("too_close_to_a_spawn")
+			return
 		end
 	end
 
@@ -158,7 +171,7 @@ function SWEP:BuildingThink()
 end
 
 function SWEP:BuildNest(ent)
-	ent:SetNestHealth(math.min(ent:GetNestHealth() + FrameTime() * ent:GetNestMaxHealth() * 0.025, ent:GetNestMaxHealth()))
+	ent:BuildUp()
 
 	ent.LastBuild = CurTime()
 	ent.LastBuilder = self.Owner
@@ -175,7 +188,7 @@ function SWEP:BuildNest(ent)
 end
 
 function SWEP:PrimaryAttack()
-	if self:GetHoldingRightClick() then return end
+	if self:GetHoldingRightClick() or not self.Owner:OnGround() then return end
 
 	self.BaseClass.PrimaryAttack(self)
 
@@ -185,7 +198,7 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:SecondaryAttack()
-	if self:IsSwinging() or self:IsInAttackAnim() then return end
+	if self:IsSwinging() or self:IsInAttackAnim() or not self.Owner:OnGround() then return end
 
 	self:SetRightClickStart(CurTime())
 end

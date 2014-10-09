@@ -19,6 +19,11 @@ SWEP.OnRemove = SWEP.Holster
 
 function SWEP:Think()
 	local owner = self.Owner
+	
+	if owner:KeyDown(IN_WALK) then
+		owner:TrySpawnAsGoreChild()
+		return
+	end
 
 	local fullrot = not owner:OnGround()
 	if owner:GetAllowFullRotation() ~= fullrot then

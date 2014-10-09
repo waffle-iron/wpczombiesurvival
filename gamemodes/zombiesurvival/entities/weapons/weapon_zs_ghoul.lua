@@ -9,6 +9,7 @@ SWEP.Base = "weapon_zs_zombie"
 SWEP.MeleeDamage = 26
 SWEP.MeleeForceScale = 0.1
 SWEP.SlowDownScale = 2.25
+SWEP.SlowDownImmunityTime = 2
 
 function SWEP:ApplyMeleeDamage(ent, trace, damage)
 	ent:PoisonDamage(damage, self.Owner, self, trace.HitPos)
@@ -39,7 +40,6 @@ local function DoFleshThrow(pl, wep)
 				local ang = Angle(aimang.p, aimang.y, aimang.r)
 				ang:RotateAroundAxis(ang:Up(), math.Rand(-8, 8))
 				ang:RotateAroundAxis(ang:Right(), math.Rand(-8, 8))
-				local heading = ang:Forward()
 
 				local ent = ents.Create("projectile_poisonflesh")
 				if ent:IsValid() then
@@ -49,7 +49,7 @@ local function DoFleshThrow(pl, wep)
 					ent:SetTeamID(TEAM_UNDEAD)
 					local phys = ent:GetPhysicsObject()
 					if phys:IsValid() then
-						phys:SetVelocityInstantaneous(heading * math.Rand(320, 380))
+						phys:SetVelocityInstantaneous(ang:Forward() * math.Rand(320, 380))
 					end
 				end
 			end
@@ -57,7 +57,10 @@ local function DoFleshThrow(pl, wep)
 			pl:EmitSound("physics/body/body_medium_break"..math.random(2, 4)..".wav", 72, math.Rand(85, 95))
 		end
 
-		pl:RawCapLegDamage(CurTime() + 2)
+		if CurTime() >= (pl.GhoulImmunity or 0) then
+			pl.GhoulImmunity = CurTime() + 2
+			pl:RawCapLegDamage(CurTime() + 2)
+		end
 	end
 end
 

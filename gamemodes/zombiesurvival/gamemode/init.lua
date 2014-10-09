@@ -3452,7 +3452,7 @@ function GM:PlayerSpawn(pl)
 		local desiredname = pl:GetInfo("cl_playermodel")
 		local modelname = player_manager.TranslatePlayerModel(#desiredname == 0 and self.RandomPlayerModels[math.random(#self.RandomPlayerModels)] or desiredname)
 		local lowermodelname = string.lower(modelname)
-		if self.RestrictedModels[lowermodelname] then
+		if table.HasValue(self.RestrictedModels, lowermodelname) then
 			modelname = "models/player/alyx.mdl"
 			lowermodelname = modelname
 		end
