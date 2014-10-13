@@ -817,7 +817,6 @@ function GM:RestartRound()
 	self:InitPostEntity()
 
 	self:RevertZombieClasses()
-	self:ChangeWeaponLocks(true, false)
 end
 
 function GM:_HUDShouldDraw(name)
@@ -1701,7 +1700,6 @@ net.Receive("zs_wavestart", function(length)
 	elseif wave == GAMEMODE:GetNumberOfWaves() then
 		GAMEMODE:CenterNotify({killicon = "default"}, {font = "ZSHUDFont"}, " ", COLOR_RED, translate.Get("final_wave"), {killicon = "default"})
 		GAMEMODE:CenterNotify(translate.Get("final_wave_sub"))
-		self:ChangeWeaponLocks(false, true)
 	else
 		local UnlockedClasses = {}
 		for i, tab in ipairs(GAMEMODE.ZombieClasses) do

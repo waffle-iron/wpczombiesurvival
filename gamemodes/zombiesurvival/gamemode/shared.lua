@@ -740,7 +740,6 @@ function GM:IsWeaponUnlocked(classname)
     return false
 end
 
-
 if not FixedSoundDuration then
 FixedSoundDuration = true
 local OldSoundDuration = SoundDuration
