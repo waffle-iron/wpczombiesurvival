@@ -734,8 +734,8 @@ function GM:IsWeaponUnlocked(classname)
         return true
     elseif self.WaveUnlock[classname] <= self:GetWave() then
         return true
-	elseif self:InflictionUnlocked() >= 0.5 and self.WaveUnlock[classname] <= 4 then
-		return true
+    elseif self:CalculateInfliction() >= 0.5 and self.WaveUnlock[classname] <= 4 then
+        return true
     end
     return false
 end
