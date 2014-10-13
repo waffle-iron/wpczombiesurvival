@@ -78,7 +78,7 @@ end
 
 local function ItemPanelThink(self)
 	local itemtab = FindItem(self.ID)
-	if itemtab then
+	if itemtab then	
 		local newstate = MySelf:GetPoints() >= math.ceil(itemtab.Worth * (GAMEMODE.m_PointsShop.m_LastNearArsenalCrate and GAMEMODE.ArsenalCrateMultiplier or 1)) and not (itemtab.NoClassicMode and GAMEMODE:IsClassicMode())
 		if newstate ~= self.m_LastAbleToBuy then
 			self.m_LastAbleToBuy = newstate
@@ -90,6 +90,14 @@ local function ItemPanelThink(self)
 				self:AlphaTo(90, 0.75, 0)
 				self.m_NameLabel:SetTextColor(COLOR_RED)
 				self.m_BuyButton:SetImage("icon16/exclamation.png")
+			end
+			
+			if not GAMEMODE.ObjectiveMap then
+				if not gamemode.Call("IsWeaponUnlocked", itemtab.SWEP) then
+					self:AlphaTo(90, 0.75, 0)
+					self.m_NameLabel:SetTextColor(COLOR_RED)
+					self.m_BuyButton:SetImage("icon16/exclamation.png")
+				end
 			end
 
 			self.m_BuyButton:SizeToContents()

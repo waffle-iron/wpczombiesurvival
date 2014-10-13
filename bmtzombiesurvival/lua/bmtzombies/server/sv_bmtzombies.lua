@@ -41,10 +41,6 @@ hook.Add("PlayerPointsAdded","PointSave.Add", function(ply, points)
 			pointsave.points = 0
 			pointsave:save()
 		end
-	
-		if plyData.points >= 150 then
-			return
-		end
 		
 		plyData.points = plyData.points + 1
 		plyData:save()

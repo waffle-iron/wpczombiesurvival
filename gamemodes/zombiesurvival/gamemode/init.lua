@@ -1933,6 +1933,16 @@ concommand.Add("zs_pointsshopbuy", function(sender, command, arguments)
 		sender:SendLua("surface.PlaySound(\"buttons/button10.wav\")")
 		return
 	end
+	
+	if itemtab.SWEP then
+		if not GAMEMODE.ObjectiveMap then
+			if not gamemode.Call("IsWeaponUnlocked", itemtab.SWEP) then
+				sender:CenterNotify(COLOR_RED, translate.ClientFormat(sender, "not_unlocked_yet_unlocked_on_x", GAMEMODE.WaveUnlock[itemtab.SWEP]))
+				sender:SendLua("surface.PlaySound(\"buttons/button10.wav\")")
+				return
+			end
+		end
+	end
 
 	cost = math.ceil(cost)
 

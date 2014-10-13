@@ -107,6 +107,8 @@ LANGUAGE.integrity_x								= "Unversehrtheit: %d%%"
 LANGUAGE.empty										= "LEER"
 LANGUAGE.manual_control								= "MANUELLE KONTROLLE"
 LANGUAGE.arsenal_crate								= "Arsenal Crate"
+LANGUAGE.not_unlocked_yet_unlocked_on_x				= "Diese Waffe ist noch nicht freigeschaltet. Es wird zu Beginn der Wellen entriegelt %d."
+LANGUAGE.weapon_tier_x								= "Waffe Stufe %d entriegelt."
 
 -- Exit point objectives
 LANGUAGE.exit_destroyed								= "Die Untoten haben einen Ausgang zerstört!"

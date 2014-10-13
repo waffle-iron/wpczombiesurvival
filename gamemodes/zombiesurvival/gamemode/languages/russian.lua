@@ -107,6 +107,8 @@ LANGUAGE.integrity_x								= "Целостность: %d%%"
 LANGUAGE.empty										= "ПУСТО"
 LANGUAGE.manual_control								= "ИАНУАЛЬНОЕ УПРАВЛЕНИЕ"
 LANGUAGE.arsenal_crate								= "Арсенальный ящик"
+LANGUAGE.not_unlocked_yet_unlocked_on_x				= "Это оружие еще ​​не разблокирована. Это будет разблокирован в начале волны %d."
+LANGUAGE.weapon_tier_x								= "Оружие ярус %d разблокирован."
 
 -- Exit point objectives
 LANGUAGE.exit_destroyed								= "Зараженные уничтожили какой-то выход!"

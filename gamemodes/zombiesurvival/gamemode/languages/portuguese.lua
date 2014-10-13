@@ -107,6 +107,8 @@ LANGUAGE.integrity_x								 = "Integridade: %d%%"
 LANGUAGE.empty										 = "VAZIO"
 LANGUAGE.manual_control								 = "CONTROLO MANUAL"
 LANGUAGE.arsenal_crate								 = "Caixa de Arsenal"
+LANGUAGE.not_unlocked_yet_unlocked_on_x				 = "Essa arma não é desbloqueado ainda. Vai ser desbloqueado no início da onda %d."
+LANGUAGE.weapon_tier_x								 = "Camada Arma %d desbloqueado."
 
 -- Exit point objectives
 LANGUAGE.exit_destroyed								 = "Os Mortos-Vivos destruíram uma saída!"

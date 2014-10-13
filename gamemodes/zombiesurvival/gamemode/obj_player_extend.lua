@@ -164,10 +164,12 @@ function meta:GetSavedPoints()
 end
 
 function meta:GetPointsSave()
-	if self:GetSavedPoints() >= 0 then
+	if self:GetSavedPoints() > 0 then
 		return "+"..self:GetSavedPoints()
+	elseif self:GetSavedPoints() <= 0 then
+		return self:GetSavedPoints()
 	else
-		return "-"..self:GetSavedPoints()
+		return self:GetSavedPoints()
 	end
 end
 

@@ -107,6 +107,8 @@ LANGUAGE.integrity_x                                                            
 LANGUAGE.empty                                                                          = "VIDE"
 LANGUAGE.manual_control                                                         = "CONTRÔLE MANUEL"
 LANGUAGE.arsenal_crate                                                          = "Caisse d'armes"
+LANGUAGE.not_unlocked_yet_unlocked_on_x											= "Cette arme n'est pas encore déverrouillé. Il sera déverrouillé au début de la vague %d."
+LANGUAGE.weapon_tier_x															= "Arme niveau %d déverrouillé."
  
 -- Exit point objectives
 LANGUAGE.exit_destroyed                                                         = "Les zombies ont détruit une sortie!"

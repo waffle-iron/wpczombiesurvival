@@ -110,6 +110,8 @@ LANGUAGE.integrity_x								= "내구도: %d%%"
 LANGUAGE.empty										= "비어 있음"
 LANGUAGE.manual_control								= "수동 조작"
 LANGUAGE.arsenal_crate								= "상점 상자"
+LANGUAGE.not_unlocked_yet_unlocked_on_x				= "그 무기는 아직 해제되지 않습니다. 이것은 파의 시작에서 해제 될 %d."
+LANGUAGE.weapon_tier_x								= "무기 티어 %d 의 잠금을 해제."
 
 -- Exit point objectives
 LANGUAGE.exit_destroyed								= "좀비들이 출구를 부쉈다!"

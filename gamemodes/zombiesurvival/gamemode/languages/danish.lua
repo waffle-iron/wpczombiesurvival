@@ -107,6 +107,8 @@ LANGUAGE.integrity_x								= "Helhed: %d%%"
 LANGUAGE.empty										= "TOM"
 LANGUAGE.manual_control								= "MANUAL KONTROL"
 LANGUAGE.arsenal_crate								= "Arsenal Kasse"
+LANGUAGE.not_unlocked_yet_unlocked_on_x				= "Det våben er ikke låst endnu. Det vil blive låst op ved starten af ​​bølge %d."
+LANGUAGE.weapon_tier_x								= "Våben tier %d ulåst."
 
 -- Exit point objectives
 LANGUAGE.exit_destroyed								= "De udøde har nedbrudt udgangen!"

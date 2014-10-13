@@ -7,6 +7,26 @@ GM.ZombieEscapeWeapons = {
 	"weapon_zs_zebulletstorm"
 }
 
+GM.WeaponWaves = {}
+GM.WeaponWaves["weapon_zs_uzi"] = 2
+GM.WeaponWaves["weapon_zs_smg"] = 2
+GM.WeaponWaves["weapon_zs_bulletstorm"] = 2
+GM.WeaponWaves["weapon_zs_silencer"] = 2
+GM.WeaponWaves["weapon_zs_annihilator"] = 2
+GM.WeaponWaves["weapon_zs_hunter"] = 2
+GM.WeaponWaves["weapon_zs_akbar"] = 3
+GM.WeaponWaves["weapon_zs_ender"] = 3
+GM.WeaponWaves["weapon_zs_reaper"] = 3
+GM.WeaponWaves["weapon_zs_oicw"] = 3
+GM.WeaponWaves["weapon_zs_m4"] = 4
+GM.WeaponWaves["weapon_zs_inferno"] = 4
+GM.WeaponWaves["weapon_zs_annabelle"] = 4
+GM.WeaponWaves["weapon_zs_crossbow"] = 5
+GM.WeaponWaves["weapon_zs_sweepershotgun"] = 6
+GM.WeaponWaves["weapon_zs_boomstick"] = 6
+GM.WeaponWaves["weapon_zs_slugrifle"] = 6
+GM.WeaponWaves["weapon_zs_pulserifle"] = 6
+
 -- Change this if you plan to alter the cost of items or you severely change how Worth works.
 -- Having separate cart files allows people to have separate loadouts for different servers.
 GM.CartFile = "zscarts.txt"
@@ -38,9 +58,14 @@ Callback is a function called. Model is a display model. If model isn't defined 
 swep, callback, and model can all be nil or empty
 ]]
 GM.Items = {}
+GM.WaveUnlock = {}
 function GM:AddItem(signature, name, desc, category, worth, swep, callback, model, worthshop, pointshop)
 	local tab = {Signature = signature, Name = name, Description = desc, Category = category, Worth = worth or 0, SWEP = swep, Callback = callback, Model = model, WorthShop = worthshop, PointShop = pointshop}
 	self.Items[#self.Items + 1] = tab
+	
+	if swep then
+		self.WaveUnlock[swep] = self.WeaponWaves[swep] or 0
+	end
 
 	return tab
 end
