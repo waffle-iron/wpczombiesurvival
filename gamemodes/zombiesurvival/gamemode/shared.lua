@@ -728,7 +728,7 @@ function GM:SetWaveActive(active)
 end
 
 function GM:IsWeaponUnlocked(classname)
-    if self.ObjectiveMap then
+    if self.ObjectiveMap and self:GetWave() >= 2 then
         return true
     elseif self:GetWave() == self:GetNumberOfWaves() then
         return true
