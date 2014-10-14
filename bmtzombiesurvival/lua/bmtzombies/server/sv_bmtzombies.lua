@@ -74,3 +74,36 @@ hook.Add("PlayerPointsRemoved","PointSave.Remove", function(ply, points)
 		plyData:save()
 	end)
 end)
+
+hook.Add("PostEndRound", "PostEndRound.Percentage", function(winner)
+	local mapname = game.GetMap()
+	local pct = 0
+	BMTZombies.WinsPercentage.findByMapName(mapname)
+	:Then(function( mapData )
+		if not mapData then
+			local mapstuff = BMTZombies.WinsPercentage:new()
+			mapstuff.mapName = mapname or ""
+			if winner == TEAM_HUMAN then
+				mapstuff.wins = 1
+			else
+				mapstuff.wins = 0
+			end
+			if winner == TEAM_UNDEAD then
+				mapstuff.losses = 1
+			else
+				mapstuff.losses = 0
+			end
+			mapstuff:save()
+		end
+		
+		if winner == TEAM_HUMAN then
+			mapData.wins = mapData.wins + 1
+		else
+			mapData.losses = mapData.losses + 1
+		end
+		
+		pct = 100 * mapData.wins / (mapData.wins+mapData.losses)
+		mapData:save()
+	end)
+	PrintMessage( HUD_PRINTTALK, string.format("[green]Humans have won this map [red]%d%% [green]of the time", pct))
+end)
