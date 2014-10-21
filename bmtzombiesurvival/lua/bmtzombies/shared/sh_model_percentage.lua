@@ -6,6 +6,7 @@ Percentage.static.model = {
 	tableName = "bmtzombies_winpercentages",
 	fields = {
 		mapName = "string",
+		numPlayed = "int",
 		wins = "int",
 		losses = "int"
 	}

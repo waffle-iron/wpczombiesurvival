@@ -215,7 +215,8 @@ if CLIENT then
 	local GetVelocity = reg.Entity.GetVelocity
 	local Length = reg.Vector.Length
 	
-	local Ang0, curang, curviewbob = Angle(0, 0, 0), Angle(0, 0, 0), Angle(0, 0, 0)	
+	local FT, CT, cos1, cos2, ws, vel
+	local Ang0, curang, curviewbob = Angle(0, 0, 0), Angle(0, 0, 0), Angle(0, 0, 0)
 	function SWEP:CalcView(ply, pos, ang, fov)
 		FT, CT = FrameTime(), CurTime()
 		

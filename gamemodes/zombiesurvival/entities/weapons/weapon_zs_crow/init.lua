@@ -19,7 +19,7 @@ SWEP.OnRemove = SWEP.Holster
 
 function SWEP:Think()
 	local owner = self.Owner
-	
+
 	if owner:KeyDown(IN_WALK) then
 		owner:TrySpawnAsGoreChild()
 		return

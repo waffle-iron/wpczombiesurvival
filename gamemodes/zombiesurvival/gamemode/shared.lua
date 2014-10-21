@@ -614,6 +614,81 @@ function GM:GetCurrentEquipmentCount(id)
     return count
 end
 
+GM.CappedInfliction = 0
+
+function GM:CalculateInfliction(victim, attacker)
+	if self.RoundEnded or self:GetWave() == 0 then return self.CappedInfliction end
+
+	local players = 0
+	local zombies = 0
+	local humans = 0
+	local wonhumans = 0
+	local hum
+	for _, pl in pairs(player.GetAll()) do
+		if not pl.Disconnecting then
+			if pl:Team() == TEAM_UNDEAD then
+				zombies = zombies + 1
+			elseif pl:HasWon() then
+				wonhumans = wonhumans + 1
+			else
+				humans = humans + 1
+				hum = pl
+			end
+		end
+	end
+
+	players = humans + zombies
+
+	if players == 0 then return self.CappedInfliction end
+
+	local infliction = math.max(zombies / players, self.CappedInfliction)
+	self.CappedInfliction = infliction
+	
+	if SERVER then
+		if humans == 1 and 2 < zombies then
+			gamemode.Call("LastHuman", hum)
+		elseif 1 <= infliction then
+			infliction = 1
+
+			if wonhumans >= 1 then
+				gamemode.Call("EndRound", TEAM_HUMAN)
+			else
+				gamemode.Call("EndRound", TEAM_UNDEAD)
+
+				if attacker and attacker:IsValid() and attacker:IsPlayer() and attacker:Team() == TEAM_UNDEAD and attacker ~= victim then
+					gamemode.Call("LastBite", victim, attacker)
+				end
+			end
+		end
+	
+		if not self:IsClassicMode() and not self.ZombieEscape and not self:IsBabyMode() and not self.PantsMode then
+			for k, v in ipairs(self.ZombieClasses) do
+				if v.Infliction and infliction >= v.Infliction and not self:IsClassUnlocked(v.Name) then
+					v.Unlocked = true
+
+					if not self.PantsMode and not self:IsClassicMode() and not self:IsBabyMode() and not self.ZombieEscape then
+						if not v.Locked then
+							for _, pl in pairs(player.GetAll()) do
+								pl:CenterNotify(COLOR_RED, translate.ClientFormat(pl, "infliction_reached", v.Infliction * 100))
+								pl:CenterNotify(translate.ClientFormat(pl, "x_unlocked", translate.ClientGet(pl, v.TranslationName)))
+							end
+						end
+					end
+				end
+			end
+		end
+
+		for _, ent in pairs(ents.FindByClass("logic_infliction")) do
+			if ent.Infliction <= infliction then
+				ent:Input("oninflictionreached", NULL, NULL, infliction)
+			end
+		end
+	end
+
+	return infliction
+end
+timer.Create("CalculateInfliction", 2, 0, function() gamemode.Call("CalculateInfliction") end)
+
 function GM:GetFearMeterPower(pos, teamid, ignore)
     if LASTHUMAN then return 1 end
 
@@ -711,6 +786,29 @@ if GM:GetWave() == 0 then
     GM:SetWaveEnd(GM.WaveZeroLength + GM:GetWaveOneLength())
 end
 
+function GM:IsWeaponUnlocked(classname)
+	local weaponwave = self.WaveUnlock[classname]
+	local infliction = self:CalculateInfliction()
+
+	if not weaponwave then
+		return true
+	end
+	
+    if self.ObjectiveMap and self:GetWave() >= 2 then
+        return true
+    elseif self:GetWave() == self:GetNumberOfWaves() then
+        return true
+    elseif weaponwave <= self:GetWave() then
+        return true
+	elseif infliction >= 0.8 and weaponwave <= 6 then
+		return true
+	elseif infliction >= 0.5 and weaponwave <= 4 then
+		return true
+	end
+	
+    return false
+end
+
 function GM:GetWaveActive()
     return GetGlobalBool("waveactive", false)
 end
@@ -725,17 +823,6 @@ function GM:SetWaveActive(active)
             gamemode.Call("WaveStateChanged", active)
         end
     end
-end
-
-function GM:IsWeaponUnlocked(classname)
-    if self.ObjectiveMap and self:GetWave() >= 2 then
-        return true
-    elseif self:GetWave() == self:GetNumberOfWaves() then
-        return true
-    elseif self.WaveUnlock[classname] <= self:GetWave() then
-        return true
-    end
-    return false
 end
 
 if not FixedSoundDuration then

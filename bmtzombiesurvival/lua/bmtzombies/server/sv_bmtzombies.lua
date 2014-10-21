@@ -30,7 +30,11 @@ end)
 hook.Add("PlayerPointsAdded","PointSave.Add", function(ply, points)
 	local id = ply:SteamID()
 	
-	ply:SetSavedPoints(ply:GetSavedPoints() + 1)
+	if points > 1 then
+		ply:SetSavedPoints(ply:GetSavedPoints() + math.Round(points/2))
+	else
+		ply:SetSavedPoints(ply:GetSavedPoints() + 1)
+	end
 	
 	BMTZombies.Points.findBySteamId(id)
 	:Then(function( plyData )
@@ -42,7 +46,11 @@ hook.Add("PlayerPointsAdded","PointSave.Add", function(ply, points)
 			pointsave:save()
 		end
 		
-		plyData.points = plyData.points + 1
+		if points > 1 then
+			plyData.points = plyData.points + math.Round(points/2)
+		else
+			plyData.points = plyData.points + 1
+		end
 		plyData:save()
 	end)
 end)
@@ -78,6 +86,11 @@ end)
 hook.Add("PostEndRound", "PostEndRound.Percentage", function(winner)
 	local mapname = game.GetMap()
 	local pct = 0
+	
+	if team.NumPlayers(TEAM_HUMAN) == 0 and team.NumPlayers(TEAM_UNDEAD) == 0 then
+		return
+	end
+	
 	BMTZombies.WinsPercentage.findByMapName(mapname)
 	:Then(function( mapData )
 		if not mapData then
@@ -93,6 +106,7 @@ hook.Add("PostEndRound", "PostEndRound.Percentage", function(winner)
 			else
 				mapstuff.losses = 0
 			end
+			mapstuff.numPlayed = 1
 			mapstuff:save()
 		end
 		
@@ -102,8 +116,10 @@ hook.Add("PostEndRound", "PostEndRound.Percentage", function(winner)
 			mapData.losses = mapData.losses + 1
 		end
 		
+		mapData.numPlayed = mapstuff.numPlayed + 1
+		
 		pct = 100 * mapData.wins / (mapData.wins+mapData.losses)
 		mapData:save()
 	end)
-	PrintMessage( HUD_PRINTTALK, string.format("[green]Humans have won this map [red]%d%% [green]of the time", pct))
+	PrintMessage( HUD_PRINTTALK, string.format("[green]This map has been played [cyan]%d [green]number of times and humans have won [red]%d%% [green]of the time", mapData.numPlayed, math.Round(pct)))
 end)

@@ -7,33 +7,15 @@ SWEP.DrawCrosshair = false
 SWEP.Slot = 4
 SWEP.SlotPos = 0
 
-SWEP.BobScale = 0
-SWEP.SwayScale = 0
 SWEP.ViewbobIntensity = 1
 SWEP.ViewbobEnabled = true
 
 local reg = debug.getregistry()
 local GetVelocity = reg.Entity.GetVelocity
 local Length = reg.Vector.Length
+
+local FT, CT, cos1, cos2, ws, vel
 local Ang0, curang, curviewbob = Angle(0, 0, 0), Angle(0, 0, 0), Angle(0, 0, 0)
-
-function SWEP:Deploy()
-	gamemode.Call("WeaponDeployed", self.Owner, self)
-
-	return true
-end
-
-function SWEP:DrawHUD()
-	if GetConVarNumber("crosshair") ~= 1 then return end
-	self:DrawCrosshairDot()
-end
-
-function SWEP:PrimaryAttack()
-end
-
-function SWEP:DrawWeaponSelection(...)
-	return self:BaseDrawWeaponSelection(...)
-end
 
 function SWEP:CalcView(ply, pos, ang, fov)
 	FT, CT = FrameTime(), CurTime()
@@ -58,6 +40,24 @@ function SWEP:CalcView(ply, pos, ang, fov)
 			curviewbob = LerpAngle(FT * 10, curviewbob, Ang0)
 		end
 	end
-	
+		
 	return pos, ang + curviewbob * self.ViewbobIntensity, fov
+end
+
+function SWEP:Deploy()
+	gamemode.Call("WeaponDeployed", self.Owner, self)
+
+	return true
+end
+
+function SWEP:DrawHUD()
+	if GetConVarNumber("crosshair") ~= 1 then return end
+	self:DrawCrosshairDot()
+end
+
+function SWEP:PrimaryAttack()
+end
+
+function SWEP:DrawWeaponSelection(...)
+	return self:BaseDrawWeaponSelection(...)
 end

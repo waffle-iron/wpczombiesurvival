@@ -93,7 +93,7 @@ local function ItemPanelThink(self)
 			end
 			
 			if not GAMEMODE.ObjectiveMap then
-				if not gamemode.Call("IsWeaponUnlocked", itemtab.SWEP) then
+				if not GAMEMODE:IsWeaponUnlocked(itemtab.SWEP) then
 					self:AlphaTo(90, 0.75, 0)
 					self.m_NameLabel:SetTextColor(COLOR_RED)
 					self.m_BuyButton:SetImage("icon16/exclamation.png")

@@ -5,17 +5,17 @@ SWEP.DrawAmmo = false
 SWEP.DrawCrosshair = false
 SWEP.ViewModelFOV = 60
 
-SWEP.Slot = 0
-SWEP.SlotPos = 0
-
 SWEP.ViewbobIntensity = 1
 SWEP.ViewbobEnabled = true
+
+SWEP.Slot = 0
+SWEP.SlotPos = 0
 
 SWEP.BlendPos = Vector(0, 0, 0)
 SWEP.BlendAng = Vector(0, 0, 0)
 SWEP.OldDelta = Angle(0, 0, 0)
 SWEP.AngleDelta = Angle(0, 0, 0)
-	
+
 local reg = debug.getregistry()
 local Right = reg.Angle.Right
 local Up = reg.Angle.Up
@@ -23,12 +23,9 @@ local Forward = reg.Angle.Forward
 local RotateAroundAxis = reg.Angle.RotateAroundAxis
 local GetVelocity = reg.Entity.GetVelocity
 local Length = reg.Vector.Length
-local Ang0, curang, curviewbob = Angle(0, 0, 0), Angle(0, 0, 0), Angle(0, 0, 0)	
-local Vec0 = Vector(0, 0, 0)
-local TargetPos, TargetAng, cos1, sin1, tan, ws, rs, mod, vel, FT, sin2, delta
-local SP = game.SinglePlayer() 
-local PosMod, AngMod = Vector(0, 0, 0), Vector(0, 0, 0)
-local CurPosMod, CurAngMod = Vector(0, 0, 0), Vector(0, 0, 0)
+
+local FT, CT, cos1, cos2, ws, vel
+local Ang0, curang, curviewbob = Angle(0, 0, 0), Angle(0, 0, 0), Angle(0, 0, 0)
 
 function SWEP:CalcView(ply, pos, ang, fov)
 	FT, CT = FrameTime(), CurTime()
@@ -78,11 +75,18 @@ function SWEP:ViewModelDrawn()
 	self:Anim_ViewModelDrawn()
 end
 
-function SWEP:PreDrawViewModel()
+local Vec0 = Vector(0, 0, 0)
+local TargetPos, TargetAng, cos1, sin1, tan, ws, rs, mod, vel, FT, sin2, delta
+	
+local SP = game.SinglePlayer() 
+local PosMod, AngMod = Vector(0, 0, 0), Vector(0, 0, 0)
+local CurPosMod, CurAngMod = Vector(0, 0, 0), Vector(0, 0, 0)
+
+function SWEP:PreDrawViewModel(vm)
 	if self.ShowViewModel == false then
 		render.SetBlend(0)
 	end
-
+	
 	CT = UnPredictedCurTime()
 	vm = self.Owner:GetViewModel()
 		
@@ -138,7 +142,7 @@ function SWEP:PreDrawViewModel()
 		PosMod.y = PosMod.y + tan1 * 1.5
 		PosMod.z = PosMod.z + tan1
 	end
-	
+		
 	FT = FrameTime()
 		
 	CurPosMod = LerpVector(FT * 10, CurPosMod, PosMod)
@@ -158,16 +162,36 @@ function SWEP:DrawWorldModel()
 	self:Anim_DrawWorldModel()
 end
 
+local Ang0, curang, curviewbob = Angle(0, 0, 0), Angle(0, 0, 0), Angle(0, 0, 0)	
+function SWEP:CalcView(ply, pos, ang, fov)
+	FT, CT = FrameTime(), CurTime()
+		
+	if self.ViewbobEnabled then
+		ws = self.Owner:GetWalkSpeed()
+		vel = Length(GetVelocity(self.Owner))
+			
+		if self.Owner:OnGround() and vel > ws * 0.3 then
+			if vel < ws * 1.2 then
+				cos1 = math.cos(CT * 15)
+				cos2 = math.cos(CT * 12)
+				curviewbob.p = cos1 * 0.15
+				curviewbob.y = cos2 * 0.1
+			else
+				cos1 = math.cos(CT * 20)
+				cos2 = math.cos(CT * 15)
+				curviewbob.p = cos1 * 0.25
+				curviewbob.y = cos2 * 0.15
+			end
+		else
+			curviewbob = LerpAngle(FT * 10, curviewbob, Ang0)
+		end
+	end
+		
+	return pos, ang + curviewbob * self.ViewbobIntensity, fov
+end
+
 local ghostlerp = 0
 function SWEP:GetViewModelPosition(pos, ang)
-	RotateAroundAxis(ang, Right(ang), CurAngMod.x + self.AngleDelta.p)
-	RotateAroundAxis(ang, Up(ang), CurAngMod.y + self.AngleDelta.y * 0.3)
-	RotateAroundAxis(ang, Forward(ang), CurAngMod.z + self.AngleDelta.y * 0.3)
-
-	pos = pos + (CurPosMod.x + self.AngleDelta.y * 0.1) * Right(ang)
-	pos = pos + (CurPosMod.y + self.BlendPos.y) * Forward(ang)
-	pos = pos + (CurPosMod.z + self.BlendPos.z - self.AngleDelta.p * 0.1) * Up(ang)
-	
 	if self:IsSwinging() then
 		local rot = self.SwingRotation
 		local offset = self.SwingOffset
@@ -199,6 +223,14 @@ function SWEP:GetViewModelPosition(pos, ang)
 		pos = pos + 3.5 * ghostlerp * ang:Up()
 		ang:RotateAroundAxis(ang:Right(), -30 * ghostlerp)
 	end
+
+	RotateAroundAxis(ang, Right(ang), CurAngMod.x + self.AngleDelta.p)
+	RotateAroundAxis(ang, Up(ang), CurAngMod.y + self.AngleDelta.y * 0.3)
+	RotateAroundAxis(ang, Forward(ang), CurAngMod.z + self.AngleDelta.y * 0.3)
+
+	pos = pos + (CurPosMod.x + self.AngleDelta.y * 0.1) * Right(ang)
+	pos = pos + (CurPosMod.y + self.BlendPos.y) * Forward(ang)
+	pos = pos + (CurPosMod.z + self.BlendPos.z - self.AngleDelta.p * 0.1) * Up(ang)
 		
 	return pos, ang
 end

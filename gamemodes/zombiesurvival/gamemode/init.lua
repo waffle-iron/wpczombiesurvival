@@ -178,6 +178,7 @@ function GM:TryHumanPickup(pl, entity)
 	end
 end
 
+/*
 function GM:AddResources()
 	resource.AddFile("resource/fonts/typenoksidi.ttf")
 	resource.AddFile("resource/fonts/hidden.ttf")
@@ -340,10 +341,10 @@ function GM:AddResources()
 	resource.AddFile("sound/"..tostring(self.HumanWinSound))
 	resource.AddFile("sound/"..tostring(self.DeathSound))
 end
+*/
 
 function GM:Initialize()
 	self:RegisterPlayerSpawnEntities()
-	self:AddResources()
 	self:PrecacheResources()
 	self:AddCustomAmmo()
 	self:AddNetworkStrings()
@@ -983,77 +984,6 @@ function GM:LastBite(victim, attacker)
 	LAST_BITE = attacker
 end
 
-function GM:CalculateInfliction(victim, attacker)
-	if self.RoundEnded or self:GetWave() == 0 then return self.CappedInfliction end
-
-	local players = 0
-	local zombies = 0
-	local humans = 0
-	local wonhumans = 0
-	local hum
-	for _, pl in pairs(player.GetAll()) do
-		if not pl.Disconnecting then
-			if pl:Team() == TEAM_UNDEAD then
-				zombies = zombies + 1
-			elseif pl:HasWon() then
-				wonhumans = wonhumans + 1
-			else
-				humans = humans + 1
-				hum = pl
-			end
-		end
-	end
-
-	players = humans + zombies
-
-	if players == 0 then return self.CappedInfliction end
-
-	local infliction = math.max(zombies / players, self.CappedInfliction)
-	self.CappedInfliction = infliction
-
-	if humans == 1 and 2 < zombies then
-		gamemode.Call("LastHuman", hum)
-	elseif 1 <= infliction then
-		infliction = 1
-
-		if wonhumans >= 1 then
-			gamemode.Call("EndRound", TEAM_HUMAN)
-		else
-			gamemode.Call("EndRound", TEAM_UNDEAD)
-
-			if attacker and attacker:IsValid() and attacker:IsPlayer() and attacker:Team() == TEAM_UNDEAD and attacker ~= victim then
-				gamemode.Call("LastBite", victim, attacker)
-			end
-		end
-	end
-
-	if not self:IsClassicMode() and not self.ZombieEscape and not self:IsBabyMode() and not self.PantsMode then
-		for k, v in ipairs(self.ZombieClasses) do
-			if v.Infliction and infliction >= v.Infliction and not self:IsClassUnlocked(v.Name) then
-				v.Unlocked = true
-
-				if not self.PantsMode and not self:IsClassicMode() and not self:IsBabyMode() and not self.ZombieEscape then
-					if not v.Locked then
-						for _, pl in pairs(player.GetAll()) do
-							pl:CenterNotify(COLOR_RED, translate.ClientFormat(pl, "infliction_reached", v.Infliction * 100))
-							pl:CenterNotify(translate.ClientFormat(pl, "x_unlocked", translate.ClientGet(pl, v.TranslationName)))
-						end
-					end
-				end
-			end
-		end
-	end
-
-	for _, ent in pairs(ents.FindByClass("logic_infliction")) do
-		if ent.Infliction <= infliction then
-			ent:Input("oninflictionreached", NULL, NULL, infliction)
-		end
-	end
-
-	return infliction
-end
-timer.Create("CalculateInfliction", 2, 0, function() gamemode.Call("CalculateInfliction") end)
-
 function GM:OnNPCKilled(ent, attacker, inflictor)
 end
 
@@ -1223,7 +1153,6 @@ function GM:RestartRound()
 end
 
 GM.DynamicSpawning = true
-GM.CappedInfliction = 0
 GM.StartingZombie = {}
 GM.CheckedOut = {}
 GM.PreviouslyDied = {}
@@ -1936,7 +1865,7 @@ concommand.Add("zs_pointsshopbuy", function(sender, command, arguments)
 	
 	if itemtab.SWEP then
 		if not GAMEMODE.ObjectiveMap then
-			if not gamemode.Call("IsWeaponUnlocked", itemtab.SWEP) then
+			if not GAMEMODE:IsWeaponUnlocked(itemtab.SWEP) then
 				sender:CenterNotify(COLOR_RED, translate.ClientFormat(sender, "not_unlocked_yet_unlocked_on_x", GAMEMODE.WaveUnlock[itemtab.SWEP]))
 				sender:SendLua("surface.PlaySound(\"buttons/button10.wav\")")
 				return

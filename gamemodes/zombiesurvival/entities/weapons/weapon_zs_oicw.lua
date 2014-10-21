@@ -98,5 +98,5 @@ SWEP.Damage = 20
 SWEP.DeployTime = 1
 SWEP.BurstCooldownMul = 3.5
 
-SWB_RegisterSound("Weapon_OICW.Fire", {"weapons/oicw/oicw_fire1.wav", "weapons/oicw/oicw_fire2.wav"}, 100)
+SWB_RegisterSound("Weapon_OICW.Fire", {"weapons/oicw/oicw_fire2.wav"}, 100)
 SWB_RegisterSound("Weapon_OICW.Reload", "weapons/oicw/oicw_reload.wav", 100)

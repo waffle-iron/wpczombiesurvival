@@ -1,3 +1,8 @@
+if SERVER then
+    AddCSLuaFile( "cl_optionsaddons.lua" )
+    return
+end
+
 hook.Add("AddExtraOptions", "AddExtraOptions.Life", function(panellist, optionsmenu)
 	local check = vgui.Create("DCheckBoxLabel", optionsmenu)
 	check:SetText("Gmod Legs: Enabled")
