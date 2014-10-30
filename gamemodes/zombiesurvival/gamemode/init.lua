@@ -993,14 +993,14 @@ function GM:LastHuman(pl)
 			net.WriteEntity(pl or NULL)
 		net.Broadcast()
 
+		for _, ent in pairs(ents.FindByClass("logic_infliction")) do
+			ent:Input("onlasthuman", pl, pl, pl and pl:IsValid() and pl:EntIndex() or -1)
+		end
+
 		LASTHUMAN = true
 	end
 
 	self.TheLastHuman = pl
-
-	for _, ent in pairs(ents.FindByClass("logic_infliction")) do
-		ent:Input("onlasthuman", pl, pl, pl and pl:IsValid() and pl:EntIndex() or -1)
-	end
 end
 
 function GM:PlayerHealedTeamMember(pl, other, health, wep)
@@ -1385,6 +1385,10 @@ function GM:PlayerReadyRound(pl)
 
 	local classid = pl:GetZombieClass()
 	pl:SetZombieClass(classid, true, pl)
+	
+	if self.OverrideStartingWorth then
+		pl:SendLua("GAMEMODE.StartingWorth="..tostring(self.StartingWorth))
+	end
 
 	if pl:Team() == TEAM_UNDEAD then
 		-- This is just so they get updated on what class they are and have their hulls set up right.
@@ -1398,10 +1402,6 @@ function GM:PlayerReadyRound(pl)
 	if self.RoundEnded then
 		pl:SendLua("gamemode.Call(\"EndRound\", "..tostring(ROUNDWINNER)..", \""..game.GetMapNext().."\")")
 		gamemode.Call("DoHonorableMentions", pl)
-	end
-
-	if self.OverrideStartingWorth then
-		pl:SendLua("GAMEMODE.StartingWorth="..tostring(self.StartingWorth))
 	end
 
 	if pl:GetInfo("zs_noredeem") == "1" then
