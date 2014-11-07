@@ -1711,15 +1711,10 @@ net.Receive("zs_wavestart", function(length)
 		GAMEMODE:CenterNotify(translate.Get("final_wave_sub"))
 	else
 		GAMEMODE:CenterNotify({killicon = "default"}, {font = "ZSHUDFont"}, " ", COLOR_RED, translate.Format("wave_x_has_begun", wave), {killicon = "default"})
-<<<<<<< HEAD
-		if #UnlockedClasses > 0 then
-			GAMEMODE:CenterNotify(COLOR_GREEN, translate.Format("x_unlocked", string.AndSeparate(UnlockedClasses)))
-		end
-		if not GAMEMODE.ObjectiveMap then
-			GAMEMODE:CenterNotify(COLOR_GREEN, translate.Format("weapon_tier_x", wave))
-		end
-=======
->>>>>>> dde4ca24861950e3ac883e8a286268ae810caa2a
+	end
+	
+	if not GAMEMODE.ObjectiveMap then
+		GAMEMODE:CenterNotify(COLOR_GREEN, translate.Format("weapon_tier_x", wave))
 	end
 
 	surface_PlaySound("ambient/creatures/town_zombie_call1.wav")
