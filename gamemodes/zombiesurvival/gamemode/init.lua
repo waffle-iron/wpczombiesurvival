@@ -379,6 +379,7 @@ function GM:AddNetworkStrings()
 	util.AddNetworkString("zs_centernotify")
 	util.AddNetworkString("zs_topnotify")
 	util.AddNetworkString("zs_zvols")
+	util.AddNetworkString("zs_classunlock")
 
 	util.AddNetworkString("zs_playerredeemed")
 	util.AddNetworkString("zs_dohulls")
@@ -802,10 +803,13 @@ function GM:PlayerSelectSpawn(pl)
 			if spawn then
 				LastSpawnPoints[teamid] = spawn
 				self:CheckDynamicSpawnHR(spawn)
+				pl.SpawnedOnSpawnPoint = true
 				return spawn
 			end
 		end
 	end
+
+	pl.SpawnedOnSpawnPoint = true
 
 	-- Fallback.
 	return LastSpawnPoints[teamid] or #tab > 0 and table.Random(tab) or pl
@@ -1164,6 +1168,16 @@ function GM:RestartLua()
 	self.LastBossZombieSpawned = nil
 	self.UseSigils = nil
 
+	-- logic_pickups
+	self.MaxWeaponPickups = nil
+	self.MaxAmmoPickups = nil
+	self.MaxFlashlightPickups = nil
+	self.WeaponRequiredForAmmo = nil
+	for _, pl in pairs(player.GetAll()) do
+		pl.AmmoPickups = nil
+		pl.WeaponPickups = nil
+	end
+
 	self.OverrideEndSlomo = nil
 	if type(GetGlobalBool("endcamera", 1)) ~= "number" then
 		SetGlobalBool("endcamera", nil)
@@ -1292,7 +1306,6 @@ function GM:InitPostEntityMap(fromze)
 
 	for _, ent in pairs(ents.FindByClass("prop_ammo")) do ent.PlacedInMap = true end
 	for _, ent in pairs(ents.FindByClass("prop_weapon")) do ent.PlacedInMap = true end
-	for _, ent in pairs(ents.FindByClass("prop_flashlightbattery")) do ent.PlacedInMap = true end
 
 	if self.ObjectiveMap then
 		self:SetDynamicSpawning(false)
@@ -2152,17 +2165,26 @@ function GM:EntityTakeDamage(ent, dmginfo)
 		local dmgtype = dmginfo:GetDamageType()
 		if dmgtype == DMG_BLAST or dmgtype == DMG_BURN or dmgtype == DMG_SLOWBURN then
 			if ent:IsPlayer() then
-				if inflictor.LastExplosionTeam == ent:Team() and inflictor.LastExplosionAttacker ~= ent and inflictor.LastExplosionTime and CurTime() < inflictor.LastExplosionTime + 10 then -- Player damaged by physics object explosion.
+				if inflictor.LastExplosionTeam == ent:Team() and inflictor.LastExplosionAttacker ~= ent and inflictor.LastExplosionTime and CurTime() < inflictor.LastExplosionTime + 10 then -- Player damaged by physics object explosion / fire.
 					dmginfo:SetDamage(0)
 					dmginfo:ScaleDamage(0)
 					return
 				end
-			elseif inflictor ~= ent and string.sub(ent:GetClass(), 1, 12) == "prop_physics" and string.sub(inflictor:GetClass(), 1, 12) == "prop_physics" then -- Physics object damaged by physics object explosion.
+			elseif inflictor ~= ent and string.sub(ent:GetClass(), 1, 12) == "prop_physics" and string.sub(inflictor:GetClass(), 1, 12) == "prop_physics" then -- Physics object damaged by physics object explosion / fire.
 				ent.LastExplosionAttacker = inflictor.LastExplosionAttacker
 				ent.LastExplosionTeam = inflictor.LastExplosionTeam
 				ent.LastExplosionTime = CurTime()
 			end
 		elseif inflictor:IsPlayer() and string.sub(ent:GetClass(), 1, 12) == "prop_physics" then -- Physics object damaged by player.
+			if inflictor:Team() == TEAM_HUMAN then
+				local phys = ent:GetPhysicsObject()
+				if phys:IsValid() and phys:HasGameFlag(FVPHYSICS_PLAYER_HELD) and inflictor:GetCarry() ~= ent or ent._LastDropped and CurTime() < ent._LastDropped + 3 and ent._LastDroppedBy ~= inflictor then -- Human player damaged a physics object while it was being carried or recently carried. They weren't the carrier.
+					dmginfo:SetDamage(0)
+					dmginfo:ScaleDamage(0)
+					return
+				end
+			end
+
 			ent.LastExplosionAttacker = inflictor
 			ent.LastExplosionTeam = inflictor:Team()
 			ent.LastExplosionTime = CurTime()
@@ -2893,6 +2915,7 @@ end
 
 function GM:DoPlayerDeath(pl, attacker, dmginfo)
 	pl:RemoveStatus("confusion", false, true)
+	pl:RemoveStatus("ghoultouch", false, true)
 
 	local inflictor = dmginfo:GetInflictor()
 	local plteam = pl:Team()
@@ -3384,6 +3407,12 @@ function GM:PlayerSpawn(pl)
 			pl.ForceSpawnAngles = nil
 		end
 
+		if pl.SpawnedOnSpawnPoint and not pl.DidntSpawnOnSpawnPoint and not pl.Revived and not pl:GetZombieClassTable().NeverAlive then
+			pl:GiveStatus("zombiespawnbuff", 3)
+		end
+		pl.DidntSpawnOnSpawnPoint = nil
+		pl.SpawnedOnSpawnPoint = nil
+
 		pl:CallZombieFunction("OnSpawned")
 	else
 		pl.m_PointQueue = 0
@@ -3467,6 +3496,7 @@ end
 
 function GM:SetWave(wave)
 	local previouslylocked = {}
+	local UnlockedClasses = {}
 	for i, classtab in ipairs(GAMEMODE.ZombieClasses) do
 		if not gamemode.Call("IsClassUnlocked", classid) then
 			previouslylocked[i] = true
@@ -3477,12 +3507,30 @@ function GM:SetWave(wave)
 
 	for classid in pairs(previouslylocked) do
 		if gamemode.Call("IsClassUnlocked", classid) then
+			local classtab = self.ZombieClasses[classid]
+			if not classtab.UnlockedNotify then
+				classtab.UnlockedNotify = true
+				table.insert(UnlockedClasses, classid)
+			end
+
 			for _, ent in pairs(ents.FindByClass("logic_classunlock")) do
 				local classname = GAMEMODE.ZombieClasses[classid].Name
 				if ent.Class == string.lower(classname) then
 					ent:Input("onclassunlocked", ent, ent, classname)
 				end
 			end
+		end
+	end
+
+	if #UnlockedClasses > 0 then
+		for _, pl in pairs(player.GetAll()) do
+			local classnames = {}
+			for __, classid in pairs(UnlockedClasses) do
+				table.insert(classnames, translate.ClientGet(pl, self.ZombieClasses[classid].TranslationName))
+			end
+			net.Start("zs_classunlock")
+				net.WriteString(string.AndSeparate(classnames))
+			net.Send(pl)
 		end
 	end
 end
@@ -3526,6 +3574,7 @@ function GM:WaveStateChanged(newstate)
 							ent:Spawn()
 							ent:DropToFloor()
 							ent:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER) -- Just so no one gets stuck in it.
+							ent.NoTakeOwnership = true
 						end
 					end
 				end
@@ -3703,7 +3752,8 @@ end
 concommand.Add("zs_class", function(sender, command, arguments)
 	if sender:Team() ~= TEAM_UNDEAD or sender.Revive or GAMEMODE.PantsMode or GAMEMODE:IsClassicMode() or GAMEMODE:IsBabyMode() or GAMEMODE.ZombieEscape then return end
 
-	local classname = table.concat(arguments, " ")
+	local classname = arguments[1]
+	local suicide = arguments[2] == "1"
 	local classtab = GAMEMODE.ZombieClasses[classname]
 	if not classtab or classtab.Hidden and not (classtab.CanUse and classtab:CanUse(sender)) then return end
 
@@ -3715,7 +3765,7 @@ concommand.Add("zs_class", function(sender, command, arguments)
 		sender.DeathClass = classtab.Index
 		sender:CenterNotify(translate.ClientFormat(sender, "you_will_spawn_as_a_x", translate.ClientGet(sender, classtab.TranslationName)))
 
-		if sender:Alive() and not sender:GetZombieClassTable().Boss and gamemode.Call("CanPlayerSuicide", sender) then
+		if suicide and sender:Alive() and not sender:GetZombieClassTable().Boss and gamemode.Call("CanPlayerSuicide", sender) then
 			sender:Kill()
 		end
 	end
