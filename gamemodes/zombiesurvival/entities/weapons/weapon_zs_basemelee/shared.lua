@@ -44,7 +44,7 @@ SWEP.SwingOffset = Vector(0, 0, 0)
 
 function SWEP:Initialize()
 	self:SetDeploySpeed(1.1)
-	self:SetWeaponHoldType(self.HoldType)
+	self:SetHoldType(self.HoldType)
 	self:SetWeaponSwingHoldType(self.SwingHoldType)
 
 	if CLIENT then
@@ -54,7 +54,7 @@ end
 
 function SWEP:SetWeaponSwingHoldType(t)
 	local old = self.ActivityTranslate
-	self:SetWeaponHoldType(t)
+	self:SetHoldType(t)
 	local new = self.ActivityTranslate
 	self.ActivityTranslate = old
 	self.ActivityTranslateSwing = new
@@ -195,7 +195,6 @@ function SWEP:MeleeSwing()
 				dmginfo:SetAttacker(owner)
 				dmginfo:SetInflictor(self)
 				dmginfo:SetDamageType(self.DamageType)
-				dmginfo:SetDamageForce(self.MeleeDamage * 20 * owner:GetAimVector())
 				if hitent:IsPlayer() then
 					hitent:MeleeViewPunch(damage)
 					if hitent:IsHeadcrab() then
@@ -206,6 +205,9 @@ function SWEP:MeleeSwing()
 
 					if self.MeleeKnockBack > 0 then
 						hitent:ThrowFromPositionSetZ(tr.HitPos, self.MeleeKnockBack, nil, true)
+					end
+					if hitent:IsPlayer() and hitent:WouldDieFrom(damage, dmginfo:GetDamagePosition()) then
+						dmginfo:SetDamageForce(math.min(self.MeleeDamage, 50) * 400 * owner:GetAimVector())
 					end
 				end
 
