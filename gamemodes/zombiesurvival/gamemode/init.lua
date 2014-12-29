@@ -70,6 +70,7 @@ AddCSLuaFile("vgui/dammocounter.lua")
 AddCSLuaFile("vgui/dpingmeter.lua")
 AddCSLuaFile("vgui/dteamheading.lua")
 AddCSLuaFile("vgui/dsidemenu.lua")
+AddCSLuaFile("vgui/dmodelkillicon.lua")
 
 AddCSLuaFile("vgui/dexroundedpanel.lua")
 AddCSLuaFile("vgui/dexroundedframe.lua")
@@ -158,8 +159,8 @@ function GM:TryHumanPickup(pl, entity)
 	if self.ZombieEscape or pl.NoObjectPickup then return end
 
 	if entity:IsValid() and not entity.m_NoPickup then
-		local entclass = entity:GetClass()
-		if (string.sub(entclass, 1, 12) == "prop_physics" or entclass == "func_physbox" or entity.HumanHoldable and entity:HumanHoldable(pl)) and pl:Team() == TEAM_HUMAN and not entity:IsNailed() and pl:Alive() and entity:GetMoveType() == MOVETYPE_VPHYSICS and entity:GetPhysicsObject():IsValid() and entity:GetPhysicsObject():GetMass() <= CARRY_MAXIMUM_MASS and entity:GetPhysicsObject():IsMoveable() and entity:OBBMins():Length() + entity:OBBMaxs():Length() <= CARRY_MAXIMUM_VOLUME then
+		local entclass = string.sub(entity:GetClass(), 1, 12)
+		if (entclass == "prop_physics" or entclass == "func_physbox" or entity.HumanHoldable and entity:HumanHoldable(pl)) and pl:Team() == TEAM_HUMAN and not entity:IsNailed() and pl:Alive() and entity:GetMoveType() == MOVETYPE_VPHYSICS and entity:GetPhysicsObject():IsValid() and entity:GetPhysicsObject():GetMass() <= CARRY_MAXIMUM_MASS and entity:GetPhysicsObject():IsMoveable() and entity:OBBMins():Length() + entity:OBBMaxs():Length() <= CARRY_MAXIMUM_VOLUME then
 			local holder, status = entity:GetHolder()
 			if not holder and not pl:IsHolding() and CurTime() >= (pl.NextHold or 0)
 			and pl:GetShootPos():Distance(entity:NearestPoint(pl:GetShootPos())) <= 64 and pl:GetGroundEntity() ~= entity then
@@ -353,6 +354,7 @@ function GM:Initialize()
 	self:SetPantsMode(self.PantsMode, true)
 	self:SetClassicMode(self:IsClassicMode(), true)
 	self:SetBabyMode(self:IsBabyMode(), true)
+	self:SetRedeemBrains(self.DefaultRedeem)
 
 	local mapname = string.lower(game.GetMap())
 	if string.find(mapname, "_obj_", 1, true) or string.find(mapname, "objective", 1, true) then
@@ -599,19 +601,21 @@ end
 
 function GM:ReplaceMapWeapons()
 	for _, ent in pairs(ents.FindByClass("weapon_*")) do
-		if string.sub(ent:GetClass(), 1, 10) == "weapon_zs_" then
-			local wep = ents.Create("prop_weapon")
-			if wep:IsValid() then
-				wep:SetPos(ent:GetPos())
-				wep:SetAngles(ent:GetAngles())
-				wep:SetWeaponType(ent:GetClass())
-				wep:SetShouldRemoveAmmo(false)
-				wep:Spawn()
-				wep.IsPreplaced = true
+		local wepclass = ent:GetClass()
+		if wepclass ~= "weapon_map_base" then
+			if string.sub(wepclass, 1, 10) == "weapon_zs_" then
+				local wep = ents.Create("prop_weapon")
+				if wep:IsValid() then
+					wep:SetPos(ent:GetPos())
+					wep:SetAngles(ent:GetAngles())
+					wep:SetWeaponType(ent:GetClass())
+					wep:SetShouldRemoveAmmo(false)
+					wep:Spawn()
+					wep.IsPreplaced = true
+				end
 			end
+			ent:Remove()
 		end
-
-		ent:Remove()
 	end
 end
 
@@ -718,7 +722,7 @@ function GM:PlayerSelectSpawn(pl)
 	if pl.m_PreRedeem and teamid == TEAM_HUMAN and #self.RedeemSpawnPoints >= 1 then
 		tab = self.RedeemSpawnPoints
 	elseif teamid == TEAM_UNDEAD then
-		if pl:GetZombieClassTable().Boss and #self.BossSpawnPoints >= 1 then
+		if pl:GetZombieClassTable().Boss and (not pl.DeathClass or self.ZombieClasses[pl.DeathClass].Boss) and #self.BossSpawnPoints >= 1 then
 			tab = self.BossSpawnPoints
 		elseif self.DynamicSpawning --[[and CurTime() >= self:GetWaveStart() + 1]] then -- If we're a bit in the wave then we can spawn on top of heavily dense groups with no humans looking at us.
 			if self:ShouldUseAlternateDynamicSpawn() then
@@ -1530,6 +1534,8 @@ function GM:PlayerInitialSpawnRound(pl)
 
 	pl.BonusDamageCheck = 0
 
+	pl.LegDamage = 0
+
 	pl.DamageDealt = {}
 	pl.DamageDealt[TEAM_UNDEAD] = 0
 	pl.DamageDealt[TEAM_HUMAN] = 0
@@ -2339,7 +2345,7 @@ function GM:EntityTakeDamage(ent, dmginfo)
 				end
 			end
 		end
-	elseif entclass == "func_physbox" then
+	elseif string.sub(entclass, 1, 12) == "func_physbox" then
 		local holder, status = ent:GetHolder()
 		if holder then status:Remove() end
 
@@ -3463,22 +3469,24 @@ function GM:PlayerSpawn(pl)
 		pl:SetNoTarget(false)
 		pl:SetMaxHealth(100)
 
-		pl:Give("weapon_zs_fists")
-
 		if self.ZombieEscape then
 			pl:Give("weapon_zs_zeknife")
 			pl:Give("weapon_zs_zegrenade")
 			pl:Give(table.Random(self.ZombieEscapeWeapons))
-		elseif self.StartingLoadout then
-			self:GiveStartingLoadout(pl)
-		elseif pl.m_PreRedeem then
-			if self.RedeemLoadout then
-				for _, class in pairs(self.RedeemLoadout) do
-					pl:Give(class)
+		else
+			pl:Give("weapon_zs_fists")
+			
+			if self.StartingLoadout then
+				self:GiveStartingLoadout(pl)
+			elseif pl.m_PreRedeem then
+				if self.RedeemLoadout then
+					for _, class in pairs(self.RedeemLoadout) do
+						pl:Give(class)
+					end
+				else
+					pl:Give("weapon_zs_redeemers")
+					pl:Give("weapon_zs_swissarmyknife")
 				end
-			else
-				pl:Give("weapon_zs_redeemers")
-				pl:Give("weapon_zs_swissarmyknife")
 			end
 		end
 

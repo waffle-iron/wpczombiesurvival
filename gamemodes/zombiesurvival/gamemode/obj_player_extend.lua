@@ -1,8 +1,6 @@
 local meta = FindMetaTable("Player")
 if not meta then return end
 
-meta.GetTeamID = meta.Team
-
 function meta:GetMaxHealthEx()
 	if self:Team() == TEAM_UNDEAD then
 		return self:GetMaxZombieHealth()
@@ -143,10 +141,6 @@ function meta:SetZombieClassName(classname)
 	end
 end
 
-function meta:AddLegDamage(damage)
-	self:SetLegDamage(self:GetLegDamage() + damage)
-end
-
 function meta:SetPoints(points)
 	self:SetDTInt(1, points)
 end
@@ -203,6 +197,10 @@ function meta:GetUnlucky()
 	return self.m_Unlucky
 end
 
+function meta:AddLegDamage(damage)
+	self:SetLegDamage(self:GetLegDamage() + damage)
+end
+
 function meta:SetLegDamage(damage)
 	self.LegDamage = CurTime() + math.min(GAMEMODE.MaxLegDamage, damage * 0.125)
 	if SERVER then
@@ -222,8 +220,7 @@ function meta:RawCapLegDamage(time)
 end
 
 function meta:GetLegDamage()
-	local base = self.LegDamage or 0
-	return math.max(0, base - CurTime())
+	return math.max(0, (self.LegDamage or 0) - CurTime())
 end
 
 function meta:WouldDieFrom(damage, hitpos)

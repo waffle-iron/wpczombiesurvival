@@ -20,6 +20,7 @@ include("vgui/dteamcounter.lua")
 include("vgui/dmodelpanelex.lua")
 include("vgui/dammocounter.lua")
 include("vgui/dteamheading.lua")
+include("vgui/dmodelkillicon.lua")
 
 include("vgui/dexroundedpanel.lua")
 include("vgui/dexroundedframe.lua")
@@ -379,6 +380,8 @@ function GM:LocalPlayerFound()
 	self.InputMouseApply = self._InputMouseApply
 	self.GUIMousePressed = self._GUIMousePressed
 	self.HUDWeaponPickedUp = self._HUDWeaponPickedUp
+
+	LocalPlayer().LegDamage = 0
 
 	if render.GetDXLevel() >= 80 then
 		self.RenderScreenspaceEffects = self._RenderScreenspaceEffects
@@ -1019,22 +1022,6 @@ end
 function GM:PlayerDeath(pl, attacker)
 end
 
-function GM:OnPlayerHitGround(pl, inwater, hitfloater, speed)
-	if inwater then return true end
-
-	if pl:Team() == TEAM_UNDEAD then
-		if pl:GetZombieClassTable().NoFallDamage then return true end
-
-		speed = math.max(0, speed - 200)
-	end
-
-	if pl:Team() ~= TEAM_UNDEAD or not pl:GetZombieClassTable().NoFallSlowdown then
-		pl:RawCapLegDamage(CurTime() + math.min(2, speed * 0.0035))
-	end
-
-	return true
-end
-
 function GM:LastHuman(pl)
 	if not IsValid(pl) then pl = nil end
 
@@ -1239,17 +1226,43 @@ function GM:CalcViewTaunt(pl, origin, angles, fov, zclose, zfar)
 end
 
 local staggerdir = VectorRand():GetNormalized()
+local BHopTime = 0
+local WasPressingJump = false
+
+local function PressingJump(cmd)
+	return bit.band(cmd:GetButtons(), IN_JUMP) ~= 0
+end
+
+local function DontPressJump(cmd)
+	cmd:SetButtons(cmd:GetButtons() - IN_JUMP)
+end
+
 function GM:_CreateMove(cmd)
 	if MySelf:IsPlayingTaunt() and MySelf:Alive() then
 		self:CreateMoveTaunt(cmd)
 		return
 	end
 
+	-- Disables bunny hopping to an extent.
 	if MySelf:GetLegDamage() >= 0.5 then
-		local buttons = cmd:GetButtons()
-		if bit.band(buttons, IN_JUMP) ~= 0 then
-			cmd:SetButtons(buttons - IN_JUMP)
+		if PressingJump(cmd) then
+			DontPressJump(cmd)
 		end
+	elseif MySelf:OnGround() then
+		if CurTime() < BHopTime then
+			if PressingJump(cmd) then
+				DontPressJump(cmd)
+				WasPressingJump = true
+			end
+		elseif WasPressingJump then
+			if PressingJump(cmd) then
+				DontPressJump(cmd)
+			else
+				WasPressingJump = false
+			end
+		end
+	else
+		BHopTime = CurTime() + 0.065
 	end
 
 	if MySelf:Team() == TEAM_HUMAN then

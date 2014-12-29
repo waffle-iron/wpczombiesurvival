@@ -5,6 +5,10 @@ function ENT:Initialize()
 
 	if self.On == nil then self.On = true end
 	if self.InstantChange == nil then self.InstantChange = true end
+	if self.OnlyWhenClass == nil then 
+		self.OnlyWhenClass = {} 
+		self.OnlyWhenClass[1] = -1 
+	end
 end
 
 function ENT:Think()
@@ -21,7 +25,7 @@ function ENT:AcceptInput(name, caller, activator, arg)
 	elseif name == "disable" then
 		self.On = false
 		return true
-	elseif name == "settouchclass" or name == "setendtouchclass" or name == "settouchdeathclass" or name == "setendtouchdeathclass" or name == "setonetime" or name == "setinstantchange" then
+	elseif name == "settouchclass" or name == "setendtouchclass" or name == "settouchdeathclass" or name == "setendtouchdeathclass" or name == "setonetime" or name == "setinstantchange" or name == "setonlywhenclass" then
 		self:KeyValue(string.sub(name, 4), arg)
 	end
 end
@@ -32,6 +36,21 @@ function ENT:KeyValue(key, value)
 		self.On = tonumber(value) == 1
 	elseif key == "touchclass" then
 		self.TouchClass = string.lower(value)
+	elseif key == "onlywhenclass" then
+		self.OnlyWhenClass = {}
+		if value == "disabled" then 
+			self.OnlyWhenClass[1] = -1
+		else
+			self.OnlyWhenClass[1] = -1
+			for i, allowed_class in pairs(string.Explode(",", string.lower(value))) do
+				for k, v in ipairs(GAMEMODE.ZombieClasses) do
+					if string.lower(v.Name) == allowed_class then
+						self.OnlyWhenClass[i] = k
+						break
+					end
+				end
+			end
+		end
 	elseif key == "endtouchclass" then
 		self.EndTouchClass = string.lower(value)
 	elseif key == "touchdeathclass" then
@@ -51,19 +70,20 @@ function ENT:DoTouch(ent, class_name, death_class_name)
 			for k, v in ipairs(GAMEMODE.ZombieClasses) do
 				if string.lower(v.Name) == class_name then
 					local prev = ent:GetZombieClass()
-					local prevpos = ent:GetPos()
-					local prevang = ent:EyeAngles()
-					ent:SetZombieClass(k)
-					ent.DidntSpawnOnSpawnPoint = true
-					ent:UnSpectateAndSpawn()
-					if self.OneTime then
-						ent.DeathClass = prev
+					if table.HasValue( self.OnlyWhenClass, prev ) or self.OnlyWhenClass[1] == -1 then
+						local prevpos = ent:GetPos()
+						local prevang = ent:EyeAngles()
+						ent:SetZombieClass(k)
+						ent.DidntSpawnOnSpawnPoint = true
+						ent:UnSpectateAndSpawn()
+						if self.OneTime then
+							ent.DeathClass = prev
+						end
+						if self.InstantChange then
+							ent:SetPos(prevpos)
+							ent:SetEyeAngles(prevang)
+						end
 					end
-					if self.InstantChange then
-						ent:SetPos(prevpos)
-						ent:SetEyeAngles(prevang)
-					end
-
 					break
 				end
 			end

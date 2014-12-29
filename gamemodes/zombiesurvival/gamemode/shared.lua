@@ -390,32 +390,32 @@ function GM:OnPlayerHitGround(pl, inwater, hitfloater, speed)
 
     local isundead = pl:Team() == TEAM_UNDEAD
 
-    if isundead then
-        if pl:GetZombieClassTable().NoFallDamage then return true end
-    else
-        pl:PreventSkyCade()
-    end
+	if isundead then
+		if pl:GetZombieClassTable().NoFallDamage then return true end
+	elseif SERVER then
+		pl:PreventSkyCade()
+	end
 
-    if not isundead or not pl:GetZombieClassTable().NoFallSlowdown then
-        pl:RawCapLegDamage(CurTime() + math.min(2, speed * 0.0035))
-    end
+	if isundead then
+		speed = math.max(0, speed - 200)
+	end
 
-    if SERVER then
-        if isundead then
-            speed = math.max(0, speed - 200)
-        end
+	local damage = (0.1 * (speed - 525)) ^ 1.45
+	if hitfloater then damage = damage / 2 end
 
-        local damage = (0.1 * (speed - 525)) ^ 1.45
-        if hitfloater then damage = damage / 2 end
+	if math.floor(damage) > 0 then
+		if damage >= 5 and (not isundead or not pl:GetZombieClassTable().NoFallSlowdown) then
+			pl:RawCapLegDamage(CurTime() + math.min(2, damage * 0.038))
+		end
 
-        if math.floor(damage) > 0 then
-            if 20 <= damage and damage < pl:Health() then
-                pl:KnockDown(damage * 0.05)
-            end
-            pl:TakeSpecialDamage(damage, DMG_FALL, game.GetWorld(), game.GetWorld(), pl:GetPos())
-            pl:EmitSound("player/pl_fallpain"..(math.random(2) == 1 and 3 or 1)..".wav")
-        end
-    end
+		if SERVER then
+			if damage >= 30 and damage < pl:Health() then
+				pl:KnockDown(damage * 0.05)
+			end
+			pl:TakeSpecialDamage(damage, DMG_FALL, game.GetWorld(), game.GetWorld(), pl:GetPos())
+			pl:EmitSound("player/pl_fallpain"..(math.random(2) == 1 and 3 or 1)..".wav")
+		end
+	end
 
     return true
 end
@@ -457,9 +457,9 @@ function GM:ScalePlayerDamage(pl, hitgroup, dmginfo)
         end
     end
 
-    if (hitgroup == HITGROUP_LEFTLEG or hitgroup == HITGROUP_RIGHTLEG) and self:PlayerShouldTakeDamage(pl, dmginfo:GetAttacker()) then
-        pl:AddLegDamage(dmginfo:GetDamage())
-    end
+	if SERVER and (hitgroup == HITGROUP_LEFTLEG or hitgroup == HITGROUP_RIGHTLEG) and self:PlayerShouldTakeDamage(pl, dmginfo:GetAttacker()) then
+		pl:AddLegDamage(dmginfo:GetDamage())
+	end
 end
 
 function GM:CanDamageNail(ent, attacker, inflictor, damage, dmginfo)
@@ -471,7 +471,11 @@ function GM:CanPlaceNail(pl, tr)
 end
 
 function GM:CanRemoveNail(pl, nail)
-    return true
+	if nail.m_NailUnremovable then 
+		return false 
+	else
+		return true
+	end
 end
 
 function GM:GetDamageResistance(fearpower)
