@@ -429,7 +429,7 @@ function GM:PlayerCanPurchase(pl)
 end
 
 function GM:PlayerCanHearPlayersVoice(listener, talker)
-    return listener:Team() == talker:Team()
+    return listener:IsValid() and talker:IsValid() and listener:Team() == talker:Team()
 end
 
 function GM:PlayerTraceAttack(pl, dmginfo, dir, trace)
