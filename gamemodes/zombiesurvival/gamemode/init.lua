@@ -248,7 +248,6 @@ function GM:AddResources()
 	resource.AddFile("materials/models/weapons/v_fza/fast_zombie_sheet.vmt")
 	resource.AddFile("materials/models/weapons/v_fza/fast_zombie_sheet.vtf")
 	resource.AddFile("materials/models/weapons/v_fza/fast_zombie_sheet_normal.vtf")
-	resource.AddFile("models/weapons/v_annabelle.mdl")
 	resource.AddFile("materials/models/weapons/w_annabelle/gun.vtf")
 	resource.AddFile("materials/models/weapons/sledge.vtf")
 	resource.AddFile("materials/models/weapons/sledge.vmt")
@@ -259,11 +258,7 @@ function GM:AddResources()
 	resource.AddFile("materials/models/weapons/hammer.vtf")
 	resource.AddFile("materials/models/weapons/hammer.vmt")
 	resource.AddFile("models/weapons/w_sledgehammer.mdl")
-	resource.AddFile("models/weapons/v_sledgehammer/v_sledgehammer.mdl")
 	resource.AddFile("models/weapons/w_hammer.mdl")
-	resource.AddFile("models/weapons/v_hammer/v_hammer.mdl")
-
-	resource.AddFile("models/weapons/v_aegiskit.mdl")
 
 	resource.AddFile("materials/models/weapons/v_hand/armtexture.vmt")
 
@@ -1987,6 +1982,53 @@ concommand.Add("zs_pointsshopbuy", function(sender, command, arguments)
 				end
 			end
 		end
+	end
+end)
+
+concommand.Add("zs_pointsshopsell", function(sender, command, arguments)
+	if not (sender:IsValid() and sender:IsConnected()) or #arguments == 0 then return end
+
+	if sender:GetUnlucky() then
+		sender:CenterNotify(COLOR_RED, translate.ClientGet(sender, "banned_for_life_warning"))
+		sender:SendLua("surface.PlaySound(\"buttons/button10.wav\")")
+		return
+	end
+
+	if not sender:NearArsenalCrate() then
+		sender:CenterNotify(COLOR_RED, translate.ClientGet(sender, "need_to_be_near_arsenal_crate"))
+		sender:SendLua("surface.PlaySound(\"buttons/button10.wav\")")
+		return
+	end
+
+	local itemtab
+	local id = arguments[1]
+	local num = tonumber(id)
+	if num then
+		itemtab = GAMEMODE.Items[num]
+	else
+		for i, tab in pairs(GAMEMODE.Items) do
+			if tab.Signature == id then
+				itemtab = tab
+				break
+			end
+		end
+	end
+
+	if not itemtab then return end
+
+	if itemtab.SWEP then
+		if not sender:HasWeapon(itemtab.SWEP) then
+			sender:CenterNotify(COLOR_RED, translate.ClientFormat(sender, "dont_have_weapon_x", itemtab.Name))
+			sender:SendLua("surface.PlaySound(\"buttons/button10.wav\")")
+			return
+		end
+		
+		cost = math.ceil(itemtab.Worth/6)
+	
+		sender:StripWeapon(itemtab.SWEP)
+		sender:AddPoints(cost)
+		sender:PrintTranslatedMessage(HUD_PRINTTALK, "sold_x_for_y_points", itemtab.Name, cost)
+		sender:SendLua("surface.PlaySound(\"ambient/levels/labs/coinslot1.wav\")")
 	end
 end)
 

@@ -83,7 +83,7 @@ hook.Add("PlayerPointsRemoved","PointSave.Remove", function(ply, points)
 	end)
 end)
 
-hook.Add("PostEndRound", "PostEndRound.Percentage", function(winner)
+hook.Add("EndRound", "EndRound.Percentage", function(winner)
 	local mapname = game.GetMap()
 	local pct = 0
 	
@@ -116,10 +116,11 @@ hook.Add("PostEndRound", "PostEndRound.Percentage", function(winner)
 			mapData.losses = mapData.losses + 1
 		end
 		
-		mapData.numPlayed = mapstuff.numPlayed + 1
+		mapData.numPlayed = mapData.numPlayed + 1
 		
 		pct = 100 * mapData.wins / (mapData.wins+mapData.losses)
 		mapData:save()
+		
+		PrintMessage( HUD_PRINTTALK, string.format("[green]This map has been played [teal]%d [green] times and humans have won [red]%d%% [green]of the time", mapData.numPlayed, math.Round(pct)))
 	end)
-	PrintMessage( HUD_PRINTTALK, string.format("[green]This map has been played [cyan]%d [green]number of times and humans have won [red]%d%% [green]of the time", mapData.numPlayed, math.Round(pct)))
 end)

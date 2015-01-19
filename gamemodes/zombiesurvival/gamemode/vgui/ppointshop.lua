@@ -67,6 +67,10 @@ local function PurchaseDoClick(self)
 	RunConsoleCommand("zs_pointsshopbuy", self.ID)
 end
 
+local function SellDoClick(self)
+	RunConsoleCommand("zs_pointsshopsell", self.ID)
+end
+
 local function BuyAmmoDoClick(self)
 	RunConsoleCommand("zs_pointsshopbuy", "ps_"..self.AmmoType)
 end
@@ -248,11 +252,22 @@ function GM:OpenPointsShop()
 					local pricelab = EasyLabel(itempan, tostring(tab.Worth).." Points", "ZSHUDFontTiny")
 					pricelab:SetPos(itempan:GetWide() - 20 - pricelab:GetWide(), 4)
 					itempan.m_PriceLabel = pricelab
+					
+					local points = math.ceil(tab.Worth/6)
+					local sellbutton = vgui.Create("DImageButton", itempan)
+					sellbutton:SetImage("icon16/exclamation.png")
+					sellbutton:SizeToContents()
+					sellbutton:SetPos(itempan:GetWide() - 20 - sellbutton:GetWide(), itempan:GetTall() - 20)
+					sellbutton:SetTooltip("Sell "..name.."for "..points.." points")
+					sellbutton.ID = itempan.ID
+					sellbutton.DoClick = SellDoClick
+					itempan.m_SellButton = sellbutton
 
 					local button = vgui.Create("DImageButton", itempan)
 					button:SetImage("icon16/lorry_add.png")
 					button:SizeToContents()
-					button:SetPos(itempan:GetWide() - 20 - button:GetWide(), itempan:GetTall() - 20)
+					button:CopyPos(sellbutton)
+					button:MoveLeftOf(sellbutton, 2)
 					button:SetTooltip("Purchase "..name)
 					button.ID = itempan.ID
 					button.DoClick = PurchaseDoClick

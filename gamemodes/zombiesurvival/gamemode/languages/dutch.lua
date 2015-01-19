@@ -108,6 +108,8 @@ LANGUAGE.manual_control								= "HANDMATIGE BESTURING"
 LANGUAGE.arsenal_crate								= "Arsenaal Krat"
 LANGUAGE.not_unlocked_yet_unlocked_on_x				= "Dat wapen is nog niet ontgrendeld. Het zal worden ontgrendeld begin wave %d."
 LANGUAGE.weapon_tier_x								= "Wapen tier %d ontgrendeld."
+LANGUAGE.dont_have_weapon_x							= "Niet kan verkopen, heb je niet een hebt %s"
+LANGUAGE.sold_x_for_y_points						= "Verkocht %s voor %d punten!"
 
 -- Exit point objectives
 LANGUAGE.exit_destroyed								= "De zombies hebben een uitgang vernietigd!"

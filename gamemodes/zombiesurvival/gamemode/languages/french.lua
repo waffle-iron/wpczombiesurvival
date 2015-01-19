@@ -109,6 +109,8 @@ LANGUAGE.manual_control                                                         
 LANGUAGE.arsenal_crate                                                          = "Caisse d'armes"
 LANGUAGE.not_unlocked_yet_unlocked_on_x											= "Cette arme n'est pas encore déverrouillé. Il sera déverrouillé au début de la vague %d."
 LANGUAGE.weapon_tier_x															= "Arme niveau %d déverrouillé."
+LANGUAGE.dont_have_weapon_x														= "Vous ne pouvez pas vendre, vous ne avez pas de %s"
+LANGUAGE.sold_x_for_y_points													= "Vendu %s pour les points de %d!"
  
 -- Exit point objectives
 LANGUAGE.exit_destroyed                                                         = "Les zombies ont détruit une sortie!"

@@ -109,7 +109,9 @@ translate.AddLanguage("it", "Italian")
     LANGUAGE.manual_control                                         = "CONTROLLO MANUALE"
     LANGUAGE.arsenal_crate                                          = "Cassa dell'arsenale"
 	LANGUAGE.not_unlocked_yet_unlocked_on_x							= "Tale arma non è ancora sbloccato. Sarà sbloccato all'inizio di onda %d."
-     LANGUAGE.weapon_tier_x											= "Tier Arma %d sbloccato."
+    LANGUAGE.weapon_tier_x											= "Tier Arma %d sbloccato."
+	LANGUAGE.dont_have_weapon_x										= "Non può vendere, non si dispone di un %s"
+	LANGUAGE.sold_x_for_y_points									= "Venduto %s per %d punti!"
      
     -- Exit point objectives
     LANGUAGE.exit_destroyed                                         = "I non-morti hanno bloccato un'uscita!"

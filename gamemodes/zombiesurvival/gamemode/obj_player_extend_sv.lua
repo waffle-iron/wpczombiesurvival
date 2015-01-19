@@ -1,6 +1,8 @@
 local meta = FindMetaTable("Player")
 if not meta then return end
 
+local bUsedC4 = false
+
 function meta:FakeDeath(sequenceid, modelscale, length)
 	for _, ent in pairs(ents.FindByClass("fakedeath")) do
 		if ent:GetOwner() == self then

@@ -172,7 +172,7 @@ function GM:ShowHelp()
 	but:DockMargin(0, 0, 0, 12)
 	but:DockPadding(0, 12, 0, 12)
 	but:Dock(TOP)
-	but.DoClick = function() MakepLifeOptions() end
+	but.DoClick = function() Life_OpenMenu() end
 
 	local but = vgui.Create("DButton", menu)
 	but:SetFont("ZSHUDFontSmaller")

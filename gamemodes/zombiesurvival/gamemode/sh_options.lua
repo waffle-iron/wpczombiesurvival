@@ -26,6 +26,7 @@ GM.WeaponWaves["weapon_zs_sweepershotgun"] = 6
 GM.WeaponWaves["weapon_zs_boomstick"] = 6
 GM.WeaponWaves["weapon_zs_slugrifle"] = 6
 GM.WeaponWaves["weapon_zs_pulserifle"] = 6
+GM.WeaponWaves["weapon_zs_m249"] = 6
 
 -- Change this if you plan to alter the cost of items or you severely change how Worth works.
 -- Having separate cart files allows people to have separate loadouts for different servers.
@@ -250,6 +251,7 @@ GM:AddPointShopItem("sweeper", "'Sweeper' Shotgun", nil, ITEMCAT_GUNS, 200, "wea
 GM:AddPointShopItem("boomstick", "Boom Stick", nil, ITEMCAT_GUNS, 200, "weapon_zs_boomstick")
 GM:AddPointShopItem("slugrifle", "'Tiny' Slug Rifle", nil, ITEMCAT_GUNS, 200, "weapon_zs_slugrifle")
 GM:AddPointShopItem("pulserifle", "'Adonis' Pulse Rifle", nil, ITEMCAT_GUNS, 225, "weapon_zs_pulserifle")
+GM:AddPointShopItem("grimreaper", "'Grim Reaper' Machince Gun", nil, ITEMCAT_GUNS, 300, "weapon_zs_m249")
 
 GM:AddPointShopItem("pistolammo", "pistol ammo box", nil, ITEMCAT_AMMO, 7, nil, function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["pistol"] or 12, "pistol", true) end, "models/Items/BoxSRounds.mdl")
 GM:AddPointShopItem("shotgunammo", "shotgun ammo box", nil, ITEMCAT_AMMO, 7, nil, function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["buckshot"] or 8, "buckshot", true) end, "models/Items/BoxBuckshot.mdl")
@@ -265,6 +267,7 @@ GM:AddPointShopItem("stunbaton", "Stun Baton", nil, ITEMCAT_MELEE, 25, "weapon_z
 GM:AddPointShopItem("knife", "Knife", nil, ITEMCAT_MELEE, 5, "weapon_zs_swissarmyknife")
 GM:AddPointShopItem("shovel", "Shovel", nil, ITEMCAT_MELEE, 30, "weapon_zs_shovel")
 GM:AddPointShopItem("sledgehammer", "Sledge Hammer", nil, ITEMCAT_MELEE, 30, "weapon_zs_sledgehammer")
+GM:AddPointShopItem("katana", "'Slicer' Katana", nil, ITEMCAT_MELEE, 50, "weapon_zs_katana")
 
 GM:AddPointShopItem("crphmr", "Carpenter's Hammer", nil, ITEMCAT_TOOLS, 50, "weapon_zs_hammer").NoClassicMode = true
 GM:AddPointShopItem("wrench", "Mechanic's Wrench", nil, ITEMCAT_TOOLS, 25, "weapon_zs_wrench").NoClassicMode = true
@@ -283,6 +286,7 @@ GM:AddPointShopItem("50mkit", "50 Medical Kit power", "50 extra power for the Me
 
 GM:AddPointShopItem("grenade", "Grenade", nil, ITEMCAT_OTHER, 60, "weapon_zs_grenade")
 GM:AddPointShopItem("detpck", "Detonation Pack", nil, ITEMCAT_OTHER, 70, "weapon_zs_detpack")
+GM:AddPointShopItem("suicidebmb", "Suicide Bomb", nil, ITEMCAT_OTHER, 150, "weapon_zs_c4")
 
 
 -- These are the honorable mentions that come at the end of the round.

@@ -109,6 +109,8 @@ LANGUAGE.manual_control								= "MANUELLE KONTROLLE"
 LANGUAGE.arsenal_crate								= "Arsenal Crate"
 LANGUAGE.not_unlocked_yet_unlocked_on_x				= "Diese Waffe ist noch nicht freigeschaltet. Es wird zu Beginn der Wellen entriegelt %d."
 LANGUAGE.weapon_tier_x								= "Waffe Stufe %d entriegelt."
+LANGUAGE.dont_have_weapon_x							= "Nicht verkaufen können, müssen Sie nicht ein %s"
+LANGUAGE.sold_x_for_y_points						= "Verkauft %s für %d Punkte!"
 
 -- Exit point objectives
 LANGUAGE.exit_destroyed								= "Die Untoten haben einen Ausgang zerstört!"

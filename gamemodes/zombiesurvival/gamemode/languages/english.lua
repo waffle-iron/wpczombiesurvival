@@ -139,6 +139,8 @@ LANGUAGE.x_has_built_this_nest_and_is_still_around	= "%s has built this nest and
 LANGUAGE.no_other_nests								= "You can't destroy a nest if only one remains."
 LANGUAGE.not_unlocked_yet_unlocked_on_x				= "That weapon is not unlocked yet. It will be unlocked at the start of wave %d."
 LANGUAGE.weapon_tier_x								= "Weapon tier %d unlocked."
+LANGUAGE.dont_have_weapon_x							= "Can't sell, you do not have a %s"
+LANGUAGE.sold_x_for_y_points						= "Sold %s for %d points!"
 
 -- Sigils point objectives
 LANGUAGE.sigil_destroyed							= "The Undead have destroyed a Sigil!"

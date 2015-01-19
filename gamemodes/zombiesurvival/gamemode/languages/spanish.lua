@@ -108,6 +108,8 @@ LANGUAGE.manual_control	= "CONTROL MANUAL"
 LANGUAGE.arsenal_crate = "Cajón de Arsenal"
 LANGUAGE.not_unlocked_yet_unlocked_on_x	= "Esa arma aún no se desbloquea. Se desbloquea en el inicio de la onda %d."
 LANGUAGE.weapon_tier_x = "Tier Arma %d desbloqueado."
+LANGUAGE.dont_have_weapon_x = "No se puede vender, no tiene un %s"
+LANGUAGE.sold_x_for_y_points = "Vendido %s para los puntos de %d!"
 
 -- Exit point objectives
 LANGUAGE.exit_destroyed = "Los muertos vivientes han destruido una salida!"

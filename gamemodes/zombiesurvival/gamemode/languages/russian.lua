@@ -109,6 +109,8 @@ LANGUAGE.manual_control								= "ИАНУАЛЬНОЕ УПРАВЛЕНИЕ"
 LANGUAGE.arsenal_crate								= "Арсенальный ящик"
 LANGUAGE.not_unlocked_yet_unlocked_on_x				= "Это оружие еще ​​не разблокирована. Это будет разблокирован в начале волны %d."
 LANGUAGE.weapon_tier_x								= "Оружие ярус %d разблокирован."
+LANGUAGE.dont_have_weapon_x							= "Не можете продать, вам не придется %s"
+LANGUAGE.sold_x_for_y_points						= "Продается %s для %d очков!"
 
 -- Exit point objectives
 LANGUAGE.exit_destroyed								= "Зараженные уничтожили какой-то выход!"

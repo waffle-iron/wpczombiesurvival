@@ -109,6 +109,8 @@ LANGUAGE.manual_control								= "MANUAL KONTROL"
 LANGUAGE.arsenal_crate								= "Arsenal Kasse"
 LANGUAGE.not_unlocked_yet_unlocked_on_x				= "Det våben er ikke låst endnu. Det vil blive låst op ved starten af ​​bølge %d."
 LANGUAGE.weapon_tier_x								= "Våben tier %d ulåst."
+LANGUAGE.dont_have_weapon_x							= "Kan ikke sælge, har du ikke en %s"
+LANGUAGE.sold_x_for_y_points						= "Solgt %s for %d point!"
 
 -- Exit point objectives
 LANGUAGE.exit_destroyed								= "De udøde har nedbrudt udgangen!"

@@ -112,6 +112,8 @@ LANGUAGE.manual_control								= "수동 조작"
 LANGUAGE.arsenal_crate								= "상점 상자"
 LANGUAGE.not_unlocked_yet_unlocked_on_x				= "그 무기는 아직 해제되지 않습니다. 이것은 파의 시작에서 해제 될 %d."
 LANGUAGE.weapon_tier_x								= "무기 티어 %d 의 잠금을 해제."
+LANGUAGE.dont_have_weapon_x							= "판매 할 수 없습니다, 당신은이 없습니다 %s"
+LANGUAGE.sold_x_for_y_points						= "%d 개 지점에 대한 판매 %s 에!"
 
 -- Exit point objectives
 LANGUAGE.exit_destroyed								= "좀비들이 출구를 부쉈다!"
