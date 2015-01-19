@@ -473,12 +473,70 @@
 		"thumper"               : "Turrets"
 	]
 	amount(integer)  : "Amount" : 0 : "Amount of ammo that collecting this item gives"
+	neverremove(choices)  		        : "Never Remove" : 0 : "Never remove when used or damage, for repeated uses." =
+		[
+			0 : "No"
+			1 : "Yes"
+		]
+	ignorepickupcount(choices)          : "Ignore Pickup Counter" : 0 : "Set to ignore a maxpickupcounter, if any." =
+		[
+			0 : "No"
+			1 : "Yes"
+		]
+	ignoreuse(choices)          		: "Ignore Use" : 0 : "Set to disable being able to pickup via use key" =
+		[
+			0 : "No"
+			1 : "Yes"
+		]	
+	
+	// Inputs
+	input givetoactivator(void)         : "Forces the ammo onto the activator."
+	input setneverremove(integer)       : "Set to make infinite uses."
+	input setignorepickupcount(integer) : "Set to ignore any max pickup counter."
+	input setignoreuse(integer)         : "Set to disable being able to pickup via use key"
+	input setammotype(string)         	: "Set to change the ammo type of this entity."
+	
+	// Outputs
+	output OnPickupPassed(void)			: "Called when the ammo is given to the player."
+	output OnPickupFailed(void)			: "Called when the ammo is not given to the player"
 ]
 
 @PointClass studio("models/weapons/w_irifle.mdl") base(Targetname, Parentname, Angles) = prop_weapon  : "ZS: Game Specific Weapon."
 [
 	// Keys
-	weapontype(string) : "weapon_type" : "weapon_zs_m4" : "Weapon type this entity becomes"
+	weapontype(string)                  : "Weapon Type" : "weapon_zs_m4" : "Weapon type this entity becomes"
+	empty(choices)          		    : "Empty" : 0 : "Set to empty the weapon of any default ammo" =
+		[
+			0 : "No"
+			1 : "Yes"
+		]	
+	neverremove(choices)  		        : "Never Remove" : 0 : "Never remove when used or damage, for repeated uses." =
+		[
+			0 : "No"
+			1 : "Yes"
+		]
+	ignorepickupcount(choices)          : "Ignore Pickup Counter" : 0 : "Set to ignore a maxpickupcounter, if any." =
+		[
+			0 : "No"
+			1 : "Yes"
+		]
+	ignoreuse(choices)          		: "Ignore Use" : 0 : "Set to disable being able to pickup via use key" =
+		[
+			0 : "No"
+			1 : "Yes"
+		]
+		
+	// Inputs
+	input givetoactivator(void)         : "Forces the weapon onto the activator."
+	input setneverremove(integer)       : "Set to make infinite uses."
+	input setignorepickupcount(integer) : "Set to ignore any max pickup counter."
+	input setignoreuse(integer)         : "Set to disable being able to pickup via use key"
+	input setweapontype(string)         : "Set to change the weapon type of this entity."
+	input setempty(string)        		: "Set to empty the weapon of any default ammo."
+	
+	// Outputs
+	output OnPickupPassed(void)			: "Called when the weapon is given to the player."
+	output OnPickupFailed(void)			: "Called when the weapon is not given to the player"
 ]
 
 @PointClass base(Targetname, Parentname) sphere( range ) = point_worldhint : "ZS: Allows you to create 3D hints and information tags."
@@ -585,6 +643,13 @@
 		"private" : "Activator Only"
 		"all"     : "All"
 	]
+	displaytime(integer)                : "Display Time" : 8 : "How long the input message displays for, does not have an effect on HUD messages."
+	position(choices)					: "Message Position" : "center" : "Where the message is seen." =
+	[
+		"center" : "Center"
+		"top"    : "Top Right"
+	]
+	textcolor(color255)                 : "Text Colour" : "255 255 255" : "Sets the color of an input message."
 	
 	// Inputs
 	input message(string)               : "What to display. Supports the markup library."
@@ -592,6 +657,8 @@
 	input setzombiehudmessage(string)   : "Set a message to display in the zombie wave hud."
 	input clearhumanhudmessage(void)    : "Clear the message to display in the human wave hud."
 	input clearzombiehudmessage(void)   : "Clear the message to display in the zombie wave hud."
+	input setdisplaytime(integer)       : "Change how long the input message displays for."
+	input settextcolor(string)          : "Takes an 'R G B' string to change the color of the next message."
 ]
 
 @PointClass base(Targetname) = logic_pantsmode : "ZS: When activated, this will set the special Pants Mode on."
@@ -700,7 +767,7 @@
 "Ammo Type: SMG.\n"+
 "This is a stationary turret that is placed similarly to aegis boards. Once placed, they will seek zombies and fire when one crosses its laser sight, focusing on the head. However, turrets can be extremely vulnerable to zombies as its firing power isn't good enough to take down zombies on its own and doesn't have much health. " []
 
-@PointClass base(Weapon) studio("models/items/item_item_crate.mdl") = weapon_zs_acrate : 
+@PointClass base(Weapon) studio("models/items/item_item_crate.mdl") = weapon_zs_arsenalcrate : 
 "The Arsenal Crate is a major part of the humans' survival. At wave break, this allows humans to purchase other weapons at 20% off. When a player purchases an item from this, the owner gets paid 10% commission price. Arsenal Crates can be destroyed by zombie attacks. " []
 
 @PointClass base(Weapon) studio("models/props_combine/combine_mine01.mdl") = weapon_zs_messagebeacon : 

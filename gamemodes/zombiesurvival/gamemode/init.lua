@@ -791,7 +791,7 @@ function GM:PlayerSelectSpawn(pl)
 				local blocked
 				local spawnpos = spawn:GetPos()
 				for _, ent in pairs(ents.FindInBox(spawnpos + playermins, spawnpos + playermaxs)) do
-					if ent and ent:IsValid() and ent:IsPlayer() and not spawninplayer or string.sub(ent:GetClass(), 1, 5) == "prop_" then
+					if IsValid(ent) and ent:IsPlayer() and not spawninplayer or string.sub(ent:GetClass(), 1, 5) == "prop_" then
 						blocked = true
 						break
 					end
@@ -1534,6 +1534,10 @@ function GM:PlayerInitialSpawnRound(pl)
 	pl.DamageDealt = {}
 	pl.DamageDealt[TEAM_UNDEAD] = 0
 	pl.DamageDealt[TEAM_HUMAN] = 0
+
+	pl.LifeBarricadeDamage = 0
+	pl.LifeHumanDamage = 0
+	pl.LifeBrainsEaten = 0
 
 	pl.m_PointQueue = 0
 	pl.m_LastDamageDealt = 0

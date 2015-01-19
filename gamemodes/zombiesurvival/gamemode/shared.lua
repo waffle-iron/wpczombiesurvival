@@ -430,13 +430,6 @@ end
 
 function GM:PlayerCanHearPlayersVoice(listener, talker)
     return listener:Team() == talker:Team()
-    --[[if self:GetEndRound() then return true, false end
-
-    if listener:Team() == talker:Team() then
-        return true, listener:GetPos():DistanceZSkew(talker:GetPos(), 2) <= 128
-    end
-
-    return false]]
 end
 
 function GM:PlayerTraceAttack(pl, dmginfo, dir, trace)
