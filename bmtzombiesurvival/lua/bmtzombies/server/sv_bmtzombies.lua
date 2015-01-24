@@ -121,6 +121,6 @@ hook.Add("EndRound", "EndRound.Percentage", function(winner)
 		pct = 100 * mapData.wins / (mapData.wins+mapData.losses)
 		mapData:save()
 		
-		PrintMessage( HUD_PRINTTALK, string.format("[green]This map has been played [teal]%d [green] times and humans have won [red]%d%% [green]of the time", mapData.numPlayed, math.Round(pct)))
+		PrintMessage( HUD_PRINTTALK, string.format("[green]This map has been played [teal]%d[green] times and humans have won [red]%d%% [green]of the time", mapData.numPlayed, math.Round(pct)))
 	end)
 end)
