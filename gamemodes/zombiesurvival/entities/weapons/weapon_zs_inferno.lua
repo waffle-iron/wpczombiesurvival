@@ -22,9 +22,6 @@ if CLIENT then
 	SWEP.SnapZoom = true
 	SWEP.SimulateCenterMuzzle = true
 	
-	SWEP.IconLetter = "e"
-	killicon.AddFont("swb_aug", "SWB_KillIcons", SWEP.IconLetter, Color(255, 80, 0, 150))
-	
 	SWEP.MuzzleEffect = "swb_rifle_med"
 	
 	SWEP.HUD3DBone = "v_weapon.aug_Parent"

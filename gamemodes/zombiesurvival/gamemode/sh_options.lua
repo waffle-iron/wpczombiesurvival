@@ -7,6 +7,8 @@ GM.ZombieEscapeWeapons = {
 	"weapon_zs_zebulletstorm"
 }
 
+--This is confusing, I won't release this cause it's not compatible with servers that have more then 6 waves
+--I can't figure out how to make this system more modular nor can I find out how to make it work with bigger waves
 GM.WeaponWaves = {}
 GM.WeaponWaves["weapon_zs_uzi"] = 2
 GM.WeaponWaves["weapon_zs_smg"] = 2
@@ -18,14 +20,19 @@ GM.WeaponWaves["weapon_zs_akbar"] = 3
 GM.WeaponWaves["weapon_zs_ender"] = 3
 GM.WeaponWaves["weapon_zs_reaper"] = 3
 GM.WeaponWaves["weapon_zs_oicw"] = 3
+GM.WeaponWaves["weapon_zs_galil"] = 3
 GM.WeaponWaves["weapon_zs_m4"] = 4
 GM.WeaponWaves["weapon_zs_inferno"] = 4
 GM.WeaponWaves["weapon_zs_annabelle"] = 4
+GM.WeaponWaves["weapon_zs_g3sg1"] = 4
 GM.WeaponWaves["weapon_zs_crossbow"] = 5
+GM.WeaponWaves["weapon_zs_sawedoff"] = 5
+GM.WeaponWaves["weapon_zs_sg552"] = 5
 GM.WeaponWaves["weapon_zs_sweepershotgun"] = 6
 GM.WeaponWaves["weapon_zs_boomstick"] = 6
 GM.WeaponWaves["weapon_zs_slugrifle"] = 6
 GM.WeaponWaves["weapon_zs_pulserifle"] = 6
+GM.WeaponWaves["weapon_zs_sg550"] = 6
 GM.WeaponWaves["weapon_zs_m249"] = 6
 
 -- Change this if you plan to alter the cost of items or you severely change how Worth works.
@@ -240,17 +247,22 @@ GM:AddPointShopItem("reaper", "'Reaper' UMP", nil, ITEMCAT_GUNS, 80, "weapon_zs_
 GM:AddPointShopItem("ender", "'Ender' Automatic Shotgun", nil, ITEMCAT_GUNS, 75, "weapon_zs_ender")
 GM:AddPointShopItem("akbar", "'Akbar' Assault Rifle", nil, ITEMCAT_GUNS, 80, "weapon_zs_akbar")
 GM:AddPointShopItem("oicw", "'OICW' Assault Rifle", nil, ITEMCAT_GUNS, 90, "weapon_zs_oicw")
+GM:AddPointShopItem("riddler", "'Riddler' Assault Rifle", nil, ITEMCAT_GUNS, 90, "weapon_zs_galil")
 
 GM:AddPointShopItem("stalker", "'Stalker' Assault Rifle", nil, ITEMCAT_GUNS, 125, "weapon_zs_m4")
 GM:AddPointShopItem("inferno", "'Inferno' Assault Rifle", nil, ITEMCAT_GUNS, 125, "weapon_zs_inferno")
 GM:AddPointShopItem("annabelle", "'Annabelle' Rifle", nil, ITEMCAT_GUNS, 100, "weapon_zs_annabelle")
+GM:AddPointShopItem("infil", "'Infiltrator' G3SG/1", nil, ITEMCAT_GUNS, 110, "weapon_zs_g3sg1")
 
 GM:AddPointShopItem("crossbow", "'Impaler' Crossbow", nil, ITEMCAT_GUNS, 175, "weapon_zs_crossbow")
+GM:AddPointShopItem("sawedoff", "'Sawed-Off' Shotgun", nil, ITEMCAT_GUNS, 150, "weapon_zs_sawedoff")
+GM:AddPointShopItem("elimantorrifle", "'Eliminator' SIG SG552", nil, ITEMCAT_GUNS, 150, "weapon_zs_sg552")
 
 GM:AddPointShopItem("sweeper", "'Sweeper' Shotgun", nil, ITEMCAT_GUNS, 200, "weapon_zs_sweepershotgun")
 GM:AddPointShopItem("boomstick", "Boom Stick", nil, ITEMCAT_GUNS, 200, "weapon_zs_boomstick")
 GM:AddPointShopItem("slugrifle", "'Tiny' Slug Rifle", nil, ITEMCAT_GUNS, 200, "weapon_zs_slugrifle")
 GM:AddPointShopItem("pulserifle", "'Adonis' Pulse Rifle", nil, ITEMCAT_GUNS, 225, "weapon_zs_pulserifle")
+GM:AddPointShopItem("killerrifle", "'Killer' SIG SG550", nil, ITEMCAT_GUNS, 230, "weapon_zs_sg550")
 GM:AddPointShopItem("grimreaper", "'Grim Reaper' Machince Gun", nil, ITEMCAT_GUNS, 300, "weapon_zs_m249")
 
 GM:AddPointShopItem("pistolammo", "pistol ammo box", nil, ITEMCAT_AMMO, 7, nil, function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["pistol"] or 12, "pistol", true) end, "models/Items/BoxSRounds.mdl")

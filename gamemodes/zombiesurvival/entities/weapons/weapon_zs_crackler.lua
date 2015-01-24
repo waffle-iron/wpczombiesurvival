@@ -13,9 +13,6 @@ if CLIENT then
 	
 	SWEP.ZoomAmount = 15
 	
-	SWEP.IconLetter = "t"
-	killicon.AddFont("swb_famas", "SWB_KillIcons", SWEP.IconLetter, Color(255, 80, 0, 150))
-	
 	SWEP.MuzzleEffect = "swb_rifle_med"
 	SWEP.InvertShellEjectAngle = true
 	

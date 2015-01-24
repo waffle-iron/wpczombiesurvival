@@ -15,9 +15,6 @@ if CLIENT then
 	SWEP.ZoomAmount = 5
 	SWEP.ViewModelMovementScale = 0.85
 	
-	SWEP.IconLetter = "B"
-	killicon.AddFont("swb_xm1014", "SWB_KillIcons", SWEP.IconLetter, Color(255, 80, 0, 150))
-	
 	SWEP.MuzzleEffect = "swb_sniper"
 	
 	SWEP.DrawBlackBarsOnAim = true
@@ -32,6 +29,8 @@ if CLIENT then
 	SWEP.AdjustableZoom = true
 	SWEP.MinZoom = 40
 	SWEP.MaxZoom = 80
+	
+	SWEP.IronsightsMultiplier = 0.25
 	
 	SWEP.HUD3DBone = "v_weapon.xm1014_Bolt"
 	SWEP.HUD3DPos = Vector(-1, 0, 0)

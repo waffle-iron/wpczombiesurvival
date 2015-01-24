@@ -547,7 +547,7 @@ function GM:_Think()
 
 	if myteam == TEAM_HUMAN then
 		local wep = MySelf:GetActiveWeapon()
-		if wep:IsValid() and wep.GetIronsights and wep:GetIronsights() then
+		if wep:IsValid() and wep.dt and wep.dt.State == SWB_AIMING then
 			self.FOVLerp = math.Approach(self.FOVLerp, wep.IronsightsMultiplier or 0.6, FrameTime() * 4)
 		elseif self.FOVLerp ~= 1 then
 			self.FOVLerp = math.Approach(self.FOVLerp, 1, FrameTime() * 5)
@@ -884,6 +884,9 @@ function GM:CreateFonts()
 
 	surface.CreateLegacyFont("csd", screenscale * 36, 100, true, false, "zsdeathnoticecs", false, true)
 	surface.CreateLegacyFont("HL2MP", screenscale * 36, 100, true, false, "zsdeathnotice", false, true)
+	
+	surface.CreateLegacyFont("cs", screenscale * 36, 100, true, false, "zsdeathnoticecs2", false, true)
+	surface.CreateLegacyFont("HalfLife2", screenscale * 36, 100, true, false, "zsdeathnotice2", false, true)
 
 	surface.CreateLegacyFont(fontfamily, screenscale * 16, fontweight, fontaa, false, "ZSHUDFontTiny", fontshadow, fontoutline)
 	surface.CreateLegacyFont(fontfamily, screenscale * 20, fontweight, fontaa, false, "ZSHUDFontSmallest", fontshadow, fontoutline)
@@ -1144,7 +1147,19 @@ function GM:PlayerBindPress(pl, bind, wasin)
 		RunConsoleCommand("+zoom")
 		timer.CreateEx("ReleaseZoom", 1, 1, RunConsoleCommand, "-zoom")
 	elseif bind == "+menu_context" then
-		self.ZombieThirdPerson = not self.ZombieThirdPerson
+		if pl and pl:OldAlive() then
+			if pl.m_bThirdPDisabled then
+				return
+			end
+	
+			if pl:Team() == TEAM_UNDEAD and pl.m_bShoulderEnabled then
+				pl.m_bShoulderEnabled = false
+			elseif pl:Team() == TEAM_HUMAN and not pl.m_bShoulderEnabled then
+				pl.m_bShoulderEnabled = true
+			end
+
+			pl.m_bThirdPEnabled = not pl.m_bThirdPEnabled
+		end
 	end
 end
 

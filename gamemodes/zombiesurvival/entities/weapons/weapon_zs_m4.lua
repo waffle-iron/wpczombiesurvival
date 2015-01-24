@@ -14,9 +14,6 @@ if CLIENT then
 	
 	SWEP.ZoomAmount = 15
 	
-	SWEP.IconLetter = "w"
-	killicon.AddFont("swb_m4a1", "SWB_KillIcons", SWEP.IconLetter, Color(255, 80, 0, 150))
-	
 	SWEP.MuzzleEffect = "swb_rifle_med"
 	SWEP.MuzzleEffectSupp = "swb_silenced"
 	

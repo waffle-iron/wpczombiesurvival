@@ -15,9 +15,6 @@ if CLIENT then
 	SWEP.ViewModelMovementScale = 0.85
 	SWEP.Shell = "smallshell"
 	
-	SWEP.IconLetter = "x"
-	killicon.AddFont("swb_mp5", "SWB_KillIcons", SWEP.IconLetter, Color(255, 80, 0, 150))
-	
 	SWEP.MuzzleEffect = "swb_rifle_small"
 	SWEP.MuzzlePosMod = {x = 5, y = 30, z = -4}
 	SWEP.PosBasedMuz = true

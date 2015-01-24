@@ -172,6 +172,11 @@ LANGUAGE.class_flesh_beast							= "Flesh Beast"
 LANGUAGE.class_fast_zombie_legs						= "Beine des schnellen Zombies"
 LANGUAGE.class_chem_zombie							= "Chem Zombie"
 LANGUAGE.class_shade								= "Shade"
+LANGUAGE.class_butcher								= "The Butcher"
+LANGUAGE.class_flesh_creeper						= "Flesh Creeper"
+LANGUAGE.class_gore_child							= "Gore Kinder"
+LANGUAGE.class_giga_gore_child						= "Giga Gore Kinder"
+LANGUAGE.class_zombine								= "Zombine"
 
 -- Class descriptions
 LANGUAGE.description_zombie							= "Der normale Zombie ist sehr beständig und hat kraftvolle Klauen.\nEs ist schwer ihn unten zu halten, vor allem wenn er nicht in den Kopf geschossen wird."
@@ -195,6 +200,11 @@ LANGUAGE.description_flesh_beast					= "*Noch nicht fertig*"
 LANGUAGE.description_fast_zombie_legs				= "Du solltest das noch nicht einmal sehen."
 LANGUAGE.description_chem_zombie					= "Der Chem Zombie beinhaltet etherische und giftige Chemikalien.\nEs hat keine anderen Absichten neben dem Angreifen, außer getötet zu werden, in Hoffnung in der Nähe von Menschen zu explodieren."
 LANGUAGE.description_shade							= "In dem es ein starkes magnetisches Feld um sich herum aufbaut werden alle Angriffe mit Projektilen und Nahkampfwaffen nutzlos.\nAus irgendeinem Grund ist Shade verletzbar bei hellem Licht."
+LANGUAGE.description_butcher						= "Ein verrückter, Untoten Metzger. Es ist nicht sehr hart, aber jemand das Pech haben, werden in der Nähe wird es wahrscheinlich in Fetzen gerissen werden."
+LANGUAGE.description_flesh_creeper					= "Flesh Creepers besitzen die Fähigkeit, Nester zu schaffen. \nVon dieser Nester, andere Zombie-Kreaturen entstehen. \nDas funktioniert, ist unbekannt, aber es ist imperitive, alle Nester oder Kletterpflanzen zu vernichten."
+LANGUAGE.description_gore_child						= "Sobald zombified, ein Kind im Mutterleib infiziert auch. \nBesitzen keine besonderen Fähigkeiten, kommt ihre Kraft aus ihrer Zahl."
+LANGUAGE.description_giga_gore_child				= "Das Ergebnis einer Gore Kinder der zu lange Zeit nicht gegengesteuert wurde. \nEin Horror zu erblicken, ist ihre massigen Körper das Ergebnis zombified Stammzellen. \nSie auch ein Wirt für Gore Kinder, die immer im Schlepptau zu finden sind werden mit ihm."
+LANGUAGE.description_zombine						= "Ein Kombinieren Soldaten, die von einem headcrab infiziert wurde. \nEr greift schnell und kann eine sekundäre Granatenangriff, die schwere Schäden für den Menschen tun können, zu verwenden."
 
 -- Class control schemes
 LANGUAGE.controls_zombie							= "> HAUPTWAFFE: Klauen\n> SEKUNDÄRWAFFE: Schrei\n> NACHLADEN: Stöhnen\n> SPRINTEN: Tod vortäuschen\n> BEI FATALEM ANGRIFF AUF DIE BEINE: Wiederbeleben / Transformieren"
@@ -213,6 +223,11 @@ LANGUAGE.controls_wraith							= "> HAUPTWAFFE: Klauen\n> SEKUNDÄRWAFFE: Schrei
 LANGUAGE.controls_flesh_beast						= "> HAUPTWAFFE: Klauen\n> SEKUNDÄRWAFFE: Kopfnuss"
 LANGUAGE.controls_chem_zombie						= "> BEIM TOD: Giftbombe"
 LANGUAGE.controls_shade								= "> HAUPTWAFFE: Heben\n> SEKUNDÄRWAFFE: Werfen"
+LANGUAGE.controls_butcher							= "> HAUPTWAFFE: Hacken"
+LANGUAGE.controls_flesh_creeper						= "> HAUPTWAFFE: Leiter Smash\n> SEKUNDÄRWAFFE: Nest"
+LANGUAGE.controls_gore_child						= "> HAUPTWAFFE: Klauen"
+LANGUAGE.controls_giga_gore_child					= "> HAUPTWAFFE: Smash\n> SEKUNDÄRWAFFE: Werfen Gore Kinder"
+LANGUAGE.controls_zombine							= "> HAUPTWAFFE: Klauen\n> SEKUNDÄRWAFFE: Granate Suicide"
 
 -- The help file... Quite big! I wouldn't blame you if you didn't translate this part.
 LANGUAGE.help_cat_introduction						= "Einführung"

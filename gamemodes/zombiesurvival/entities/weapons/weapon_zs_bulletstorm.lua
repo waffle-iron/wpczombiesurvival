@@ -16,9 +16,6 @@ if CLIENT then
 	SWEP.ViewModelMovementScale = 0.85
 	SWEP.Shell = "smallshell"
 	
-	SWEP.IconLetter = "m"
-	killicon.AddFont("swb_p90", "SWB_KillIcons", SWEP.IconLetter, Color(255, 80, 0, 150))
-	
 	SWEP.MuzzleEffect = "swb_rifle_med"
 	
 	SWEP.HUD3DBone = "v_weapon.p90_Release"

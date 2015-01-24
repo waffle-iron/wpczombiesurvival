@@ -3,7 +3,7 @@ CLASS.TranslationName = "class_chem_zombie"
 CLASS.Description = "description_chem_zombie"
 CLASS.Help = "controls_chem_zombie"
 
-CLASS.Wave = 1
+CLASS.Wave = 5 / 6
 CLASS.Health = 100
 CLASS.SWEP = "weapon_zs_chemzombie"
 CLASS.Model = Model("models/Zombie/Poison.mdl")
@@ -18,10 +18,6 @@ CLASS.VoicePitch = 0.65
 CLASS.ViewOffset = Vector(0, 0, 50)
 CLASS.Hull = {Vector(-16, -16, 0), Vector(16, 16, 64)}
 CLASS.HullDuck = {Vector(-16, -16, 0), Vector(16, 16, 35)}
-
-function CLASS:CanUse(pl)
-	return false
-end
 
 function CLASS:CalcMainActivity(pl, velocity)
 	if velocity:Length2D() <= 0.5 then
@@ -86,7 +82,7 @@ if SERVER then
 		if DUMMY_CHEMZOMBIE:IsValid() then
 			DUMMY_CHEMZOMBIE:SetPos(pos)
 		end
-		util.PoisonBlastDamage(DUMMY_CHEMZOMBIE, pl, pos, 128, 20, true)
+		util.PoisonBlastDamage(DUMMY_CHEMZOMBIE, pl, pos, 80, 45, true)
 
 		pl:CheckRedeem()
 	end

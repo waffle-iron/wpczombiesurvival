@@ -16,9 +16,6 @@ if CLIENT then
 	SWEP.Shell = "shotshell"
 	SWEP.ShellOnEvent = true
 	
-	SWEP.IconLetter = "v"
-	killicon.AddFont("swb_galil", "SWB_KillIcons", SWEP.IconLetter, Color(255, 80, 0, 150))
-	
 	SWEP.MuzzleEffect = "swb_rifle_med"
 	
 	SWEP.HUD3DBone = "v_weapon.galil"

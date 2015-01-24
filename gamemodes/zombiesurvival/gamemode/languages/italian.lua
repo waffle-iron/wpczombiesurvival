@@ -173,6 +173,11 @@ translate.AddLanguage("it", "Italian")
     LANGUAGE.class_fast_zombie_legs                                 = "Fast Zombie Legs"
     LANGUAGE.class_chem_zombie                                              = "Chem Zombie"
     LANGUAGE.class_shade                                                    = "Shade"
+	LANGUAGE.class_butcher												= "The Butcher"
+	LANGUAGE.class_flesh_creeper										= "Flesh Creeper"
+	LANGUAGE.class_gore_child											= "Gore Child"
+	LANGUAGE.class_giga_gore_child										= "Giga Gore Child"
+	LANGUAGE.class_zombine												= "Zombine"
      
     -- Class descriptions
     LANGUAGE.description_zombie                                     = "Lo zombie di base è molto resistente e ha dei potenti artigli.\nE' duro da uccidere, specie se non si spara alla testa."
@@ -196,6 +201,11 @@ translate.AddLanguage("it", "Italian")
     LANGUAGE.description_fast_zombie_legs                           = "Non dovresti neanche vederlo."
     LANGUAGE.description_chem_zombie                                = "il Chem Zombie è formato da composti chimici tossici e volatili.\n Non ha altri modi per attaccare se non quello di farsi uccidere nelle vicinanze degli umani, per poi esplodere ferendoli."
     LANGUAGE.description_shade                                      = "Creando un forte campo magnetico attorno a se stesso, tutti i proiettili e attacchi ravvicinati vengono resi inutili contro di esso.\nTuttavia, per qualche strana ragione, lo Shade è vulnerabile alla luce chiara."
+	LANGUAGE.description_butcher									= "Un folle, macellaio non morti. Non è molto difficile, ma chiunque la sfortuna di essere vicino, molto probabilmente essere strappata a brandelli."
+	LANGUAGE.description_flesh_creeper								= "Flesh Creepers possiedono la capacità di creare nidi. \nDa questi nidi, altre creature zombificati emergono. \nIl modo in cui funziona è sconosciuto ma è imperitive per distruggere eventuali nidi o rampicanti."
+	LANGUAGE.description_gore_child									= "Una volta Zombified, un bambino non ancora nato si infetta pure. \nPossedere abilità speciali, la loro forza viene dal loro numero."
+	LANGUAGE.description_giga_gore_child							= "Il risultato di un Bambino Gore, che è stato lasciato incontrollato per troppo tempo. \nUn orrore a vedersi, il loro corpo massiccio è il risultato di cellule staminali zombificati. \ndiventano anche un host per Gore bambini che può sempre essere trovato a rimorchio con esso."
+	LANGUAGE.description_zombine									= "Un Combine soldato che è stato infettato da un headcrab. \nAttacca rapidamente e può utilizzare una granata secondaria che può fare gravi danni per gli esseri umani."
      
     -- Class control schemes
     LANGUAGE.controls_zombie                                        = "> PRIMARIO: Artigli\n> SECONDARIO: Urlo\n> RICARICA: Lamento\n> SPRINT: Finta morte\n> Ucciso colpito alle gambe: Resurrezione / Trasformazione"
@@ -214,3 +224,8 @@ translate.AddLanguage("it", "Italian")
     LANGUAGE.controls_flesh_beast                                   = "> PRIMARIO: Artigli\n> SECONDARIO: Testata"
     LANGUAGE.controls_chem_zombie                                   = "> ALLA MORTE: Bomba velenosa"
     LANGUAGE.controls_shade                                 = "> PRIMARIO: Solleva\n> SECONDARIO: Lancio"
+	LANGUAGE.controls_butcher								= "> PRIMARIO: Tritare"
+	LANGUAGE.controls_flesh_creeper							= "> PRIMARIO: Zuccata\n> SECONDARIO: Nido"
+	LANGUAGE.controls_gore_child									= "> PRIMARIO: Artigli"
+	LANGUAGE.controls_giga_gore_child								= "> PRIMARIO: Smash\n> SECONDARIO: Gettare Gore Bambino"
+	LANGUAGE.controls_zombine										= "> PRIMARIO: Artigli\n> SECONDARIO: Grenade Suicide"

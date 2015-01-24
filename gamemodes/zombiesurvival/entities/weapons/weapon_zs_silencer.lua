@@ -15,9 +15,7 @@ if CLIENT then
 	SWEP.ViewModelMovementScale = 0.85
 	SWEP.Shell = "smallshell"
 	
-	SWEP.IconLetter = "d"
 	SWEP.NoStockMuzzle = true
-	killicon.AddFont("swb_tmp", "SWB_KillIcons", SWEP.IconLetter, Color(255, 80, 0, 150))
 	
 	SWEP.MuzzleEffect = "swb_silenced_small"
 	

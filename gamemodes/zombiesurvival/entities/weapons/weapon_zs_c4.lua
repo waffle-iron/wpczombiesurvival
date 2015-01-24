@@ -75,7 +75,7 @@ function SWEP:Asplode()
 	ent:SetPos( self.Owner:GetPos() )
 	ent:SetOwner( self.Owner )
 	ent:Spawn()
-	ent:SetKeyValue( "iMagnitude", "600" )
+	ent:SetKeyValue( "iMagnitude", "1200" )
 	ent:Fire( "Explode", 0, 0 )
 	ent:EmitSound( "siege/big_explosion.wav", 500, 500 )
 		

@@ -172,6 +172,11 @@ LANGUAGE.class_flesh_beast                                                      
 LANGUAGE.class_fast_zombie_legs                                         = "Jambes d'un zombie agile"
 LANGUAGE.class_chem_zombie                                                      = "Zombie chimique"
 LANGUAGE.class_shade                                                            = "Shade"
+LANGUAGE.class_butcher															= "Le Boucher"
+LANGUAGE.class_flesh_creeper													= "Flesh Creeper"
+LANGUAGE.class_gore_child														= "Gore Enfant"
+LANGUAGE.class_giga_gore_child													= "Giga Gore Enfant"
+LANGUAGE.class_zombine															= "Zombine"
  
 -- Class descriptions
 LANGUAGE.description_zombie                                                     = "Le zombie de base est résistant et porte de puissants coups.\nDur à abattre, surtout si on ne lui tire pas en pleine tête."
@@ -195,6 +200,11 @@ LANGUAGE.description_flesh_beast                                        = "*en c
 LANGUAGE.description_fast_zombie_legs                           = "Rien à voir par ici, circulez."
 LANGUAGE.description_chem_zombie                                        = "Le corps de ce zombie est extrêment instable.\nIl n'a rien en particulier sauf l'espoir d'exploser près d'un humain."
 LANGUAGE.description_shade                                                      = "Grâce au champ de force magnétique autour de lui, les balles sont inutiles.\nIl est en revanche vulnérable aux lumières émises par les lampe-torches."
+LANGUAGE.description_butcher											= "A, boucherie morts-vivants folle. Il ne est pas très difficile, mais quiconque assez malchanceux pour être près d'elle sera probablement en lambeaux."
+LANGUAGE.description_flesh_creeper										= "Flesh Creepers possèdent la capacité de créer des nids. \nDe ces nids, d'autres créatures zombifiés émergent. \nLa façon dont cela fonctionne est inconnue, mais Il est impératif de détruire les nids ou des lianes."
+LANGUAGE.description_gore_child											= "Une fois zombified, l'enfant à naître est infecté aussi. \nPossédant pas de capacités spéciales, leur force vient de leur nombre."
+LANGUAGE.description_giga_gore_child									= "Le résultat d'un enfant Gore qui a été laissé décochée depuis trop longtemps. \nUne horreur pour les yeux, leur corps massif est le résultat de cellules souches zombifiés. \nIls deviennent aussi un hôte pour Gore enfants qui peut toujours être trouvé dans le remorquage avec elle."
+LANGUAGE.description_zombine											= "Une moissonneuse-batteuse soldat qui a été infecté par un headcrab. \nIl attaque rapidement et peut utiliser une attaque à la grenade secondaire qui peut causer des dommages graves à l'homme."
  
 -- Class control schemes
 LANGUAGE.controls_zombie                                                        = "> PRIMAIRE: Attaque\n> SECONDARY: Crier\n> RECHARGER: Crier\n> SPRINT: Feindre la mort\n> TIR FATAL DANS LES JAMBES: Résurrection / Transformation"
@@ -213,6 +223,11 @@ LANGUAGE.controls_wraith                                                        
 LANGUAGE.controls_flesh_beast                                           = "> PRIMAIRE: Attaque\n> SECONDARY: Coup de tête"
 LANGUAGE.controls_chem_zombie                                           = "> ON DEATH: Bombe empoisonnée"
 LANGUAGE.controls_shade                                                         = "> PRIMAIRE: Souveler\n> SECONDARY: Lancer"
+LANGUAGE.controls_butcher												= "> PRIMARY: Hacher"
+LANGUAGE.controls_flesh_creeper													= "> PRIMARY: Chef Smash\n> SECONDARY: Nid"
+LANGUAGE.controls_gore_child													= "> PRIMARY: Attaque"
+LANGUAGE.controls_giga_gore_child										= "> PRIMARY: Smash\n> SECONDARY: Jetez Gore Enfant"
+LANGUAGE.controls_zombine														= "> PRIMARY: Attaque\n> SECONDARY: Grenade Suicide"
  
 -- The help file... Quite big! I wouldn't blame you if you didn't translate this part.
 LANGUAGE.help_cat_introduction                                          = "Introduction"

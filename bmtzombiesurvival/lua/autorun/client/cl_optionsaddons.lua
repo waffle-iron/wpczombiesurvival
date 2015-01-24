@@ -1,8 +1,3 @@
-if SERVER then
-    AddCSLuaFile( "cl_optionsaddons.lua" )
-    return
-end
-
 hook.Add("AddExtraOptions", "AddExtraOptions.Life", function(panellist, optionsmenu)
 	local check = vgui.Create("DCheckBoxLabel", optionsmenu)
 	check:SetText("Gmod Legs: Enabled")
@@ -49,4 +44,10 @@ hook.Add("AddExtraOptions", "AddExtraOptions.Life", function(panellist, optionsm
 	slider:SetText("Atmos: Max Rain Radius")
 	slider:SizeToContents()
 	panellist:AddItem(slider)
+	
+	local check = vgui.Create("DCheckBoxLabel", optionsmenu)
+	check:SetText("Disable Kill/Assist/Headshots Counter")
+	check:SetConVar("zs_disable_counter")
+	check:SizeToContents()
+	panellist:AddItem(check)
 end)

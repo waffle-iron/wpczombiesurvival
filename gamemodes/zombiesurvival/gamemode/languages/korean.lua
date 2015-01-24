@@ -175,6 +175,11 @@ LANGUAGE.class_flesh_beast							= "감염된 맹수"
 LANGUAGE.class_fast_zombie_legs						= "패스트 좀비 다리"
 LANGUAGE.class_chem_zombie							= "챔 좀비"
 LANGUAGE.class_shade								= "셰이드"
+LANGUAGE.class_butcher								= "정육점"
+LANGUAGE.class_flesh_creeper						= "육체 기는"
+LANGUAGE.class_gore_child							= "고어 어린이"
+LANGUAGE.class_giga_gore_child						= "기가 고어 어린이"
+LANGUAGE.class_zombine								= "두 법원"
 
 -- Class descriptions
 LANGUAGE.description_zombie							= "체력도 좋고 힘도 쓸만한 좀비.\n머리를 맞지 않는다면 죽이기가 어렵다."
@@ -202,6 +207,12 @@ LANGUAGE.description_fast_zombie_legs				= "You shouldn't even be seeing this."
 LANGUAGE.description_chem_zombie					= "챔 좀비의 몸은 각종 독성 화학물질로 구성되어 있다.\n챔 좀비는 공격할 수 없지만,\n죽을 때에 강력한 폭발을 일으켜 주변의 모든 인간 및 바리케이드에 데미지를 가한다."
 LANGUAGE.description_shade							= "자신의 주변에 강력한 자기장을 형성하므로써, 모든 공격을 무효화시킨다.\n그러나 어떤 이유에선지 강한 빛에 약한 모습을 보인다."
 
+LANGUAGE.description_butcher						= "미친, 언데드 정육점. 그것은 매우 힘든 것이 아니라 그것이 가장 가능성이 갈기 갈기 찢어진 것 근처에 충분히 불운 한 사람이 될 수 있습니다."
+LANGUAGE.description_flesh_creeper					= "육체 덩굴은. \nN이 둥지에서 다른 좀비가 생물이 등장. \n둥지를 만들 수있는 능력을 가지고 N이 작동하는 방법은 알 수 있지만 어떤 둥지 또는 덩굴 식물을 파괴하는 imperitive입니다."
+LANGUAGE.description_gore_child						= "일단 좀비가, 태어나지 않은 아이가.뿐만 아니라 감염된 \n특별한 능력을 보유하지, 그들의 힘은 그 수에서 온다."
+LANGUAGE.description_giga_gore_child				= "너무 오랫동안 체크를 해제 된 고어 어린이의 결과입니다. \n보는 공포, 자신의 거대한 몸은 \n. 좀비가 줄기 세포의 결과이고, n은 또한 항상 견인에서 찾을 수 있습니다 고어 어린이를위한 호스트가 될 그것."
+LANGUAGE.description_zombine						= "A는 headcrab에 의해 감염된 군인을 결합합니다. \n그는 빠르게 공격과 인체에 심각한 손상을 할 수있는 보조 수류탄 공격을 사용할 수 있습니다."
+
 -- Class control schemes
 
 LANGUAGE.controls_zombie							= "> 공격 1: 할큄\n> 공격 2: 울부짖음\n> 재장전: 신음\n> 달리기: 죽은척 함\n> 다리에 치명적 공격을 받았을 시: 부활 / 변형"
@@ -223,6 +234,12 @@ LANGUAGE.controls_wraith							= "> 공격 1: 할큄\n> 공격 2: 울부짖음\n
 LANGUAGE.controls_flesh_beast						= "> 공격 1: 할큄\n> 공격 2: 박치기"
 LANGUAGE.controls_chem_zombie						= "> 죽을 때: 독 폭탄"
 LANGUAGE.controls_shade								= "> 공격 1: 들기\n> 공격 2: 던지기"
+
+LANGUAGE.controls_butcher							= "> 1: 잘라"
+LANGUAGE.controls_flesh_creeper						= "> 1: 헤드 스매쉬 \n> 2: 둥지"
+LANGUAGE.controls_gore_child						= "> 1: 집게발"
+LANGUAGE.controls_giga_gore_child					= "> 1: 스매시\n> 2: 고어 어린이를 던져"
+LANGUAGE.controls_zombine							= "> 1: 집게발\n> 2: 수류탄 자살"
 
 -- The help file... Quite big! I wouldn't blame you if you didn't translate this part.
 LANGUAGE.help_cat_introduction						= "좀비 서바이벌"

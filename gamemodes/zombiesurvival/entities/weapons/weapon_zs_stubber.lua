@@ -26,8 +26,7 @@ if CLIENT then
 	SWEP.MinZoom = 40
 	SWEP.MaxZoom = 80
 	
-	SWEP.IconLetter = "n"
-	killicon.AddFont("swb_scout", "SWB_KillIcons", SWEP.IconLetter, Color(255, 80, 0, 150))
+	SWEP.IronsightsMultiplier = 0.25
 	
 	SWEP.MuzzleEffect = "swb_rifle_large"
 	

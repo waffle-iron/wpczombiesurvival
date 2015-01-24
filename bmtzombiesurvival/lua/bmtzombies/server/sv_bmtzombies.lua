@@ -19,7 +19,7 @@ hook.Add("PlayerSpawn","PointSave.Spawn", function(ply)
 			pointsave.points = 0
 			pointsave:save()
 		else 
-			if ply:Team() == 4 then
+			if ply:Team() == TEAM_HUMAN then
 				if plyData.points and plyData.points > 0 then 
 					ply:SetPoints(plyData.points)
 				end

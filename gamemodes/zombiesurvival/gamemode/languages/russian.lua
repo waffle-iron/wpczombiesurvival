@@ -172,6 +172,11 @@ LANGUAGE.class_flesh_beast							= "Flesh Beast"
 LANGUAGE.class_fast_zombie_legs						= "Ноги быстрого зомби"
 LANGUAGE.class_chem_zombie							= "Химический зомби"
 LANGUAGE.class_shade								= "Shade"
+LANGUAGE.class_butcher								= "Мясник"
+LANGUAGE.class_flesh_creeper						= "Плоть Creeper"
+LANGUAGE.class_gore_child							= "Гор ребенка"
+LANGUAGE.class_giga_gore_child						= "Giga Гор ребенка"
+LANGUAGE.class_zombine								= "Zombine"
 
 -- Class descriptions
 LANGUAGE.description_zombie							= "Обычный зомби очень стойкий и довольно силен.\nЕго сложно положить, особенно если не стрелять в голову."
@@ -195,6 +200,11 @@ LANGUAGE.description_flesh_beast					= "*на подходе*"
 LANGUAGE.description_fast_zombie_legs				= "Не для Ваших глаз."
 LANGUAGE.description_chem_zombie					= "Тело Химического Зараженного состоит из реактивных, токсичных химикатов.\nУ этого зараженного нет поводадля аттаки, кроме как самоубийство, с надеждой подорвать рядом стоящих выживших."
 LANGUAGE.description_shade							= "Создавая сильное магнитическое поле вокруг себя, все пули и рукопашне аттаки бесполезны против него.\nОднако, по какой-то причине Shade раним ярким светом."
+LANGUAGE.description_butcher						= "Сумасшедший, нежить мясник. Это не очень трудно, но кто-то не повезло быть рядом с ним, скорее всего, будет разорван в клочья."
+LANGUAGE.description_flesh_creeper					= "Флеш Криперс обладают способностью создавать гнезда. \nИз этих гнезд, другие Zombified существа появляются. \nКак это работает неизвестен, но это imperitive уничтожить любые гнезда или лианы."
+LANGUAGE.description_gore_child						= "После того, как Zombified, нерожденный ребенок заражается, а также. \nне имеющих особых способностей, их сила исходит от их численности."
+LANGUAGE.description_giga_gore_child				= "Результат Gore ребенка, которая была не остановить слишком долго. \nужас, чтобы созерцать, их массивное тело является результатом Zombified стволовых клеток. \nОни также стали хозяином для Gore детей, которая всегда можно найти на буксире с ней."
+LANGUAGE.description_zombine						= "Комбинат солдата, который был инфицирован хедкрабом. \nОн нападает быстро и можно использовать вторичное нападение гранаты, которые могут нанести серьезный ущерб людям."
 
 -- Class control schemes
 LANGUAGE.controls_zombie							= "> ПЕРВИЧНЫЙ: Когти\n> ВТОРИЧНЫЙ: Крик\n> ПЕРЕЗАРЯДКА: Плач\n> БЕГ: Притвориться мертвым\n> УБИЙСТВО В НОГИ: Шанс на реанимацию / трансформация"
@@ -213,6 +223,11 @@ LANGUAGE.controls_wraith							= "> ПЕРВИЧНЫЙ: Когти\n> ВТОРИ
 LANGUAGE.controls_flesh_beast						= "> ПЕРВИЧНЫЙ: Когти\n> ВТОРИЧНЫЙ: Хэд Батт"
 LANGUAGE.controls_chem_zombie						= "> СМЕРТЬ: Ядовитый взрыв"
 LANGUAGE.controls_shade								= "> ПЕРВИЧНЫЙ: Левитация\n> ВТОРИЧНЫЙ: Кинуть"
+LANGUAGE.controls_butcher							= "> ПЕРВИЧНЫЙ: рубить"
+LANGUAGE.controls_flesh_creeper						= "> ПЕРВИЧНЫЙ: Глава банкротство\n> ВТОРИЧНЫЙ: гнездо"
+LANGUAGE.controls_gore_child						= "> ПЕРВИЧНЫЙ: Когти"
+LANGUAGE.controls_giga_gore_child					= "> ПЕРВИЧНЫЙ: банкротство\n> ВТОРИЧНЫЙ: Бросьте Gore ребенка"
+LANGUAGE.controls_zombine							= "> ПЕРВИЧНЫЙ: Когти\n> ВТОРИЧНЫЙ: Grenade Самоубийство"
 
 -- The help file... Quite big! I wouldn't blame you if you didn't translate this part.
 LANGUAGE.help_cat_introduction						= "Вступление"
