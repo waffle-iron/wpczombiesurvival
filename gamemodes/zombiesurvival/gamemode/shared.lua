@@ -841,3 +841,6 @@ function SoundDuration(snd)
     return OldSoundDuration(snd)
 end
 end
+
+function GM:VehicleMove()
+end
