@@ -55,6 +55,7 @@ AddCSLuaFile("cl_postprocess.lua")
 AddCSLuaFile("cl_deathnotice.lua")
 AddCSLuaFile("cl_floatingscore.lua")
 AddCSLuaFile("cl_dermaskin.lua")
+AddCSLuaFile("cl_dermaskin_options.lua")
 AddCSLuaFile("cl_hint.lua")
 
 AddCSLuaFile("obj_vector_extend.lua")

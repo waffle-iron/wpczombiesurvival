@@ -42,6 +42,7 @@ include("vgui/zshealtharea.lua")
 include("vgui/plifeoptions.lua")
 
 include("cl_dermaskin.lua")
+include("cl_dermaskin_options.lua")
 include("cl_deathnotice.lua")
 include("cl_floatingscore.lua")
 include("cl_hint.lua")
@@ -1662,7 +1663,7 @@ net.Receive("zs_dmg", function(length)
 	local damage = net.ReadUInt(16)
 	local pos = net.ReadVector()
 
-	if DamageFloaters then
+	if DamageFloaters and not GetConVar("zs_damagefloatersstyle"):GetBool() then
 		local effectdata = EffectData()
 			effectdata:SetOrigin(pos)
 			effectdata:SetMagnitude(damage)
@@ -1675,7 +1676,7 @@ net.Receive("zs_dmg_prop", function(length)
 	local damage = net.ReadUInt(16)
 	local pos = net.ReadVector()
 
-	if DamageFloaters then
+	if DamageFloaters and not GetConVar("zs_damagefloatersstyle"):GetBool() then
 		local effectdata = EffectData()
 			effectdata:SetOrigin(pos)
 			effectdata:SetMagnitude(damage)

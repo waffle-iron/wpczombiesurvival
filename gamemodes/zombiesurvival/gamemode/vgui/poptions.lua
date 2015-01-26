@@ -5,6 +5,7 @@ function MakepOptions()
 		pOptions:SetAlpha(0)
 		pOptions:AlphaTo(255, 0.5, 0)
 		pOptions:SetVisible(true)
+		pOptions:SetSkin("zombiesurvivaloptions")
 		pOptions:MakePopup()
 		return
 	end
@@ -12,6 +13,7 @@ function MakepOptions()
 	local Window = vgui.Create("DFrame")
 	local wide = math.min(ScrW(), 500)
 	local tall = math.min(ScrH(), 580)
+	Window:SetSkin("zombiesurvivaloptions")
 	Window:SetSize(wide, tall)
 	Window:Center()
 	Window:SetTitle(" ")
@@ -246,5 +248,6 @@ function MakepOptions()
 
 	Window:SetAlpha(0)
 	Window:AlphaTo(255, 0.5, 0)
+	Window:SetSkin("zombiesurvivaloptions")
 	Window:MakePopup()
 end
