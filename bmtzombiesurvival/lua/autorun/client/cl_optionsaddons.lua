@@ -1,6 +1,17 @@
 CreateClientConVar("zs_damagefloatersstyle", "0", true, false)
 
 hook.Add("AddExtraOptions", "AddExtraOptions.Life", function(panellist, optionsmenu)
+	local DButton = vgui.Create( "DButton" )
+	DButton:SetFont("ZSHUDFontSmaller")
+	DButton:SetText( "TPF: Options" )
+	DButton:SetTall(32)
+	DButton:DockMargin(0, 0, 0, 12)
+	DButton:DockPadding(0, 12, 0, 12)
+	DButton.DoClick = function()
+		LocalPlayer():ConCommand( "tpf_open_menu" )
+	end
+	panellist:AddItem(DButton)
+
 	local check = vgui.Create("DCheckBoxLabel", optionsmenu)
 	check:SetText("Gmod Legs: Enabled")
 	check:SetConVar("cl_legs")
