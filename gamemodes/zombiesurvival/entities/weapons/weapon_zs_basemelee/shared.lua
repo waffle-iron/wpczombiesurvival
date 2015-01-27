@@ -44,7 +44,7 @@ SWEP.SwingOffset = Vector(0, 0, 0)
 
 function SWEP:Initialize()
 	self:SetDeploySpeed(1.1)
-	self:SetWeaponHoldType(self.HoldType)
+	self:SetHoldType(self.HoldType)
 	self:SetWeaponSwingHoldType(self.SwingHoldType)
 
 	if CLIENT then

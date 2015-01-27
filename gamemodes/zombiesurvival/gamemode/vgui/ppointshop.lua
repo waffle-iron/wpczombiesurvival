@@ -253,21 +253,30 @@ function GM:OpenPointsShop()
 					pricelab:SetPos(itempan:GetWide() - 20 - pricelab:GetWide(), 4)
 					itempan.m_PriceLabel = pricelab
 					
-					local points = math.ceil(tab.Worth/6)
 					local sellbutton = vgui.Create("DImageButton", itempan)
-					sellbutton:SetImage("icon16/exclamation.png")
-					sellbutton:SizeToContents()
-					sellbutton:SetPos(itempan:GetWide() - 20 - sellbutton:GetWide(), itempan:GetTall() - 20)
-					sellbutton:SetTooltip("Sell "..name.."for "..points.." points")
-					sellbutton.ID = itempan.ID
-					sellbutton.DoClick = SellDoClick
-					itempan.m_SellButton = sellbutton
-
+					local points = math.ceil(tab.Worth/6)
+					if tab.Category == ITEMCAT_GUNS or tab.Category == ITEMCAT_MELEE then
+						sellbutton:SetImage("icon16/exclamation.png")
+						sellbutton:SizeToContents()
+						sellbutton:SetPos(itempan:GetWide() - 20 - sellbutton:GetWide(), itempan:GetTall() - 20)
+						sellbutton:SetTooltip("Sell "..name.." for "..points.." points")
+						sellbutton.ID = itempan.ID
+						sellbutton.DoClick = SellDoClick
+						itempan.m_SellButton = sellbutton
+					else
+						sellbutton:SetDisabled(true)
+						sellbutton:SetImageVisible(false)
+					end
+					
 					local button = vgui.Create("DImageButton", itempan)
 					button:SetImage("icon16/lorry_add.png")
 					button:SizeToContents()
-					button:CopyPos(sellbutton)
-					button:MoveLeftOf(sellbutton, 2)
+					if tab.Category == ITEMCAT_GUNS or tab.Category == ITEMCAT_MELEE then
+						button:CopyPos(sellbutton)
+						button:MoveLeftOf(sellbutton, 2)
+					else
+						button:SetPos(itempan:GetWide() - 20 - button:GetWide(), itempan:GetTall() - 20)
+					end
 					button:SetTooltip("Purchase "..name)
 					button.ID = itempan.ID
 					button.DoClick = PurchaseDoClick

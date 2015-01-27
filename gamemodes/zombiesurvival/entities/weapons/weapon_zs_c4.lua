@@ -42,7 +42,7 @@ function SWEP:Reload()
 end   
 
 function SWEP:Initialize()
-	self:SetWeaponHoldType("slam")
+	self:SetHoldType("slam")
     util.PrecacheSound("siege/big_explosion.wav")
     util.PrecacheSound("siege/jihad.wav")
 end
