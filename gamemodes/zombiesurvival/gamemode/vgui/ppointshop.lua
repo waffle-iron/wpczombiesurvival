@@ -100,7 +100,7 @@ local function ItemPanelThink(self)
 				if not GAMEMODE:IsWeaponUnlocked(itemtab.SWEP) then
 					self:AlphaTo(90, 0.75, 0)
 					self.m_NameLabel:SetTextColor(COLOR_RED)
-					self.m_BuyButton:SetImage("icon16/exclamation.png")
+					self.m_BuyButton:SetImage("icon16/lock.png")
 				end
 			end
 
@@ -256,7 +256,7 @@ function GM:OpenPointsShop()
 					local sellbutton = vgui.Create("DImageButton", itempan)
 					local points = math.ceil(tab.Worth/6)
 					if tab.Category == ITEMCAT_GUNS or tab.Category == ITEMCAT_MELEE then
-						sellbutton:SetImage("icon16/exclamation.png")
+						sellbutton:SetImage("icon16/money_add.png")
 						sellbutton:SizeToContents()
 						sellbutton:SetPos(itempan:GetWide() - 20 - sellbutton:GetWide(), itempan:GetTall() - 20)
 						sellbutton:SetTooltip("Sell "..name.." for "..points.." points")
