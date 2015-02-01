@@ -17,9 +17,10 @@ SWEP.ViewModel      = "models/weapons/c_katana.mdl"
 SWEP.WorldModel   	= "models/weapons/w_katana.mdl"
 SWEP.UseHands = true
 
-SWEP.MeleeDamage = 40
+SWEP.MeleeDamage = 75
 SWEP.MeleeRange = 72
 SWEP.MeleeSize = 1.5
+SWEP.MeleeKnockBack = 8
 
 SWEP.Primary.Delay = 1.0
 

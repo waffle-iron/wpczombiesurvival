@@ -199,6 +199,8 @@ function SWEP:DrawHUD()
 	end
 
 	if GetConVarNumber("crosshair") == 1 then
-		self:DrawCrosshairDot()
+		if self.Owner.m_bThirdPEnabled or (not GetConVar("gmp_hud_enabled"):GetBool() or not GetConVar("gmp_hud_crosshair_enabled"):GetBool()) then
+			self:DrawCrosshairDot()
+		end
 	end
 end

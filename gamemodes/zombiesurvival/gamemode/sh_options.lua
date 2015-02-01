@@ -28,9 +28,11 @@ GM.WeaponWaves["weapon_zs_g3sg1"] = 4
 GM.WeaponWaves["weapon_zs_crossbow"] = 5
 GM.WeaponWaves["weapon_zs_sawedoff"] = 5
 GM.WeaponWaves["weapon_zs_sg552"] = 5
-GM.WeaponWaves["weapon_zs_sweepershotgun"] = 6
-GM.WeaponWaves["weapon_zs_boomstick"] = 6
+GM.WeaponWaves["weapon_zs_sweepershotgun"] = 5
+GM.WeaponWaves["weapon_zs_boomstick"] = 5
+GM.WeaponWaves["weapon_zs_laserboomstick"] = 6
 GM.WeaponWaves["weapon_zs_slugrifle"] = 6
+GM.WeaponWaves["weapon_zs_csniper"] = 6
 GM.WeaponWaves["weapon_zs_pulserifle"] = 6
 GM.WeaponWaves["weapon_zs_sg550"] = 6
 GM.WeaponWaves["weapon_zs_m249"] = 6
@@ -263,7 +265,9 @@ GM:AddPointShopItem("boomstick", "Boom Stick", nil, ITEMCAT_GUNS, 200, "weapon_z
 GM:AddPointShopItem("slugrifle", "'Tiny' Slug Rifle", nil, ITEMCAT_GUNS, 200, "weapon_zs_slugrifle")
 GM:AddPointShopItem("pulserifle", "'Adonis' Pulse Rifle", nil, ITEMCAT_GUNS, 225, "weapon_zs_pulserifle")
 GM:AddPointShopItem("killerrifle", "'Killer' SIG SG550", nil, ITEMCAT_GUNS, 230, "weapon_zs_sg550")
-GM:AddPointShopItem("grimreaper", "'Grim Reaper' Machince Gun", nil, ITEMCAT_GUNS, 300, "weapon_zs_m249")
+GM:AddPointShopItem("combiensniper", "'Destroyer' Sniper Rifle", nil, ITEMCAT_GUNS, 300, "weapon_zs_csniper")
+GM:AddPointShopItem("laserboomstick", "Laser BoomStick", nil, ITEMCAT_GUNS, 300, "weapon_zs_laserboomstick")
+GM:AddPointShopItem("grimreaper", "'Grim Reaper' Machince Gun", nil, ITEMCAT_GUNS, 350, "weapon_zs_m249")
 
 GM:AddPointShopItem("pistolammo", "pistol ammo box", nil, ITEMCAT_AMMO, 7, nil, function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["pistol"] or 12, "pistol", true) end, "models/Items/BoxSRounds.mdl")
 GM:AddPointShopItem("shotgunammo", "shotgun ammo box", nil, ITEMCAT_AMMO, 7, nil, function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["buckshot"] or 8, "buckshot", true) end, "models/Items/BoxBuckshot.mdl")

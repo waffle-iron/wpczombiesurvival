@@ -12,11 +12,13 @@ function PANEL:Init()
 	self.m_Text1 = vgui.Create("DLabel", self)
 	self.m_Text2 = vgui.Create("DLabel", self)
 	self.m_Text3 = vgui.Create("DLabel", self)
+	self.m_Text4 = vgui.Create("DLabel", self)
 	self:SetTextFont("ZSHUDFontTiny")
 
 	self.m_Text1.Paint = self.Text1Paint
 	self.m_Text2.Paint = self.Text2Paint
 	self.m_Text3.Paint = self.Text3Paint
+	self.m_Text4.Paint = self.Text4Paint
 
 	self:InvalidateLayout()
 end
@@ -28,12 +30,15 @@ function PANEL:SetTextFont(font)
 	self.m_Text2:SetFont(font)
 	self.m_Text3.Font = font
 	self.m_Text3:SetFont(font)
+	self.m_Text4.Font = font
+	self.m_Text4:SetFont(font)
 
 	self:InvalidateLayout()
 end
 
 function PANEL:PerformLayout()
-	local hs = self:GetTall() * 0.5
+	local hs = self:GetTall() * 0.35
+	
 	self.m_HumanCount:SetSize(hs, hs)
 	self.m_ZombieCount:SetSize(hs, hs)
 	self.m_ZombieCount:AlignTop(hs)
@@ -45,11 +50,15 @@ function PANEL:PerformLayout()
 	self.m_Text2:SetWide(self:GetWide())
 	self.m_Text2:SizeToContentsY()
 	self.m_Text2:MoveRightOf(self.m_HumanCount, 12)
-	self.m_Text2:CenterVertical()
+	self.m_Text2:MoveBelow( self.m_Text1, 2 )
 	self.m_Text3:SetWide(self:GetWide())
 	self.m_Text3:SizeToContentsY()
 	self.m_Text3:MoveRightOf(self.m_HumanCount, 12)
-	self.m_Text3:AlignBottom(4)
+	self.m_Text3:MoveBelow( self.m_Text2, 2 )
+	self.m_Text4:SetWide(self:GetWide())
+	self.m_Text4:SizeToContentsY()
+	self.m_Text4:MoveRightOf(self.m_HumanCount, 12)
+	self.m_Text4:MoveBelow( self.m_Text3, 2 )
 end
 
 function PANEL:Text1Paint()
@@ -126,6 +135,18 @@ function PANEL:Text3Paint()
 			end
 		else
 			draw.SimpleText(translate.Format("points_x", MySelf:GetPoints().." / "..MySelf:Frags()).." / "..MySelf:GetPointsSave(), self.Font, 0, 0, COLOR_DARKRED)
+		end
+	end
+
+	return true
+end
+
+function PANEL:Text4Paint()
+	if MySelf:IsValid() then
+		if MySelf:Team() == TEAM_UNDEAD then
+			draw.SimpleText(translate.Format("points_x", MySelf:GetZombiePoints().." / "..MySelf:GetPointsSave()), self.Font, 0, 0, COLOR_DARKGREEN)
+		else
+			draw.SimpleText("", self.Font, 0, 0, COLOR_DARKGREEN)
 		end
 	end
 

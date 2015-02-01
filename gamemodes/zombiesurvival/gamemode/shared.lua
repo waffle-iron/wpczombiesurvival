@@ -435,6 +435,7 @@ end
 function GM:PlayerTraceAttack(pl, dmginfo, dir, trace)
 end
 
+--[[
 function GM:ScalePlayerDamage(pl, hitgroup, dmginfo)
     if hitgroup == HITGROUP_HEAD and dmginfo:IsBulletDamage() then
         pl.m_LastHeadShot = CurTime()
@@ -454,6 +455,7 @@ function GM:ScalePlayerDamage(pl, hitgroup, dmginfo)
 		pl:AddLegDamage(dmginfo:GetDamage())
 	end
 end
+--]]
 
 function GM:CanDamageNail(ent, attacker, inflictor, damage, dmginfo)
     return not attacker:IsPlayer() or attacker:Team() ~= TEAM_HUMAN
@@ -786,20 +788,20 @@ if GM:GetWave() == 0 then
 end
 
 function GM:IsWeaponUnlocked(classname)
-	local weaponwave = self.WaveUnlock[classname]
-	local infliction = self:CalculateInfliction()
+	local weaponwave = GAMEMODE.WaveUnlock[classname]
+	local infliction = GAMEMODE:CalculateInfliction()
 
 	if not weaponwave then
 		return true
 	end
 	
-    if self.ObjectiveMap and self:GetWave() >= 2 then
+    if GAMEMODE.ObjectiveMap and GAMEMODE:GetWave() == 2 then
         return true
-    elseif self:GetWave() == self:GetNumberOfWaves() then
+    elseif GAMEMODE:GetWave() == GAMEMODE:GetNumberOfWaves() then
         return true
-    elseif self:GetWave() >= weaponwave then
+    elseif GAMEMODE:GetWave() >= weaponwave then
         return true
-	elseif infliction >= 0.8 and weaponwave <= self:GetNumberOfWaves() then
+	elseif infliction >= 0.8 and weaponwave <= GAMEMODE:GetNumberOfWaves() then
 		return true
 	elseif infliction >= 0.5 and weaponwave <= 4 then
 		return true

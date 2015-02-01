@@ -405,6 +405,8 @@ function GM:AddNetworkStrings()
 	util.AddNetworkString("zs_pls_kill_pl")
 	util.AddNetworkString("zs_pl_kill_self")
 	util.AddNetworkString("zs_death")
+	
+	util.AddNetworkString("stp_enabled")
 end
 
 function GM:IsClassicMode()
@@ -1275,6 +1277,17 @@ function GM:RestartGame()
 		pl:DoHulls()
 		pl:SetZombieClass(self.DefaultZombieClass)
 		pl.DeathClass = nil
+		if pl.m_bThirdPEnabled then
+			pl.m_bShoulderEnabled = false
+			pl.m_bThirdPEnabled = false
+			pl.m_bThirdPDisabled = false
+			
+			net.Start("stp_enabled")
+				net.WriteBit(ply.m_bShoulderEnabled)
+				net.WriteBit(ply.m_bThirdPEnabled)
+				net.WriteBit(ply.m_bThirdPDisabled)
+			net.Send(pl)
+		end
 	end
 
 	self:SetWave(0)
@@ -1626,6 +1639,16 @@ function GM:PlayerRedeemed(pl, silent, noequip)
 	pl:UnSpectateAndSpawn()
 	pl.m_PreRedeem = nil
 	pl:DoHulls()
+	
+	if pl.m_bThirdPEnabled then
+		pl.m_bShoulderEnabled = true
+		
+		net.Start("stp_enabled")
+			net.WriteBit(ply.m_bShoulderEnabled)
+			net.WriteBit(ply.m_bThirdPEnabled)
+			net.WriteBit(ply.m_bThirdPDisabled)
+		net.Send(pl)
+	end
 
 	local frags = pl:Frags()
 	if frags < 0 then
@@ -1894,12 +1917,15 @@ concommand.Add("zs_pointsshopbuy", function(sender, command, arguments)
 	end
 	
 	if itemtab.SWEP then
-		if not GAMEMODE.ObjectiveMap then
-			if not GAMEMODE:IsWeaponUnlocked(itemtab.SWEP) then
+		if not GAMEMODE:IsWeaponUnlocked(itemtab.SWEP) then
+			if GAMEMODE.ObjectiveMap then
+				sender:CenterNotify(COLOR_RED, translate.ClientFormat(sender, "not_unlocked_yet_unlocked_on_x", 2))
+				sender:SendLua("surface.PlaySound(\"buttons/button10.wav\")")
+			else
 				sender:CenterNotify(COLOR_RED, translate.ClientFormat(sender, "not_unlocked_yet_unlocked_on_x", GAMEMODE.WaveUnlock[itemtab.SWEP]))
 				sender:SendLua("surface.PlaySound(\"buttons/button10.wav\")")
-				return
 			end
+			return
 		end
 	end
 
@@ -2499,9 +2525,12 @@ end
 
 function GM:OnPlayerChangedTeam(pl, oldteam, newteam)
 	if newteam == TEAM_UNDEAD then
+		pl:SetZombiePoints(pl:GetPoints())
 		pl:SetPoints(0)
 		pl.DamagedBy = {}
 		pl:SetBarricadeGhosting(false)
+		pl.m_bThirdPEnabled = false
+		pl.m_bShoulderEnabled = false
 		self.CheckedOut[pl:UniqueID()] = true
 	elseif newteam == TEAM_HUMAN then
 		self.PreviouslyDied[pl:UniqueID()] = nil
@@ -3842,4 +3871,10 @@ concommand.Add("zs_class", function(sender, command, arguments)
 			sender:Kill()
 		end
 	end
+end)
+
+net.Receive("stp_enabled",function(len, ply)
+	ply.m_bShoulderEnabled = net.ReadBit()==1
+	ply.m_bThirdPEnabled = net.ReadBit()==1
+	ply.m_bThirdPDisabled = net.ReadBit()==1
 end)

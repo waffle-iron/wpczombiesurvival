@@ -96,12 +96,10 @@ local function ItemPanelThink(self)
 				self.m_BuyButton:SetImage("icon16/exclamation.png")
 			end
 			
-			if not GAMEMODE.ObjectiveMap then
-				if not GAMEMODE:IsWeaponUnlocked(itemtab.SWEP) then
-					self:AlphaTo(90, 0.75, 0)
-					self.m_NameLabel:SetTextColor(COLOR_RED)
-					self.m_BuyButton:SetImage("icon16/lock.png")
-				end
+			if not GAMEMODE:IsWeaponUnlocked(itemtab.SWEP) then
+				self:AlphaTo(90, 0.75, 0)
+				self.m_NameLabel:SetTextColor(COLOR_RED)
+				self.m_BuyButton:SetImage("icon16/lock.png")
 			end
 
 			self.m_BuyButton:SizeToContents()

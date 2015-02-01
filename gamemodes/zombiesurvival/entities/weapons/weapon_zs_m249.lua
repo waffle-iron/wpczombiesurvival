@@ -18,8 +18,9 @@ if CLIENT then
 	SWEP.InvertShellEjectAngle = true
 	
 	SWEP.HUD3DBone = "v_weapon.m249"
-	SWEP.HUD3DPos = Vector(1.40, 0, 8)
-	SWEP.HUD3DScale = 0.015
+	SWEP.HUD3DPos = Vector(1.5, -1, 2)
+	SWEP.HUD3DAng = Angle(0, 180, 180)
+	SWEP.HUD3DScale = 0.0150
 end
 
 SWEP.PlayBackRate = 1

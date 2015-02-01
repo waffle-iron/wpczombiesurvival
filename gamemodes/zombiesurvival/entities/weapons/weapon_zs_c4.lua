@@ -38,6 +38,29 @@ SWEP.Secondary.Ammo			= "none"
 
 SWEP.WalkSpeed = SPEED_NORMAL
 
+if SERVER then
+	SWEP.Weight				= 5
+	SWEP.AutoSwitchTo		= false
+	SWEP.AutoSwitchFrom		= false
+	
+	function SWEP:Asplode()
+		local k, v
+		local ent = ents.Create( "env_explosion" )
+		ent:SetPos( self.Owner:GetPos() )
+		ent:SetOwner( self.Owner )
+		ent:Spawn()
+		ent:SetKeyValue( "iMagnitude", "1200" )
+		ent:Fire( "Explode", 0, 0 )
+		ent:EmitSound( "siege/big_explosion.wav", 500, 500 )
+			
+		self.Owner:Kill( )
+
+		for k, v in pairs( player.GetAll( ) ) do
+			v:ConCommand( "play siege/big_explosion.wav\n" )
+		end
+	end
+end
+
 function SWEP:Reload()
 end   
 
@@ -69,23 +92,6 @@ function SWEP:PrimaryAttack()
 	end
 end
 
-function SWEP:Asplode()
-	local k, v
-	local ent = ents.Create( "env_explosion" )
-	ent:SetPos( self.Owner:GetPos() )
-	ent:SetOwner( self.Owner )
-	ent:Spawn()
-	ent:SetKeyValue( "iMagnitude", "1200" )
-	ent:Fire( "Explode", 0, 0 )
-	ent:EmitSound( "siege/big_explosion.wav", 500, 500 )
-		
-	self.Owner:Kill( )
-
-	for k, v in pairs( player.GetAll( ) ) do
-		v:ConCommand( "play siege/big_explosion.wav\n" )
-	end
-end
-
 function SWEP:SecondaryAttack()	
 	
 	self.Weapon:SetNextSecondaryFire( CurTime() + 1 )
@@ -97,12 +103,6 @@ function SWEP:SecondaryAttack()
 	if (!SERVER) then return end
 	
 	self.Weapon:EmitSound( TauntSound )
-end
-
-if SERVER then
-	SWEP.Weight				= 5
-	SWEP.AutoSwitchTo		= false
-	SWEP.AutoSwitchFrom		= false
 end
 
 if CLIENT then

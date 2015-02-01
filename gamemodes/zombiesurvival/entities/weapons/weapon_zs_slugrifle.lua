@@ -31,6 +31,7 @@ if CLIENT then
 	SWEP.MaxZoom = 80
 	
 	SWEP.IronsightsMultiplier = 0.25
+	SWEP.HeadshotMultiplier = 5
 	
 	SWEP.HUD3DBone = "v_weapon.xm1014_Bolt"
 	SWEP.HUD3DPos = Vector(-1, 0, 0)

@@ -157,6 +157,14 @@ function meta:GetSavedPoints()
 	return self:GetDTInt(2)
 end
 
+function meta:SetZombiePoints(points)
+	self:SetDTInt(3, points)
+end
+
+function meta:GetZombiePoints()
+	return self:GetDTInt(3)
+end
+
 function meta:GetPointsSave()
 	if self:GetSavedPoints() > 0 then
 		return "+"..self:GetSavedPoints()
@@ -837,18 +845,7 @@ function meta:PlayPainSound()
 	if self:Team() == TEAM_UNDEAD then
 		if self:CallZombieFunction("PlayPainSound") then return end
 		snds = self:GetZombieClassTable().PainSounds
-	else
-		local set = VoiceSets[self.VoiceSet]
-		if set then
-			local health = self:Health()
-			if 70 <= health then
-				snds = set.PainSoundsLight
-			elseif 35 <= health then
-				snds = set.PainSoundsMed
-			else
-				snds = set.PainSoundsHeavy
-			end
-		end
+	else return
 	end
 
 	if snds then

@@ -18,5 +18,8 @@ function SWEP:DrawHUD()
 	draw.SimpleTextBlurry(text, "ZSHUDFontSmall", ScrW() - nTEXW * 0.5 - 24, ScrH() - nTEXH * 2, COLOR_LIMEGREEN, TEXT_ALIGN_CENTER)
 
 	if GetConVarNumber("crosshair") ~= 1 then return end
-	self:DrawCrosshairDot()
+	
+	if self.Owner.m_bThirdPEnabled or (not GetConVar("gmp_hud_enabled"):GetBool() or not GetConVar("gmp_hud_crosshair_enabled"):GetBool()) then
+		self:DrawCrosshairDot()
+	end
 end

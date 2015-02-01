@@ -247,13 +247,30 @@ function meta:DrawCrosshairCross()
 end
 
 function meta:DrawCrosshairDot()
-	local x = ScrW() * 0.5
-	local y = ScrH() * 0.5
+	local lp
+	local td = {}
+	local x2, y2
+	
+	lp = self.Owner.m_bThirdPEnabled
+	
+	if lp then
+		td.start = self.Owner:GetShootPos()
+		td.endpos = td.start + (self.Owner:EyeAngles() + self.Owner:GetPunchAngle()):Forward() * 16384
+		td.filter = self.Owner
+				
+		tr = util.TraceLine(td)
+				
+		x2 = tr.HitPos:ToScreen()
+		x2, y2 = x2.x, x2.y
+	else
+		x2 = ScrW() * 0.5
+		y2 = ScrH() * 0.5
+	end
 
 	surface.SetDrawColor(GAMEMODE.CrosshairColor2)
-	surface.DrawRect(x - 2, y - 2, 4, 4)
+	surface.DrawRect(x2 - 2, y2 - 2, 4, 4)
 	surface.SetDrawColor(0, 0, 0, 220)
-	surface.DrawOutlinedRect(x - 2, y - 2, 4, 4)
+	surface.DrawOutlinedRect(x2 - 2, y2 - 2, 4, 4)
 end
 
 function meta:BaseDrawWeaponSelection(x, y, wide, tall, alpha)

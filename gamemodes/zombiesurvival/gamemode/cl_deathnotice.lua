@@ -97,8 +97,8 @@ killicon.Add("projectile_poisonflesh", "zombiesurvival/killicons/projectile_pois
 killicon.Add("projectile_poisonpuke", "zombiesurvival/killicons/pukepus", color_white)
 killicon.Add("weapon_zs_zombine", "zombiesurvival/killicons/zombine", color_white)
 killicon.Add("weapon_zs_special_wow", "sprites/glow04_noz", color_white)
-killicon.Add("weapon_zs_katana", "killicon/katana", color_white)
 killicon.Add("weapon_zs_sawedoff", "killicon/bm16", color_white)
+killicon.Add("weapon_zs_csniper", "killicon/combine_sniper", color_white)
 
 killicon.Add("prop_gunturret", "zombiesurvival/killicons/prop_gunturret", color_white)
 killicon.Add("weapon_zs_gunturret", "zombiesurvival/killicons/prop_gunturret", color_white)

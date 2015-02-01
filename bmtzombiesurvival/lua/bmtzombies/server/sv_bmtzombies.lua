@@ -28,6 +28,10 @@ hook.Add("PlayerSpawn","PointSave.Spawn", function(ply)
 	end)
 end)
 hook.Add("PlayerPointsAdded","PointSave.Add", function(ply, points)
+	if ply:Team() == TEAM_UNDEAD then
+		return
+	end
+	
 	local id = ply:SteamID()
 	
 	if points > 1 then
@@ -55,6 +59,10 @@ hook.Add("PlayerPointsAdded","PointSave.Add", function(ply, points)
 	end)
 end)
 hook.Add("PlayerPointsRemoved","PointSave.Remove", function(ply, points)
+	if ply:Team() == TEAM_UNDEAD then
+		return
+	end
+
 	local id = ply:SteamID()
 	
 	ply:SetSavedPoints(ply:GetSavedPoints() - points)

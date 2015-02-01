@@ -952,7 +952,7 @@ function GM:CreateVGUI()
 	self.GameStatePanel = vgui.Create("DGameState")
 	self.GameStatePanel:SetTextFont("ZSHUDFontSmaller")
 	self.GameStatePanel:SetAlpha(220)
-	self.GameStatePanel:SetSize(screenscale * 420, screenscale * 80)
+	self.GameStatePanel:SetSize(screenscale * 420, screenscale * 120)
 	self.GameStatePanel:ParentToHUD()
 
 	self.TopNotificationHUD = vgui.Create("DEXNotificationsList")
@@ -1152,6 +1152,10 @@ function GM:PlayerBindPress(pl, bind, wasin)
 			if pl.m_bThirdPDisabled then
 				return
 			end
+			
+			if pl.m_bThirdPDisabled == nil then
+				pl.m_bThirdPDisabled = false
+			end
 	
 			if pl:Team() == TEAM_UNDEAD and pl.m_bShoulderEnabled then
 				pl.m_bShoulderEnabled = false
@@ -1160,6 +1164,12 @@ function GM:PlayerBindPress(pl, bind, wasin)
 			end
 
 			pl.m_bThirdPEnabled = not pl.m_bThirdPEnabled
+			
+			net.Start("stp_enabled")
+				net.WriteBit(pl.m_bShoulderEnabled)
+				net.WriteBit(pl.m_bThirdPEnabled)
+				net.WriteBit(pl.m_bThirdPDisabled)
+			net.SendToServer()
 		end
 	end
 end
@@ -1837,6 +1847,12 @@ end)
 
 net.Receive("zs_lasthumanpos", function(length)
 	GAMEMODE.LastHumanPosition = net.ReadVector()
+end)
+
+net.Receive("stp_enabled",function(length)
+	LocalPlayer().m_bShoulderEnabled = net.ReadBit()==1
+	LocalPlayer().m_bThirdPEnabled = net.ReadBit()==1
+	LocalPlayer().m_bThirdPDisabled = net.ReadBit()==1
 end)
 
 net.Receive("zs_endround", function(length)
