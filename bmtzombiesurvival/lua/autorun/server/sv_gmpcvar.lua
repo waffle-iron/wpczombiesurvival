@@ -13,6 +13,9 @@ hook.Add("Think", "GMP.Think", function()
 			if Ply:GetInfoNum("gmp_headshot_killicon_enabled", 0) == 1 then
 				Ply:ConCommand("gmp_headshot_killicon_enabled 0")
 			end
+			if Ply:GetInfoNum("gmp_dynaview_close_enabled", 0) == 1 then
+				Ply:ConCommand("gmp_dynaview_close_enabled 0")
+			end
 		end
 	end
 end)

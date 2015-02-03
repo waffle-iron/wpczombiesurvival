@@ -199,6 +199,7 @@ end
 
 if SERVER then return end
 
+CLASS.HealthBar = surface.GetTextureID("zombiesurvival/healthbar_fastzombie")
 CLASS.Icon = "zombiesurvival/killicons/fastzombie"
 
 function CLASS:CreateMove(pl, cmd)

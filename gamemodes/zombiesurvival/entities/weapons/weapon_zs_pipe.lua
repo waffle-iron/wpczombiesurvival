@@ -7,13 +7,8 @@ if CLIENT then
 	SWEP.ViewModelFOV = 60
 
 	SWEP.ShowViewModel = false
-	SWEP.ShowWorldModel = false
-
 	SWEP.VElements = {
 		["base"] = { type = "Model", model = "models/props_canal/mattpipe.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(2.2, 1, -2.274), angle = Angle(0, 0, 0), size = Vector(1, 1, 1), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
-	}
-	SWEP.WElements = {
-		["base"] = { type = "Model", model = "models/props_canal/mattpipe.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(2.599, 1, -6), angle = Angle(0, 0, 0), size = Vector(1, 1, 1), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
 	}
 end
 
@@ -23,7 +18,11 @@ SWEP.DamageType = DMG_CLUB
 
 SWEP.ViewModel = "models/weapons/c_stunstick.mdl"
 SWEP.WorldModel = "models/props_canal/mattpipe.mdl"
+SWEP.WM = "models/props_canal/mattpipe.mdl"
+SWEP.WMPos = Vector(1.35, 2.5, -6)
+SWEP.WMAng = Angle(0, 0, 0)
 SWEP.UseHands = true
+SWEP.DrawTraditionalWorldModel = false
 
 SWEP.MeleeDamage = 40
 SWEP.MeleeRange = 50

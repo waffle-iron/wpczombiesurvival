@@ -137,6 +137,7 @@ end
 
 if not CLIENT then return end
 
+CLASS.HealthBar = surface.GetTextureID("zombiesurvival/healthbar_zombiefix")
 CLASS.Icon = "zombiesurvival/killicons/zombie"
 
 function CLASS:PrePlayerDraw(pl)

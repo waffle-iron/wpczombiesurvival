@@ -7,12 +7,8 @@ if CLIENT then
 	SWEP.ViewModelFlip = false
 
 	SWEP.ShowViewModel = false
-	SWEP.ShowWorldModel = false
 	SWEP.VElements = {
 		["base"] = { type = "Model", model = "models/props_c17/tools_wrench01a.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(2, 2, 0), angle = Angle(190, 0, 90), size = Vector(1.5, 1.5, 1.5), color = Color(255, 255, 255, 255), surpresslightning = false, material = "models/props_c17/metalladder001", skin = 0, bodygroup = {} }
-	}
-	SWEP.WElements = {
-		["base"] = { type = "Model", model = "models/props_c17/tools_wrench01a.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(2, 1, 0), angle = Angle(190, 90, 90), size = Vector(1.5, 1.5, 1.5), color = Color(255, 255, 255, 255), surpresslightning = false, material = "models/props_c17/metalladder001", skin = 0, bodygroup = {} }
 	}
 
 	SWEP.Description = "This tool can be used to repair deployables as long as they were not damaged recently."
@@ -22,8 +18,12 @@ SWEP.Base = "weapon_zs_basemelee"
 
 SWEP.ViewModel = "models/weapons/c_crowbar.mdl"
 SWEP.WorldModel = "models/props_c17/tools_wrench01a.mdl"
+SWEP.WM = "models/props_c17/tools_wrench01a.mdl"
+SWEP.WMPos = Vector(-5, -2, -4)
+SWEP.WMAng = Angle(190, 90, 90)
 SWEP.ModelScale = 1.5
 SWEP.UseHands = true
+SWEP.DrawTraditionalWorldModel = false
 
 SWEP.HoldType = "melee"
 

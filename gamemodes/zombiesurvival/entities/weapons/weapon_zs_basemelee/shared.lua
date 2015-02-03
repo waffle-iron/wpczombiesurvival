@@ -4,8 +4,8 @@ if SERVER then
 	AddCSLuaFile("animations.lua")
 end
 
-SWEP.ViewModel = "models/weapons/v_axe/v_axe.mdl"
-SWEP.WorldModel = "models/weapons/w_axe.mdl"
+SWEP.ViewModel = "models/weapons/c_stunstick.mdl"
+SWEP.WorldModel = "models/props/cs_militia/axe.mdl"
 
 SWEP.Primary.ClipSize = -1
 SWEP.Primary.DefaultClip = -1
@@ -48,6 +48,11 @@ function SWEP:Initialize()
 	self:SetWeaponSwingHoldType(self.SwingHoldType)
 
 	if CLIENT then
+		if self.WM then
+			self.WMEnt = ClientsideModel(self.WM, RENDERGROUP_BOTH)
+			self.WMEnt:SetNoDraw(true)
+		end
+		
 		self:Anim_Initialize()
 	end
 end

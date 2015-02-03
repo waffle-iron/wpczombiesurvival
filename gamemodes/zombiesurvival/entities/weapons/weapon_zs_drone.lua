@@ -7,7 +7,6 @@ if CLIENT then
 	SWEP.ViewModelFlip = false
 	SWEP.ViewModelFOV = 50
 	SWEP.ShowViewModel = true
-	SWEP.ShowWorldModel = false
 
 	SWEP.ViewModelBoneMods = {
 		["ValveBiped.cube1"] = { scale = Vector(0.009, 0.009, 0.009), pos = Vector(0, 0, 0), angle = Angle(0, 0, 0) },
@@ -18,17 +17,18 @@ if CLIENT then
 	SWEP.VElements = {
 		["base"] = { type = "Model", model = "models/combine_scanner.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(5, 4, 0), angle = Angle(-54.206, 58.294, -50.114), size = Vector(1, 1, 1), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
 	}
-
-	SWEP.WElements = {
-		["base"] = { type = "Model", model = "models/combine_scanner.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(5, 5, 0), angle = Angle(-43.978, 27.614, 0), size = Vector(1, 1, 1), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
-	}
 end
 
 SWEP.Base = "weapon_zs_basemelee"
 
 SWEP.ViewModel = "models/weapons/c_bugbait.mdl"
 SWEP.WorldModel = "models/combine_scanner.mdl"
+SWEP.WM = "models/combine_scanner.mdl"
+SWEP.WMPos = Vector(5, 5, 0)
+SWEP.WMAng = Angle(-43.978, 27.614, 0)
 SWEP.UseHands = true
+
+SWEP.DrawTraditionalWorldModel = false
 
 SWEP.HoldType = "grenade"
 

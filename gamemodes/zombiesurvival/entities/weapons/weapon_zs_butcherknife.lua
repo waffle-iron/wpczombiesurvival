@@ -7,12 +7,8 @@ if CLIENT then
 	SWEP.ViewModelFlip = false
 
 	SWEP.ShowViewModel = false
-	SWEP.ShowWorldModel = false
 	SWEP.VElements = {
 		["base"] = { type = "Model", model = "models/props_lab/cleaver.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(3, 1, -1), angle = Angle(90, 0, 0), size = Vector(0.8, 1, 1), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
-	}
-	SWEP.WElements = {
-		["base"] = { type = "Model", model = "models/props_lab/cleaver.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(3, 1, -3.182), angle = Angle(90, 0, 0), size = Vector(0.8, 1, 1), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
 	}
 end
 
@@ -21,11 +17,16 @@ SWEP.Base = "weapon_zs_basemelee"
 SWEP.DamageType = DMG_SLASH
 
 SWEP.ViewModel = "models/weapons/c_crowbar.mdl"
-SWEP.WorldModel = "models/weapons/w_crowbar.mdl"
+SWEP.WorldModel = "models/props_lab/cleaver.mdl"
+SWEP.WM = "models/props_lab/cleaver.mdl"
+SWEP.WMPos = Vector(1, 1, -3.182)
+SWEP.WMAng = Angle(90, 0, 0)
 SWEP.UseHands = true
 SWEP.NoDroppedWorldModel = true
 --[[SWEP.BoxPhysicsMax = Vector(8, 1, 4)
 SWEP.BoxPhysicsMin = Vector(-8, -1, -4)]]
+
+SWEP.DrawTraditionalWorldModel = false
 
 SWEP.MeleeDamage = 40
 SWEP.MeleeRange = 48

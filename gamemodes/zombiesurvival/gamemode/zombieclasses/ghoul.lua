@@ -196,4 +196,5 @@ end
 
 if not CLIENT then return end
 
+CLASS.HealthBar = surface.GetTextureID("zombiesurvival/healthbar__human")
 CLASS.Icon = "zombiesurvival/killicons/ghoul"

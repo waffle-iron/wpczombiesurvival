@@ -8,6 +8,8 @@ SWEP.ViewModelFOV = 60
 SWEP.ViewbobIntensity = 1
 SWEP.ViewbobEnabled = true
 
+SWEP.DrawTraditionalWorldModel = true
+
 SWEP.Slot = 0
 SWEP.SlotPos = 0
 
@@ -65,7 +67,7 @@ end
 function SWEP:DrawHUD()
 	if GetConVarNumber("crosshair") ~= 1 then return end
 	
-	if self.Owner.m_bThirdPEnabled or (not GetConVar("gmp_hud_enabled"):GetBool() or not GetConVar("gmp_hud_crosshair_enabled"):GetBool()) then
+	if self.Owner.m_bThirdPEnabled  then
 		self:DrawCrosshairDot()
 	end
 end
@@ -158,9 +160,46 @@ function SWEP:PostDrawViewModel(vm)
 	end
 end
 
+local wm, pos, ang
+local GetBonePosition = debug.getregistry().Entity.GetBonePosition
 function SWEP:DrawWorldModel()
 	local owner = self:GetOwner()
 	if owner:IsValid() and owner.ShadowMan then return end
+	
+	if (self.ShowWorldModel == nil or self.ShowWorldModel) then
+		if self.DrawTraditionalWorldModel then
+			self:DrawModel()
+		else
+			wm = self.WMEnt
+			
+			if IsValid(wm) then
+				if IsValid(owner) then
+					pos, ang = GetBonePosition(owner, owner:LookupBone("ValveBiped.Bip01_R_Hand"))
+					
+					if pos and ang then
+						RotateAroundAxis(ang, Right(ang), self.WMAng[1])
+						RotateAroundAxis(ang, Up(ang), self.WMAng[2])
+						RotateAroundAxis(ang, Forward(ang), self.WMAng[3])
+
+						pos = pos + self.WMPos[1] * Right(ang) 
+						pos = pos + self.WMPos[2] * Forward(ang)
+						pos = pos + self.WMPos[3] * Up(ang)
+						
+						wm:SetRenderOrigin(pos)
+						wm:SetRenderAngles(ang)
+						wm:DrawModel()
+					end
+				else
+					wm:SetRenderOrigin(self:GetPos())
+					wm:SetRenderAngles(self:GetAngles())
+					wm:DrawModel()
+					wm:DrawShadow()
+				end
+			else
+				self:DrawModel()
+			end
+		end
+	end
 
 	self:Anim_DrawWorldModel()
 end

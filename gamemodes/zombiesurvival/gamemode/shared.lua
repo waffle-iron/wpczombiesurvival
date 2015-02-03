@@ -788,20 +788,20 @@ if GM:GetWave() == 0 then
 end
 
 function GM:IsWeaponUnlocked(classname)
-	local weaponwave = GAMEMODE.WaveUnlock[classname]
-	local infliction = GAMEMODE:CalculateInfliction()
+	local weaponwave = self.WaveUnlock[classname]
+	local infliction = self:CalculateInfliction()
 
 	if not weaponwave then
 		return true
 	end
 	
-    if GAMEMODE.ObjectiveMap and GAMEMODE:GetWave() == 2 then
+    if GAMEMODE.ObjectiveMap and not self:GetWaveActive() then
         return true
-    elseif GAMEMODE:GetWave() == GAMEMODE:GetNumberOfWaves() then
+    elseif self:GetWave() == self:GetNumberOfWaves() then
         return true
-    elseif GAMEMODE:GetWave() >= weaponwave then
+    elseif self:GetWave() >= weaponwave then
         return true
-	elseif infliction >= 0.8 and weaponwave <= GAMEMODE:GetNumberOfWaves() then
+	elseif infliction >= 0.8 and weaponwave <= self:GetNumberOfWaves() then
 		return true
 	elseif infliction >= 0.5 and weaponwave <= 4 then
 		return true

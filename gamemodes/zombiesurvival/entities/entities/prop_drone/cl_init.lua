@@ -25,6 +25,7 @@ function ENT:Think()
 
 			local sat = perc * 90
 
+			local pos = self:GetPos()
 			local emitter = ParticleEmitter(pos)
 			emitter:SetNearClip(16, 24)
 

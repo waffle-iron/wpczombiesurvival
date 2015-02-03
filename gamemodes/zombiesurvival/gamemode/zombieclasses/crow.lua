@@ -147,4 +147,5 @@ function CLASS:ShouldDrawLocalPlayer(pl)
 	return true
 end
 
+CLASS.HealthBar = surface.GetTextureID("zombiesurvival/healthbar_crow")
 CLASS.Icon = "zombiesurvival/killicons/crow"

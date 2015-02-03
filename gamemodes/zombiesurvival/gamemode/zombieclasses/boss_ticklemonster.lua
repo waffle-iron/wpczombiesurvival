@@ -116,6 +116,7 @@ end
 
 if not CLIENT then return end
 
+CLASS.HealthBar = surface.GetTextureID("zombiesurvival/healthbar__human")
 CLASS.Icon = "zombiesurvival/killicons/tickle"
 
 local vecSpineOffset = Vector(10, 0, 0)

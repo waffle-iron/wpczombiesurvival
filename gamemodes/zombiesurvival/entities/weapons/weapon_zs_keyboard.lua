@@ -7,17 +7,12 @@ if CLIENT then
 	SWEP.ViewModelFlip = false
 
 	SWEP.ShowViewModel = false
-	SWEP.ShowWorldModel = false
-
 	SWEP.ViewModelBoneMods = {
 		["ValveBiped.Bip01_R_Finger02"] = { scale = Vector(1, 1, 1), pos = Vector(0, 0, 0), angle = Angle(0, -45.715, 0) },
 		["ValveBiped.Bip01_R_Finger01"] = { scale = Vector(1, 1, 1), pos = Vector(0, 0, 0), angle = Angle(0, -49.524, 0) }
 	}
 	SWEP.VElements = {
 		["base"] = { type = "Model", model = "models/props_c17/computer01_keyboard.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(4.091, 4.4, -7.728), angle = Angle(180, -82.842, 80.794), size = Vector(0.75, 0.75, 0.75), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
-	}
-	SWEP.WElements = {
-		["base"] = { type = "Model", model = "models/props_c17/computer01_keyboard.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(5, 4.091, -8.636), angle = Angle(180, -60.341, 90), size = Vector(1, 1, 1), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
 	}
 end
 
@@ -29,7 +24,11 @@ SWEP.DamageType = DMG_CLUB
 
 SWEP.ViewModel = "models/weapons/c_stunstick.mdl"
 SWEP.WorldModel = "models/props_c17/computer01_keyboard.mdl"
+SWEP.WM = "models/props_c17/computer01_keyboard.mdl"
+SWEP.WMPos = Vector(-10, -5.091, -4.136)
+SWEP.WMAng = Angle(-180, 90, 90)
 SWEP.UseHands = true
+SWEP.DrawTraditionalWorldModel = false
 
 SWEP.MeleeDamage = 35
 SWEP.MeleeRange = 52

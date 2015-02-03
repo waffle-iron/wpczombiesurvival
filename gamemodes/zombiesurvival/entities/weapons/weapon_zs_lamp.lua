@@ -7,12 +7,8 @@ if CLIENT then
 	SWEP.ViewModelFlip = false
 
 	SWEP.ShowViewModel = false
-	SWEP.ShowWorldModel = false
 	SWEP.VElements = {
 		["base"] = { type = "Model", model = "models/props_interiors/Furniture_Lamp01a.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(3, 1.85, -8), angle = Angle(183, 0, 2), size = Vector(1.5, 1.5, 1.5), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
-	}
-	SWEP.WElements = {
-		["base"] = { type = "Model", model = "models/props_interiors/Furniture_Lamp01a.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(2.837, 1.638, -10), angle = Angle(180, 0, 0), size = Vector(1, 1, 1), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
 	}
 end
 
@@ -20,7 +16,11 @@ SWEP.Base = "weapon_zs_basemelee"
 
 SWEP.ViewModel = "models/weapons/c_stunstick.mdl"
 SWEP.WorldModel = "models/props_interiors/Furniture_Lamp01a.mdl"
+SWEP.WM = "models/props_interiors/Furniture_Lamp01a.mdl"
+SWEP.WMPos = Vector(1, -2.638, 10)
+SWEP.WMAng = Angle(180, 0, 0)
 SWEP.UseHands = true
+SWEP.DrawTraditionalWorldModel = false
 
 SWEP.HoldType = "melee2"
 

@@ -18,7 +18,6 @@ if CLIENT then
 	SWEP.VElements = {
 		["base"] = { type = "Model", model = "models/props_junk/rock001a.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(4.091, 3.181, -0.456), angle = Angle(-54.206, 58.294, -50.114), size = Vector(0.492, 0.492, 0.492), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
 	}
-
 	SWEP.WElements = {
 		["base"] = { type = "Model", model = "models/props_junk/rock001a.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(3.181, 2.273, -0.456), angle = Angle(-43.978, 27.614, 70.568), size = Vector(0.379, 0.379, 0.379), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
 	}
@@ -28,7 +27,11 @@ SWEP.Base = "weapon_zs_basemelee"
 
 SWEP.ViewModel = "models/weapons/c_bugbait.mdl"
 SWEP.WorldModel = "models/props_junk/rock001a.mdl"
+SWEP.WM = "models/props_junk/rock001a.mdl"
+SWEP.WMPos = Vector(3.181, 2.273, -0.456)
+SWEP.WMAng = Angle(-43.978, 27.614, 70.568)
 SWEP.UseHands = true
+SWEP.DrawTraditionalWorldModel = false
 
 SWEP.HoldType = "grenade"
 

@@ -49,7 +49,6 @@ SWEP.ViewModelFOV	= 55
 SWEP.ViewModelFlip	= false
 SWEP.ViewModel		= "models/weapons/tayley/v_bm16.mdl"
 SWEP.WorldModel		= "models/weapons/stalkerwep/bm16/w_bm16.mdl"
-SWEP.WM				= "models/weapons/stalkerwep/bm16/w_bm16.mdl"
 
 SWEP.Spawnable			= true
 SWEP.AdminSpawnable		= true

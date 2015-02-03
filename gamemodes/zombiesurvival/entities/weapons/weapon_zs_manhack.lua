@@ -18,7 +18,6 @@ if CLIENT then
 	SWEP.VElements = {
 		["base"] = { type = "Model", model = "models/manhack.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(5, 4, 0), angle = Angle(-54.206, 58.294, -50.114), size = Vector(1, 1, 1), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
 	}
-
 	SWEP.WElements = {
 		["base"] = { type = "Model", model = "models/manhack.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(5, 5, 0), angle = Angle(-43.978, 27.614, 0), size = Vector(1, 1, 1), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
 	}
@@ -28,7 +27,6 @@ SWEP.Base = "weapon_zs_basemelee"
 
 SWEP.ViewModel = "models/weapons/c_bugbait.mdl"
 SWEP.WorldModel = "models/manhack.mdl"
-SWEP.UseHands = true
 
 SWEP.DeployClass = "prop_manhack"
 SWEP.ControlWeapon = "weapon_zs_manhackcontrol"

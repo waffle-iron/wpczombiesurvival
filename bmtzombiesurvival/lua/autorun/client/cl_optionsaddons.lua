@@ -1,4 +1,5 @@
 CreateClientConVar("zs_damagefloatersstyle", "0", true, false)
+CreateClientConVar("zs_classichud", "0", true, false)
 
 hook.Add("AddExtraOptions", "AddExtraOptions.Life", function(panellist, optionsmenu)
 	local DButton = vgui.Create( "DButton" )
@@ -59,8 +60,8 @@ hook.Add("AddExtraOptions", "AddExtraOptions.Life", function(panellist, optionsm
 	panellist:AddItem(slider)
 	
 	local check = vgui.Create("DCheckBoxLabel", optionsmenu)
-	check:SetText("Disable Kill/Assist/Headshots Counter")
-	check:SetConVar("zs_disable_counter")
+	check:SetText("Enable Classic HUD")
+	check:SetConVar("zs_classichud")
 	check:SizeToContents()
 	panellist:AddItem(check)
 	

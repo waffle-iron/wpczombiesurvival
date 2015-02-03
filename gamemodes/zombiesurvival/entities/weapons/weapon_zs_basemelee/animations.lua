@@ -183,11 +183,6 @@ if CLIENT then
 
 	SWEP.wRenderOrder = nil
 	function SWEP:Anim_DrawWorldModel()
-		
-		if (self.ShowWorldModel == nil or self.ShowWorldModel) then
-			self:DrawModel()
-		end
-		
 		if (!self.WElements) then return end
 		
 		if (!self.wRenderOrder) then

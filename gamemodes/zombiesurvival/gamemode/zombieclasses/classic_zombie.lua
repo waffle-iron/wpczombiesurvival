@@ -53,6 +53,10 @@ function CLASS:UpdateAnimation(pl, velocity, maxseqgroundspeed)
 	return self.BaseClass.UpdateAnimation(self, pl, velocity, maxseqgroundspeed)
 end
 
+if CLIENT then
+	CLASS.HealthBar = surface.GetTextureID("zombiesurvival/healthbar_zombiefix")
+end
+
 --[[if SERVER then return end
 
 function CLASS:CreateMove(pl, cmd)

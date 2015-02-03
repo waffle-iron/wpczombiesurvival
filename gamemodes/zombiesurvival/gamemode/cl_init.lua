@@ -235,7 +235,7 @@ function GM:HUDAmmoPickedUp(itemname, amount)
 end
 
 function GM:InitPostEntity()
-	if not self.HealthHUD then
+	if not self.HealthHUD and not GetConVar("zs_classichud"):GetBool() then
 		self.HealthHUD = vgui.Create("ZSHealthArea")
 	end
 
@@ -369,8 +369,8 @@ function GM:LocalPlayerFound()
 	self.Think = self._Think
 	self.HUDShouldDraw = self._HUDShouldDraw
 	self.CachedFearPower = self._CachedFearPower
-	self.CalcView = self._CalcView
 	self.ShouldDrawLocalPlayer = self._ShouldDrawLocalPlayer
+	self.CalcView = self._CalcView
 	self.PostDrawOpaqueRenderables = self._PostDrawOpaqueRenderables
 	self.PostDrawTranslucentRenderables = self._PostDrawTranslucentRenderables
 	self.HUDPaint = self._HUDPaint
@@ -613,6 +613,37 @@ function GM:PlayBeats(teamid, fear)
 	end
 end
 
+local colHealth = Color(0, 130, 0, 200)
+local colPoison = Color(220, 220, 0, 200)
+function GM:DrawHealthBar(x, y, health, maxhealth, bartexture, screenscale, poisondamage)
+	health = math.max(0, health)
+
+	local wid, hei = 512 * screenscale, 256 * screenscale
+
+	if health > 0 then
+		local healthfrac = math.min(1, health / maxhealth)
+		local barx = x + screenscale * 72
+		local bary = y + screenscale * 100
+		local maxbarwidth = screenscale * 402
+		local barwidth = maxbarwidth * healthfrac
+		colHealth.g = 130 * healthfrac
+		colHealth.r = 130 - colHealth.g
+		surface.SetDrawColor(colHealth)
+		surface.DrawRect(barx, bary, barwidth, screenscale * 24)
+		if poisondamage then
+			surface.SetDrawColor(colPoison)
+			local poisonbarwidth = maxbarwidth * (poisondamage / maxhealth)
+			surface.DrawRect(barx + barwidth, bary, math.min(poisonbarwidth, maxbarwidth - barwidth), screenscale * 16)
+		end
+	end
+
+	surface.SetTexture(bartexture)
+	surface.SetDrawColor(150, 150, 150, 200)
+	surface.DrawTexturedRect(x, y, wid, hei)
+
+	draw.SimpleText(health, "ZSHUDFont", x + screenscale * 144, y + screenscale * 132, colHealth, TEXT_ALIGN_LEFT)
+end
+
 local colPackUp = Color(20, 255, 20, 220)
 local colPackUpNotOwner = Color(255, 240, 10, 220)
 function GM:DrawPackUpBar(x, y, fraction, notowner, screenscale)
@@ -632,9 +663,14 @@ function GM:DrawPackUpBar(x, y, fraction, notowner, screenscale)
 	draw_SimpleText(notowner and CurTime() % 2 < 1 and translate.Format("requires_x_people", 4) or notowner and translate.Get("packing_others_object") or translate.Get("packing"), "ZSHUDFontSmall", x, y - draw_GetFontHeight("ZSHUDFontSmall") - 2, col, TEXT_ALIGN_CENTER)
 end
 
+local texHumanHealthBar = surface.GetTextureID("zombiesurvival/healthbar__human")
 function GM:HumanHUD(screenscale)
 	local curtime = CurTime()
 	local w, h = ScrW(), ScrH()
+	
+	if GetConVar("zs_classichud"):GetBool() then
+		self:DrawHealthBar(screenscale * 24, h - 272 * screenscale, MySelf:Health(), MySelf:GetMaxHealth(), texHumanHealthBar, screenscale, MySelf:GetPoisonDamage())
+	end
 
 	local packup = MySelf.PackUp
 	if packup and packup:IsValid() then
@@ -694,6 +730,12 @@ function GM:_HUDPaint()
 	local screenscale = BetterScreenScale()
 
 	local myteam = MySelf:Team()
+	
+	if GetConVar("zs_classichud"):GetBool() then
+		if self.HealthHUD and self.HealthHUD:Valid() and self.HealthHUD:IsVisible() then
+			self.HealthHUD:SetVisible(false)
+		end
+	end
 
 	self:HUDDrawTargetID(myteam, screenscale)
 
@@ -750,6 +792,11 @@ local matHumanHeadID = Material("zombiesurvival/humanhead")
 local matZombieHeadID = Material("zombiesurvival/zombiehead")
 local colLifeStats = Color(255, 0, 0, 255)
 function GM:ZombieHUD()
+	local classtab = self.ZombieClasses[MySelf:GetZombieClass()]
+	if GetConVar("zs_classichud"):GetBool() then
+		self:DrawHealthBar(screenscale * 24, h - 272 * screenscale, MySelf:Health(), classtab.Health, classtab.HealthBar or texHumanHealthBar, screenscale)
+	end
+	
 	if self.LifeStatsEndTime and CurTime() < self.LifeStatsEndTime and (self.LifeStatsBarricadeDamage > 0 or self.LifeStatsHumanDamage > 0 or self.LifeStatsBrainsEaten > 0) then
 		colLifeStats.a = math.Clamp((self.LifeStatsEndTime - CurTime()) / (self.LifeStatsLifeTime * 0.33), 0, 1) * 255
 
@@ -1175,7 +1222,7 @@ function GM:PlayerBindPress(pl, bind, wasin)
 end
 
 function GM:_ShouldDrawLocalPlayer(pl)
-	return pl:Team() == TEAM_UNDEAD and (self.ZombieThirdPerson or pl:CallZombieFunction("ShouldDrawLocalPlayer")) or pl:IsPlayingTaunt()
+	return pl and pl:Team() == TEAM_UNDEAD and pl:CallZombieFunction("ShouldDrawLocalPlayer") or pl:IsPlayingTaunt()
 end
 
 local roll = 0

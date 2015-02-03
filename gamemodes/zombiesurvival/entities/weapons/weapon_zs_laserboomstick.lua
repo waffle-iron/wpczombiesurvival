@@ -6,8 +6,8 @@ if CLIENT then
 	SWEP.Description = "This shotgun allows you to load up to four shells in the chamber at once. Hold down reload for faster loading of each shell."
 	SWEP.CSMuzzleFlashes = false
 	
-	SWEP.AimPos = Vector(-4.281, -9.247, 3.039)
-	SWEP.AimAng = Vector(0, 0, 0)
+	SWEP.AimPos = Vector(-4.08, -9.921, 2.24)
+	SWEP.AimAng = Vector(1.1, 0.4, 0)
 		
 	SWEP.SprintPos = Vector(2.599, -10.32, 1.32)
 	SWEP.SprintAng = Vector(-9.101, 54.599, 0)
@@ -25,8 +25,12 @@ if CLIENT then
 	SWEP.HUD3DScale = 0.025
 	
 	SWEP.VElements = {
-		["element_name+"] = { type = "Model", model = "models/items/battery.mdl", bone = "ValveBiped.Gun", rel = "", pos = Vector(0.5, 0.5, -14.027), angle = Angle(0, 0, 0), size = Vector(0.432, 0.432, 0.432), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} },
-		["element_name"] = { type = "Model", model = "models/items/battery.mdl", bone = "ValveBiped.Gun", rel = "", pos = Vector(0, -0.801, -8.9), angle = Angle(0, 90, 0), size = Vector(0.367, 0.367, 2.183), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
+		["battery1"] = { type = "Model", model = "models/items/battery.mdl", bone = "ValveBiped.Gun", rel = "", pos = Vector(0, -4.676, 1.557), angle = Angle(0, 0, -90), size = Vector(0.5, 0.5, 0.82), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} },
+		["battery2"] = { type = "Model", model = "models/items/battery.mdl", bone = "ValveBiped.Gun", rel = "", pos = Vector(0, 10.909, 0.518), angle = Angle(0, 0, -90), size = Vector(0.56, 0.56, 2.832), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
+	}
+	SWEP.WElements = {
+		["battery1_wm"] = { type = "Model", model = "models/items/battery.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(9.869, 1.557, -6.753), angle = Angle(0, -90, -94), size = Vector(0.5, 0.5, 0.5), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} },
+		["battery2_wm"] = { type = "Model", model = "models/items/battery.mdl", bone = "ValveBiped.Bip01_R_Hand", rel = "", pos = Vector(9.869, 1.557, -5.715), angle = Angle(0, -90, -94), size = Vector(0.5, 0.5, 1.404), color = Color(255, 255, 255, 255), surpresslightning = false, material = "", skin = 0, bodygroup = {} }
 	}
 end
 

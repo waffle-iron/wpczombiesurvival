@@ -120,6 +120,7 @@ end
 
 if not CLIENT then return end
 
+CLASS.HealthBar = surface.GetTextureID("zombiesurvival/healthbar_poisonheadcrab")
 CLASS.Icon = "zombiesurvival/killicons/poisonheadcrab"
 
 function CLASS:CreateMove(pl, cmd)
