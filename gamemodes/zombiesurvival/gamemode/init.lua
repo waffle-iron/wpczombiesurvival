@@ -1273,11 +1273,12 @@ function GM:RestartGame()
 		pl:SetDeaths(0)
 		pl:SetPoints(0)
 		pl:SetSavedPoints(0)
+		pl:SetZombiePoints(0)
 		pl:ChangeTeam(TEAM_HUMAN)
 		pl:DoHulls()
 		pl:SetZombieClass(self.DefaultZombieClass)
 		pl.DeathClass = nil
-		pl.SetNWInt("KillNetInt", 0)
+		pl:SetNWInt("KillNetInt", 0)
 		if pl.m_bThirdPEnabled then
 			pl.m_bShoulderEnabled = false
 			pl.m_bThirdPEnabled = false
@@ -2530,11 +2531,21 @@ function GM:OnPlayerChangedTeam(pl, oldteam, newteam)
 		pl:SetPoints(0)
 		pl.DamagedBy = {}
 		pl:SetBarricadeGhosting(false)
-		pl.m_bThirdPEnabled = false
-		pl.m_bShoulderEnabled = false
 		self.CheckedOut[pl:UniqueID()] = true
 	elseif newteam == TEAM_HUMAN then
 		self.PreviouslyDied[pl:UniqueID()] = nil
+	end
+	
+	if pl.m_bThirdPEnabled then
+		pl.m_bShoulderEnabled = false
+		pl.m_bThirdPEnabled = false
+		pl.m_bThirdPDisabled = false
+			
+		net.Start("stp_enabled")
+			net.WriteBit(ply.m_bShoulderEnabled)
+			net.WriteBit(ply.m_bThirdPEnabled)
+			net.WriteBit(ply.m_bThirdPDisabled)
+		net.Send(pl)
 	end
 
 	pl.m_PointQueue = 0
@@ -2795,7 +2806,7 @@ function GM:KeyPress(pl, key)
 	if key == IN_USE then
 		if pl:Team() == TEAM_HUMAN and pl:Alive() then
 			if pl:IsCarrying() then
-				pl.status_human_holding:RemoveNextFrame()
+				pl.status_human_holding:Remove()
 			else
 				self:TryHumanPickup(pl, pl:TraceLine(64).Entity)
 			end

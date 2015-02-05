@@ -67,7 +67,7 @@ SWEP.Primary.Ammo			= "pulse"
 GAMEMODE:SetupDefaultClip(SWEP.Primary)
 
 SWEP.FireDelay = 0.2
-SWEP.FireSound = Sound("Weapon_Alyx_Gun.NPC_Single")
+SWEP.FireSound = Sound("Weapon_Alyx_Gun.Single")
 SWEP.Recoil = 0.7
 
 SWEP.Chamberable = false

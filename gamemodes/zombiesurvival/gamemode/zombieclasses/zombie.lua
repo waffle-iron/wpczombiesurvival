@@ -235,5 +235,6 @@ if SERVER then
 end
 
 if CLIENT then
+	CLASS.HealthBar = surface.GetTextureID("zombiesurvival/healthbar_zombiefix")
 	CLASS.Icon = "zombiesurvival/killicons/zombie"
 end

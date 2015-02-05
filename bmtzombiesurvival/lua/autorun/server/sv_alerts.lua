@@ -14,3 +14,27 @@ hook.Add( "PropBroken", "PropBroken.Alert", function(ent, attacker)
 		end
 	end 
 end )
+
+hook.Add( "EntityTakeDamage", "EntityTakeDamage.Alert", function( ent, dmgInfo )
+    if IsValid(ent) then
+		local attacker = dmgInfo:GetAttacker()
+		local holder = ent:GetHolder()
+		if IsValid(holder) and not attacker:Team() == TEAM_UNDEAD then
+			local propname = holder:GetHolding():GetModel()
+			PrintTranslatedMessage(HUD_PRINTCONSOLE, " "..attacker:Name().." hit a prop with model ("..propname..") out of the hands of "..holder:Name().." ")
+		end
+    end
+end )
+
+hook.Add( "KeyRelease", "KeyRelease.Helper", function( ply, key )
+	if key == IN_USE and ply.b_playersnotified then
+		ply.b_playersnotified = false
+	end
+end )
+
+hook.Add( "PlayerUse", "PlayerUse.Alert", function( ply, ent )
+	if ent:IsValid() and ply:IsValid() and ent:GetClass() == "func_button" and not ply.b_playersnotified then
+		ply.b_playersnotified = true
+		PrintTranslatedMessage(HUD_PRINTCONSOLE, " "..ply:Name().." pushed button "..ent:GetModel().." with Index ("..ent:EntIndex()..") ")
+	end
+end )

@@ -235,7 +235,7 @@ function GM:HUDAmmoPickedUp(itemname, amount)
 end
 
 function GM:InitPostEntity()
-	if not self.HealthHUD and not GetConVar("zs_classichud"):GetBool() then
+	if not self.HealthHUD then
 		self.HealthHUD = vgui.Create("ZSHealthArea")
 	end
 
@@ -664,12 +664,12 @@ function GM:DrawPackUpBar(x, y, fraction, notowner, screenscale)
 end
 
 local texHumanHealthBar = surface.GetTextureID("zombiesurvival/healthbar__human")
-function GM:HumanHUD(screenscale)
+function GM:HumanHUD(screenscale, legacyscale)
 	local curtime = CurTime()
 	local w, h = ScrW(), ScrH()
 	
 	if GetConVar("zs_classichud"):GetBool() then
-		self:DrawHealthBar(screenscale * 24, h - 272 * screenscale, MySelf:Health(), MySelf:GetMaxHealth(), texHumanHealthBar, screenscale, MySelf:GetPoisonDamage())
+		self:DrawHealthBar(legacyscale * 24, h - 272 * legacyscale, MySelf:Health(), MySelf:GetMaxHealth(), texHumanHealthBar, legacyscale, MySelf:GetPoisonDamage())
 	end
 
 	local packup = MySelf.PackUp
@@ -735,6 +735,10 @@ function GM:_HUDPaint()
 		if self.HealthHUD and self.HealthHUD:Valid() and self.HealthHUD:IsVisible() then
 			self.HealthHUD:SetVisible(false)
 		end
+	else
+		if self.HealthHUD and self.HealthHUD:Valid() and not self.HealthHUD:IsVisible() then
+			self.HealthHUD:SetVisible(true)
+		end
 	end
 
 	self:HUDDrawTargetID(myteam, screenscale)
@@ -744,9 +748,9 @@ function GM:_HUDPaint()
 	end
 
 	if myteam == TEAM_UNDEAD then
-		self:ZombieHUD()
+		self:ZombieHUD(screenscale * 0.75)
 	else
-		self:HumanHUD(screenscale)
+		self:HumanHUD(screenscale, screenscale * 0.75)
 	end
 
 	if GetGlobalBool("classicmode") then
@@ -791,7 +795,7 @@ end
 local matHumanHeadID = Material("zombiesurvival/humanhead")
 local matZombieHeadID = Material("zombiesurvival/zombiehead")
 local colLifeStats = Color(255, 0, 0, 255)
-function GM:ZombieHUD()
+function GM:ZombieHUD(screenscale)
 	local classtab = self.ZombieClasses[MySelf:GetZombieClass()]
 	if GetConVar("zs_classichud"):GetBool() then
 		self:DrawHealthBar(screenscale * 24, h - 272 * screenscale, MySelf:Health(), classtab.Health, classtab.HealthBar or texHumanHealthBar, screenscale)
@@ -1222,7 +1226,7 @@ function GM:PlayerBindPress(pl, bind, wasin)
 end
 
 function GM:_ShouldDrawLocalPlayer(pl)
-	return pl and pl:Team() == TEAM_UNDEAD and pl:CallZombieFunction("ShouldDrawLocalPlayer") or pl:IsPlayingTaunt()
+	return pl and (pl:Team() == TEAM_UNDEAD and pl:CallZombieFunction("ShouldDrawLocalPlayer")) or pl:IsPlayingTaunt()
 end
 
 local roll = 0
@@ -1243,8 +1247,10 @@ function GM:_CalcView(pl, origin, angles, fov, znear, zfar)
 			origin = rpos
 			angles = rang
 		end
+	--[[
 	elseif pl:ShouldDrawLocalPlayer() and pl:OldAlive() then
 		origin = pl:GetThirdPersonCameraPos(origin, angles)
+	--]]
 	end
 
 	local targetroll = 0
