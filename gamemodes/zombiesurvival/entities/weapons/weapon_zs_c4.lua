@@ -44,19 +44,21 @@ if SERVER then
 	SWEP.AutoSwitchFrom		= false
 	
 	function SWEP:Asplode()
-		local k, v
-		local ent = ents.Create( "env_explosion" )
-		ent:SetPos( self.Owner:GetPos() )
-		ent:SetOwner( self.Owner )
-		ent:Spawn()
-		ent:SetKeyValue( "iMagnitude", "1200" )
-		ent:Fire( "Explode", 0, 0 )
-		ent:EmitSound( "siege/big_explosion.wav", 500, 500 )
-			
-		self.Owner:Kill( )
+		local owner = self:GetOwner()
+		if owner:IsValid() and owner:IsPlayer() and owner:Team() == TEAM_HUMAN then
+			local pos = self:GetPos()
 
-		for k, v in pairs( player.GetAll( ) ) do
-			v:ConCommand( "play siege/big_explosion.wav\n" )
+			util.BlastDamage2(self, owner, pos, 960, 1800)
+
+			local effectdata = EffectData()
+				effectdata:SetOrigin(pos)
+			util.Effect("Explosion", effectdata)
+			
+			owner:Kill()
+
+			for k, v in pairs( player.GetAll( ) ) do
+				v:ConCommand( "play siege/big_explosion.wav\n" )
+			end
 		end
 	end
 end

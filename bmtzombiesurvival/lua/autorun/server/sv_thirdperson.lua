@@ -1,9 +1,8 @@
 hook.Add( "OnPlayerChangedTeam", "STP_ChangedTeam", function( ply, oldTeam, newTeam ) 
 	if ply.m_bThirdPEnabled then
-		if newteam == TEAM_UNDEAD and oldTeam == TEAM_HUMAN then
+		if newteam == TEAM_UNDEAD then
+			ply.m_bThirdPEnabled = false
 			ply.m_bShoulderEnabled = false
-		elseif newteam == TEAM_HUMAN and oldTeam == TEAM_UNDEAD then
-			ply.m_bShoulderEnabled = true
 		end
 		
 		net.Start("stp_enabled")

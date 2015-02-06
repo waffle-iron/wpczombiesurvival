@@ -26,8 +26,6 @@ if CLIENT then
 	SWEP.MinZoom = 40
 	SWEP.MaxZoom = 80
 	
-	SWEP.HeadshotMultiplier = 3.25
-	
 	SWEP.MuzzleEffect = "muzzleflash_m14"
 	SWEP.PosBasedMuz = true
 	
@@ -107,24 +105,11 @@ SWEP.ConeMin = 0
 
 SWEP.WalkSpeed = SPEED_SLOW
 
-SWEP.LaserRespawnTime = 1
-SWEP.LaserLastRespawn = 0
-
 function SWEP:Think()
-	if (self.LaserLastRespawn + self.LaserRespawnTime) < CurTime() then
-		local effectdata = EffectData()
-		
-		effectdata:SetOrigin( self:GetOwner():GetShootPos() )
-		effectdata:SetEntity( self.Weapon )
-		util.Effect( "sniperlaserbeam", effectdata ) 
-		
-		self.LaserLastRespawn = CurTime()
-
-		if ( self.Weapon:Clip1() > 0 ) then
-			self.VElements["indicator"].color = Color(21, 186, 7, 255)
-		else
-			self.VElements["indicator"].color = Color(255, 0, 0, 255)
-		end
+	if ( self:Clip1() > 0 ) then
+		self.VElements["indicator"].color = Color(21, 186, 7, 255)
+	else
+		self.VElements["indicator"].color = Color(255, 0, 0, 255)
 	end
 end
 

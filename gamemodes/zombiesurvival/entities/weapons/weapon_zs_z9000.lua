@@ -55,23 +55,31 @@ SWEP.Instructions	= ""
 
 SWEP.ViewModelFOV	= 55
 SWEP.ViewModelFlip	= false
-SWEP.ViewModel 		= "models/weapons/c_pistol.mdl"
-SWEP.WorldModel 	= "models/weapons/w_alyx_gun.mdl"
+SWEP.ViewModel = "models/weapons/c_pistol.mdl"
+SWEP.WorldModel = "models/weapons/w_alyx_gun.mdl"
 
 SWEP.Spawnable			= true
 SWEP.AdminSpawnable		= true
 
+sound.Add(
+{
+	name = "Alyx_Gun.Fire",
+	channel = CHAN_WEAPON,
+	volume = 1.0,
+	sound = {"weapons/alyx_gun/alyx_gun_fire3.wav", "weapons/alyx_gun/alyx_gun_fire4.wav" , "weapons/alyx_gun/alyx_gun_fire5.wav", "weapons/alyx_gun/alyx_gun_fire6.wav"}
+})
+
+SWEP.FireSound = Sound("Alyx_Gun.Fire")
 SWEP.Primary.ClipSize		= 10
 SWEP.Primary.Automatic		= false
 SWEP.Primary.Ammo			= "pulse"
 GAMEMODE:SetupDefaultClip(SWEP.Primary)
 
 SWEP.FireDelay = 0.2
-SWEP.FireSound = Sound("Weapon_Alyx_Gun.Single")
 SWEP.Recoil = 0.7
 
 SWEP.Chamberable = false
-SWEP.ReloadSound = Sound("Weapon_Alyx_Gun.Reload")
+SWEP.ReloadSound = Sound("weapons/pistol/pistol_reload1.wav")
 
 SWEP.HipSpread = 0.036
 SWEP.AimSpread = 0.0115

@@ -3,6 +3,12 @@ CreateClientConVar("zs_classichud", "0", true, false)
 
 hook.Add("AddExtraOptions", "AddExtraOptions.Life", function(panellist, optionsmenu)
 	local check = vgui.Create("DCheckBoxLabel", optionsmenu)
+	check:SetText("Enable TeamWallSpy")
+	check:SetConVar("zs_teamwallspy")
+	check:SizeToContents()
+	panellist:AddItem(check)
+	
+	local check = vgui.Create("DCheckBoxLabel", optionsmenu)
 	check:SetText("Gmod Legs: Enabled")
 	check:SetConVar("cl_legs")
 	check:SizeToContents()

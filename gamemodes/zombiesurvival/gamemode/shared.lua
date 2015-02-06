@@ -435,7 +435,6 @@ end
 function GM:PlayerTraceAttack(pl, dmginfo, dir, trace)
 end
 
---[[
 function GM:ScalePlayerDamage(pl, hitgroup, dmginfo)
     if hitgroup == HITGROUP_HEAD and dmginfo:IsBulletDamage() then
         pl.m_LastHeadShot = CurTime()
@@ -455,7 +454,6 @@ function GM:ScalePlayerDamage(pl, hitgroup, dmginfo)
 		pl:AddLegDamage(dmginfo:GetDamage())
 	end
 end
---]]
 
 function GM:CanDamageNail(ent, attacker, inflictor, damage, dmginfo)
     return not attacker:IsPlayer() or attacker:Team() ~= TEAM_HUMAN
@@ -795,7 +793,7 @@ function GM:IsWeaponUnlocked(classname)
 		return true
 	end
 	
-    if GAMEMODE.ObjectiveMap and not self:GetWaveActive() then
+    if GAMEMODE.ObjectiveMap and self:GetWave() == 2 then
         return true
     elseif self:GetWave() == self:GetNumberOfWaves() then
         return true

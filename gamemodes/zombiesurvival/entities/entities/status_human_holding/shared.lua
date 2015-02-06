@@ -26,6 +26,11 @@ function ENT:GetPlayerColor()
 	return defaultcolor
 end
 
+function ENT:StopHolding(time)
+	self.Removing = true
+	timer.Simple( time or 0.01, function() self:Remove() end )
+end
+
 function ENT:GetObject()
 	return self:GetDTEntity(0)
 end

@@ -829,18 +829,8 @@ function GM:ZombieHUD(screenscale)
 	if obsmode ~= OBS_MODE_NONE then
 		self:ZombieObserverHUD(obsmode)
 	elseif not self:GetWaveActive() and not MySelf:Alive() then
-	local th = draw_GetFontHeight("ZSHUDFont")
-	local x = ScrW() * 0.5
-	local y = ScrH() * 0.3
-		draw_SimpleTextBlur(translate.Get("waiting_for_next_wave"), "ZSHUDFont", x, y, COLOR_DARKRED, TEXT_ALIGN_CENTER)
-		local pl = GAMEMODE.NextBossZombie
-		if pl and pl:IsValid() then
-			if pl == MySelf then 
-				draw_SimpleTextBlur(translate.Get("you_will_be_next_boss_zombie"), "ZSHUDFont", x, y+th, COLOR_RED, TEXT_ALIGN_CENTER)
-			else 
-				draw_SimpleTextBlur(translate.Format("x_will_be_next_boss_zombie", pl:Name()), "ZSHUDFont", x, y+th, COLOR_GRAY, TEXT_ALIGN_CENTER)
-			end
-		end
+		draw_SimpleTextBlur(translate.Get("waiting_for_next_wave"), "ZSHUDFont", ScrW() * 0.5, ScrH() * 0.3, COLOR_DARKRED, TEXT_ALIGN_CENTER)
+
 		if MySelf:GetZombieClassTable().NeverAlive then
 			for _, ent in pairs(ents.FindByClass("prop_thrownbaby")) do
 				if ent:GetSettled() then
@@ -1218,25 +1208,24 @@ function GM:PlayerBindPress(pl, bind, wasin)
 				pl.m_bThirdPDisabled = false
 			end
 	
-			if pl:Team() == TEAM_UNDEAD and pl.m_bShoulderEnabled then
-				pl.m_bShoulderEnabled = false
-			elseif pl:Team() == TEAM_HUMAN and not pl.m_bShoulderEnabled then
+			if pl:Team() == TEAM_UNDEAD then
+				self.ZombieThirdPerson = not self.ZombieThirdPerson
+			elseif pl:Team() == TEAM_HUMAN then
 				pl.m_bShoulderEnabled = true
+				pl.m_bThirdPEnabled = not pl.m_bThirdPEnabled
+				
+				net.Start("stp_enabled")
+					net.WriteBit(pl.m_bShoulderEnabled)
+					net.WriteBit(pl.m_bThirdPEnabled)
+					net.WriteBit(pl.m_bThirdPDisabled)
+				net.SendToServer()
 			end
-
-			pl.m_bThirdPEnabled = not pl.m_bThirdPEnabled
-			
-			net.Start("stp_enabled")
-				net.WriteBit(pl.m_bShoulderEnabled)
-				net.WriteBit(pl.m_bThirdPEnabled)
-				net.WriteBit(pl.m_bThirdPDisabled)
-			net.SendToServer()
 		end
 	end
 end
 
 function GM:_ShouldDrawLocalPlayer(pl)
-	return pl and (pl:Team() == TEAM_UNDEAD and pl:CallZombieFunction("ShouldDrawLocalPlayer")) or pl:IsPlayingTaunt()
+	return pl:Team() == TEAM_UNDEAD and (self.ZombieThirdPerson or pl:CallZombieFunction("ShouldDrawLocalPlayer")) or pl:IsPlayingTaunt()
 end
 
 local roll = 0
@@ -1257,10 +1246,8 @@ function GM:_CalcView(pl, origin, angles, fov, znear, zfar)
 			origin = rpos
 			angles = rang
 		end
-	--[[
-	elseif pl:ShouldDrawLocalPlayer() and pl:OldAlive() then
+	elseif pl:ShouldDrawLocalPlayer() and pl:OldAlive() and pl:Team() == TEAM_UNDEAD then
 		origin = pl:GetThirdPersonCameraPos(origin, angles)
-	--]]
 	end
 
 	local targetroll = 0
@@ -1720,10 +1707,6 @@ end)
 
 net.Receive("zs_legdamage", function(length)
 	LocalPlayer().LegDamage = net.ReadFloat()
-end)
-
-net.Receive("zs_nextboss", function(length)
-	GAMEMODE.NextBossZombie = net.ReadEntity()
 end)
 
 net.Receive("zs_zvols", function(length)

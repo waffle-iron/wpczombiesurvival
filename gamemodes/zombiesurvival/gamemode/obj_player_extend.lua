@@ -845,7 +845,18 @@ function meta:PlayPainSound()
 	if self:Team() == TEAM_UNDEAD then
 		if self:CallZombieFunction("PlayPainSound") then return end
 		snds = self:GetZombieClassTable().PainSounds
-	else return
+	else
+		local set = VoiceSets[self.VoiceSet]
+		if set then
+			local health = self:Health()
+			if 70 <= health then
+				snds = set.PainSoundsLight
+			elseif 35 <= health then
+				snds = set.PainSoundsMed
+			else
+				snds = set.PainSoundsHeavy
+			end
+		end
 	end
 
 	if snds then

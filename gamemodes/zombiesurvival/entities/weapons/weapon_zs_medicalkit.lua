@@ -199,8 +199,6 @@ function SWEP:DrawHUD()
 	end
 
 	if GetConVarNumber("crosshair") == 1 then
-		if self.Owner.m_bThirdPEnabled  then
-			self:DrawCrosshairDot()
-		end
+		self:DrawCrosshairDot()
 	end
 end
