@@ -1,4 +1,4 @@
-hook.Add("InitPostEntityMap", "Adding", function()
+hook.Add("InitPostEntityMap", "Adding", function(
 	local ent = ents.Create("prop_dynamic_override")
 	if ent:IsValid() then
 		ent:SetPos(Vector(-890.3486, 71.1159, 140.0313))

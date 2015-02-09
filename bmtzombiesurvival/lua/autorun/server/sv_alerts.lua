@@ -7,10 +7,10 @@ hook.Add( "OnNailRemoved", "NailRemoved.Alert", function(nail, ent1, ent2, remov
 	end 
 end )
 
-hook.Add( "PropBroken", "PropBroken.Alert", function(ent, attacker)
-	if attacker and attacker:IsValid() and attacker:IsPlayer() then
+hook.Add( "PropBreak", "PropBreak.Alert", function(attacker, prop)
+	if attacker:IsValid() and attacker:IsPlayer() then
 		if attacker:Team() == TEAM_HUMAN then
-			PrintTranslatedMessage(HUD_PRINTCONSOLE, " "..attacker:Name().." broke a prop with model "..ent:GetModel().." ")
+			PrintTranslatedMessage(HUD_PRINTCONSOLE, " "..attacker:Name().." broke prop "..prop:GetModel().." ")
 		end
 	end 
 end )
@@ -19,7 +19,7 @@ hook.Add( "EntityTakeDamage", "EntityTakeDamage.Alert", function( ent, dmgInfo )
     if IsValid(ent) and ent:IsPlayerHolding() then
 		local attacker = dmgInfo:GetAttacker()
 		local holder = ent:GetHolder()
-		if IsValid(holder) and IsValid(attacker) and not attacker:Team() == TEAM_UNDEAD) then
+		if IsValid(holder) and IsValid(attacker) and not attacker:Team() == TEAM_UNDEAD then
 			local propname = holder:GetHolding():GetModel()
 			PrintTranslatedMessage(HUD_PRINTCONSOLE, " "..attacker:Name().." hit a prop with model ("..propname..") out of the hands of "..holder:Name().." ")
 		end

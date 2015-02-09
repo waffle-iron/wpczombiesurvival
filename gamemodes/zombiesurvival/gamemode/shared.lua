@@ -154,6 +154,30 @@ function GM:ShouldRestartRound()
     return true
 end
 
+function GM:Initialize()
+	if SERVER then
+		self:RegisterPlayerSpawnEntities()
+		self:PrecacheResources()
+		self:AddCustomAmmo()
+		self:AddNetworkStrings()
+		self:LoadProfiler()
+
+		self:SetPantsMode(self.PantsMode, true)
+		self:SetClassicMode(self:IsClassicMode(), true)
+		self:SetBabyMode(self:IsBabyMode(), true)
+		self:SetRedeemBrains(self.DefaultRedeem)
+		
+		game.ConsoleCommand("fire_dmgscale 1\n")
+		game.ConsoleCommand("mp_flashlight 1\n")
+		game.ConsoleCommand("sv_gravity 600\n")
+	end
+
+	local mapname = string.lower(game.GetMap())
+	if string.find(mapname, "_obj_", 1, true) or string.find(mapname, "objective", 1, true) then
+		self.ObjectiveMap = true
+	end
+end
+
 function GM:ZombieSpawnDistanceSort(other)
     return self._ZombieSpawnDistance < other._ZombieSpawnDistance
 end
@@ -786,26 +810,28 @@ if GM:GetWave() == 0 then
 end
 
 function GM:IsWeaponUnlocked(classname)
-	local weaponwave = self.WaveUnlock[classname]
+	local weaponwave = self.WeaponUnlocks[classname]
 	local infliction = self:CalculateInfliction()
-
-	if not weaponwave then
+	local IsObjective = self.ObjectiveMap
+	local wave = self:GetWave()
+	
+	if weaponwave == nil then
 		return true
 	end
 	
-    if GAMEMODE.ObjectiveMap and self:GetWave() == 2 then
+    if IsObjective and wave >= 2 then
         return true
-    elseif self:GetWave() == self:GetNumberOfWaves() then
+    elseif wave == 6 then
         return true
-    elseif self:GetWave() >= weaponwave then
+    elseif wave >= weaponwave then
         return true
-	elseif infliction >= 0.8 and weaponwave <= self:GetNumberOfWaves() then
+	elseif infliction >= 0.8 and weaponwave <= 6 then
 		return true
 	elseif infliction >= 0.5 and weaponwave <= 4 then
 		return true
 	end
 	
-    return false
+	return false
 end
 
 function GM:GetWaveActive()

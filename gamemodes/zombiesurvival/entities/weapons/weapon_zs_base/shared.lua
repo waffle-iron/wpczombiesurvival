@@ -33,7 +33,7 @@ SWEP.EmptyWhenPurchased = true
 function SWEP:Initialize()
 	if not self:IsValid() then return end --???
 
-	self:SetWeaponHoldType(self.HoldType)
+	self:SetHoldType(self.HoldType)
 	self:SetDeploySpeed(1.1)
 
 	-- Maybe we didn't want to convert the weapon to the new system...
@@ -89,9 +89,9 @@ function SWEP:SetIronsights(b)
 
 	if self.IronSightsHoldType then
 		if b then
-			self:SetWeaponHoldType(self.IronSightsHoldType)
+			self:SetHoldType(self.IronSightsHoldType)
 		else
-			self:SetWeaponHoldType(self.HoldType)
+			self:SetHoldType(self.HoldType)
 		end
 	end
 
@@ -260,13 +260,13 @@ local ActIndex = {
 	[ "revolver" ]		= ACT_HL2MP_IDLE_REVOLVER
 }
 
-function SWEP:SetWeaponHoldType( t )
+function SWEP:SetHoldType( t )
 
 	t = string.lower( t )
 	local index = ActIndex[ t ]
 	
 	if ( index == nil ) then
-		Msg( "SWEP:SetWeaponHoldType - ActIndex[ \""..t.."\" ] isn't set! (defaulting to normal) (from "..self:GetClass()..")\n" )
+		Msg( "SWEP:SetHoldType - ActIndex[ \""..t.."\" ] isn't set! (defaulting to normal) (from "..self:GetClass()..")\n" )
 		t = "normal"
 		index = ActIndex[ t ]
 	end
@@ -297,7 +297,7 @@ function SWEP:SetWeaponHoldType( t )
 	end
 end
 
-SWEP:SetWeaponHoldType("pistol")
+SWEP:SetHoldType("pistol")
 
 function SWEP:TranslateActivity(act)
 	if self:GetIronsights() and self.ActivityTranslateIronSights then

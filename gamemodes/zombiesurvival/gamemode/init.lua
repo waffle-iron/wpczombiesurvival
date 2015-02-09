@@ -340,32 +340,6 @@ function GM:AddResources()
 end
 */
 
-function GM:Initialize()
-	self:RegisterPlayerSpawnEntities()
-	self:PrecacheResources()
-	self:AddCustomAmmo()
-	self:AddNetworkStrings()
-	self:LoadProfiler()
-
-	self:SetPantsMode(self.PantsMode, true)
-	self:SetClassicMode(self:IsClassicMode(), true)
-	self:SetBabyMode(self:IsBabyMode(), true)
-	self:SetRedeemBrains(self.DefaultRedeem)
-
-	local mapname = string.lower(game.GetMap())
-	if string.find(mapname, "_obj_", 1, true) or string.find(mapname, "objective", 1, true) then
-		self.ObjectiveMap = true
-	end
-
-	--[[if string.sub(mapname, 1, 3) == "zm_" then
-		NOZOMBIEGASSES = true
-	end]]
-
-	game.ConsoleCommand("fire_dmgscale 1\n")
-	game.ConsoleCommand("mp_flashlight 1\n")
-	game.ConsoleCommand("sv_gravity 600\n")
-end
-
 function GM:AddNetworkStrings()
 	util.AddNetworkString("zs_gamestate")
 	util.AddNetworkString("zs_wavestart")
@@ -1943,7 +1917,7 @@ concommand.Add("zs_pointsshopbuy", function(sender, command, arguments)
 				sender:CenterNotify(COLOR_RED, translate.ClientFormat(sender, "not_unlocked_yet_unlocked_on_x", 2))
 				sender:SendLua("surface.PlaySound(\"buttons/button10.wav\")")
 			else
-				sender:CenterNotify(COLOR_RED, translate.ClientFormat(sender, "not_unlocked_yet_unlocked_on_x", GAMEMODE.WaveUnlock[itemtab.SWEP]))
+				sender:CenterNotify(COLOR_RED, translate.ClientFormat(sender, "not_unlocked_yet_unlocked_on_x", GAMEMODE.WeaponUnlocks[itemtab.SWEP]))
 				sender:SendLua("surface.PlaySound(\"buttons/button10.wav\")")
 			end
 			return

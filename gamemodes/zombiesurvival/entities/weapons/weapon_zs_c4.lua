@@ -37,6 +37,7 @@ SWEP.Secondary.Automatic	= false
 SWEP.Secondary.Ammo			= "none"
 
 SWEP.WalkSpeed = SPEED_NORMAL
+SWEP.Undroppable = true
 
 if SERVER then
 	SWEP.Weight				= 5
@@ -55,6 +56,7 @@ if SERVER then
 			util.Effect("Explosion", effectdata)
 			
 			owner:Kill()
+			owner:Gib()
 
 			for k, v in pairs( player.GetAll( ) ) do
 				v:ConCommand( "play siege/big_explosion.wav\n" )
@@ -89,6 +91,7 @@ function SWEP:PrimaryAttack()
 	self.BaseClass.ShootEffects( self )
 	
 	if (SERVER) then
+		self.IsExploding = true
 		timer.Simple(2, function() self:Asplode() end )
 		self.Owner:EmitSound( "siege/jihad.wav" )
 	end
@@ -105,6 +108,18 @@ function SWEP:SecondaryAttack()
 	if (!SERVER) then return end
 	
 	self.Weapon:EmitSound( TauntSound )
+end
+
+if SERVER then
+	function SWEP:ShouldDropOnDie()
+		return false
+	end
+	
+	function SWEP:OnDrop()
+		if self:IsValid() then
+			self.Weapon:Remove()
+		end
+	end
 end
 
 if CLIENT then

@@ -6,7 +6,7 @@ include('shared.lua')
 function ENT:Initialize()
 	self.DieTime = CurTime() + 15
 
-	self:SetModel("models/crossbow_bolt.mdl")
+	self:SetModel("models/Items/CrossbowRounds.mdl")
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetCollisionGroup(COLLISION_GROUP_WEAPON)
 	self:SetTrigger(true)

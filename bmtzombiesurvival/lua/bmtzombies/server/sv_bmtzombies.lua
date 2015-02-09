@@ -8,6 +8,10 @@ hook.Add( "PlayerInitialSpawn", "PointSave.InitialSpawn", function( pl )
 end )
 
 hook.Add("PlayerSpawn","PointSave.Spawn", function(ply)
+	if ply:Team() == TEAM_UNDEAD then
+		return
+	end
+
 	local id = ply:SteamID()
 	
 	BMTZombies.Points.findBySteamId(id)
@@ -46,7 +50,7 @@ hook.Add("PlayerPointsAdded","PointSave.Add", function(ply, points)
 			local pointsave = BMTZombies.Points:new( )
 			pointsave.steamId = id or ""
 			pointsave.nick = ply:Nick() or ""
-			pointsave.points = 0
+			pointsave.points = points
 			pointsave:save()
 		end
 		
@@ -73,21 +77,21 @@ hook.Add("PlayerPointsRemoved","PointSave.Remove", function(ply, points)
 			local pointsave = BMTZombies.Points:new( )
 			pointsave.steamId = id or ""
 			pointsave.nick = ply:Nick() or ""
-			pointsave.points = 0
+			pointsave.points =  ply:GetPoints()
 			pointsave:save()
-		end
-	
-		if plyData.points <= 0 then
-			return
-		end
-		
-		plyData.points = plyData.points - points
-		
-		if plyData.points < 0 then
-			plyData.points = 0
-		end
+		else
+			if plyData.points <= 0 then
+				return
+			end
 			
-		plyData:save()
+			plyData.points = plyData.points - points
+			
+			if plyData.points < 0 then
+				plyData.points = 0
+			end
+				
+			plyData:save()
+		end
 	end)
 end)
 
@@ -116,19 +120,19 @@ hook.Add("EndRound", "EndRound.Percentage", function(winner)
 			end
 			mapstuff.numPlayed = 1
 			mapstuff:save()
-		end
-		
-		if winner == TEAM_HUMAN then
-			mapData.wins = mapData.wins + 1
 		else
-			mapData.losses = mapData.losses + 1
+			if winner == TEAM_HUMAN then
+				mapData.wins = mapData.wins + 1
+			else
+				mapData.losses = mapData.losses + 1
+			end
+			
+			mapData.numPlayed = mapData.numPlayed + 1
+			
+			pct = 100 * mapData.wins / (mapData.wins+mapData.losses)
+			mapData:save()
+			
+			ULib.tsayColor( nil, true, Color( 0, 255, 0 ), "This map has been played ", Color( 80, 208, 208 ), string.format("%d", mapData.numPlayed), Color( 0, 255, 0 ), " times and humans have won ", Color( 255, 0, 0 ), string.format("%d", math.ceil(pct)), Color( 0, 255, 0 ), " of the time." )
 		end
-		
-		mapData.numPlayed = mapData.numPlayed + 1
-		
-		pct = 100 * mapData.wins / (mapData.wins+mapData.losses)
-		mapData:save()
-		
-		PrintMessage( HUD_PRINTTALK, string.format("[green]This map has been played [teal]%d[green] times and humans have won [red]%d%% [green]of the time", mapData.numPlayed, math.Round(pct)))
 	end)
 end)
