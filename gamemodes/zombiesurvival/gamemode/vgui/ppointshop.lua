@@ -84,24 +84,26 @@ local function ItemPanelThink(self)
 	local itemtab = FindItem(self.ID)
 	if itemtab then	
 		local newstate = MySelf:GetPoints() >= math.ceil(itemtab.Worth * (GAMEMODE.m_PointsShop.m_LastNearArsenalCrate and GAMEMODE.ArsenalCrateMultiplier or 1)) and not (itemtab.NoClassicMode and GAMEMODE:IsClassicMode())
-		local wavestate = not GAMEMODE:IsWeaponUnlocked(itemtab.SWEP)
-		if wavestate ~= self.m_WeaponUnlock then
-			self.m_WeaponUnlock = wavestate
-			if wavestate then
-				self:AlphaTo(90, 0.75, 0)
-				self.m_NameLabel:SetTextColor(COLOR_RED)
-				self.m_BuyButton:SetImage("icon16/lock.png")
-			else
-				self:AlphaTo(255, 0.75, 0)
-				self.m_NameLabel:SetTextColor(COLOR_WHITE)
-				self.m_BuyButton:SetImage("icon16/information.png")
-				
-				self.m_BuyButton:SizeToContents()
+		if GAMEMODE.WeaponUnlocks[itemtab.SWEP] then
+			local wavestate = not GAMEMODE.WeaponUnlocks[itemtab.SWEP].Unlocked
+			if wavestate ~= self.m_WeaponUnlock then
+				self.m_WeaponUnlock = wavestate
+				if wavestate then
+					self:AlphaTo(90, 0.75, 0)
+					self.m_NameLabel:SetTextColor(COLOR_RED)
+					self.m_BuyButton:SetImage("icon16/lock.png")
+				else
+					self:AlphaTo(255, 0.75, 0)
+					self.m_NameLabel:SetTextColor(COLOR_WHITE)
+					self.m_BuyButton:SetImage("icon16/exclamation.png")
+					
+					self.m_BuyButton:SizeToContents()
+				end
 			end
-		end
-		
-		if wavestate == true then
-			return
+			
+			if wavestate == true then
+				return
+			end
 		end
 		
 		if newstate ~= self.m_LastAbleToBuy then
@@ -268,7 +270,7 @@ function GM:OpenPointsShop()
 					local sellbutton = vgui.Create("DImageButton", itempan)
 					local points = math.ceil(tab.Worth/6)
 					if tab.Category == ITEMCAT_GUNS or tab.Category == ITEMCAT_MELEE then
-						sellbutton:SetImage("icon16/money_add.png")
+						sellbutton:SetImage("icon16/information.png")
 						sellbutton:SizeToContents()
 						sellbutton:SetPos(itempan:GetWide() - 20 - sellbutton:GetWide(), itempan:GetTall() - 20)
 						sellbutton:SetTooltip("Sell "..name.." for "..points.." points")

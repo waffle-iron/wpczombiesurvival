@@ -1095,6 +1095,13 @@ function GM:LastHuman(pl)
 	self.TheLastHuman = pl
 
 	if not LASTHUMAN then
+		hook.Add( "PreDrawHalos", "Halo.LastHuman", function()
+			if self.TheLastHuman then
+				if not IsValid(self.TheLastHuman) or LocalPlayer() == self.TheLastHuman or self.TheLastHuman:Team() == TEAM_UNDEAD then return end
+				halo.Add({self.TheLastHuman},team.GetColor(self.TheLastHuman:Team()),1,1,2,true,true);
+			end
+		end )
+	
 		LASTHUMAN = true
 		timer.Simple(0.5, function() GAMEMODE:LastHumanMessage() end)
 	end
@@ -1921,6 +1928,10 @@ end)
 
 net.Receive("zs_lasthumanpos", function(length)
 	GAMEMODE.LastHumanPosition = net.ReadVector()
+end)
+
+net.Receive("zs_weaponlocks",function(length)
+	GAMEMODE.WeaponUnlocks = net.ReadTable()
 end)
 
 net.Receive("stp_enabled",function(length)

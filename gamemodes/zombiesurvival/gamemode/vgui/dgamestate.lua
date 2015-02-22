@@ -143,7 +143,7 @@ end
 
 function PANEL:Text4Paint()
 	if MySelf:IsValid() then
-		if MySelf:Team() == TEAM_UNDEAD and not MySelf:GetZombiePoints() == 0 then
+		if MySelf:Team() == TEAM_UNDEAD and MySelf:GetZombiePoints() > 0 then
 			draw.SimpleText(translate.Format("points_x", MySelf:GetZombiePoints().." / "..MySelf:GetPointsSave()), self.Font, 0, 0, COLOR_DARKGREEN)
 		else
 			draw.SimpleText("", self.Font, 0, 0, COLOR_DARKGREEN)

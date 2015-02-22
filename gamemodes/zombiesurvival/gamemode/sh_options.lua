@@ -75,7 +75,7 @@ function GM:AddItem(signature, name, desc, category, worth, swep, callback, mode
 	self.Items[#self.Items + 1] = tab
 	
 	if swep then
-		self.WeaponUnlocks[swep] = self.WeaponWaves[swep] or 0
+		self.WeaponUnlocks[swep] = {Wave = self.WeaponWaves[swep] or 0, Unlocked = false}
 	end
 
 	return tab

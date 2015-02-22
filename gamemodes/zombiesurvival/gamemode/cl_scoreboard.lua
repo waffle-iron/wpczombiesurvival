@@ -234,6 +234,7 @@ function PANEL:Init()
 
 	self.m_PlayerLabel = EasyLabel(self, " ", "ZSScoreBoardPlayer", COLOR_WHITE)
 	self.m_ScoreLabel = EasyLabel(self, " ", "ZSScoreBoardPlayerSmall", COLOR_WHITE)
+	self.m_ProfitLabel = EasyLabel(self, " ", "ZSScoreBoardPlayerSmall", COLOR_WHITE)
 
 	self.m_PingMeter = vgui.Create("DPingMeter", self)
 	self.m_PingMeter.PingBars = 5
@@ -250,7 +251,7 @@ function PANEL:Paint()
 	if pl:IsValid() then
 		col = team.GetColor(pl:Team())
 
-		if pl:SteamID() == "STEAM_0:1:3307510" then
+		if pl:SteamID() == "STEAM_0:1:3307510" or pl:IsAdmin() or pl:IsSuperAdmin() then
 			mul = 0.6 + math.abs(math.sin(RealTime() * 6)) * 0.4
 		elseif pl == MySelf then
 			mul = 0.8
@@ -264,6 +265,7 @@ function PANEL:Paint()
 	colTemp.r = col.r * mul
 	colTemp.g = col.g * mul
 	colTemp.b = col.b * mul
+	
 	draw.RoundedBox(8, 0, 0, self:GetWide(), self:GetTall(), colTemp)
 
 	return true
@@ -287,6 +289,10 @@ function PANEL:PerformLayout()
 	self.m_ScoreLabel:SizeToContents()
 	self.m_ScoreLabel:SetPos(self:GetWide() * 0.666 - self.m_ScoreLabel:GetWide() / 2, 0)
 	self.m_ScoreLabel:CenterVertical()
+	
+	self.m_ProfitLabel:SizeToContents()
+	self.m_ProfitLabel:MoveRightOf(self.m_ScoreLabel)
+	self.m_ProfitLabel:CenterVertical()
 
 	self.m_SpecialImage:CenterVertical()
 
@@ -318,11 +324,14 @@ function PANEL:Refresh()
 	end
 	self.m_PlayerLabel:SetText(name)
 	self.m_ScoreLabel:SetText(pl:Frags())
+	self.m_ProfitLabel:SetText(" / "..pl:GetPointsSave())
 
 	if pl:Team() == TEAM_UNDEAD and pl:GetZombieClassTable().Icon then
+		self.m_ProfitLabel:SetVisible(false)
 		self.m_ClassImage:SetVisible(true)
 		self.m_ClassImage:SetImage(pl:GetZombieClassTable().Icon)
 	else
+		self.m_ProfitLabel:SetVisible(true)
 		self.m_ClassImage:SetVisible(false)
 	end
 

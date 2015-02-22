@@ -111,6 +111,7 @@ function SWEP:Think()
 	else
 		self.VElements["indicator"].color = Color(255, 0, 0, 255)
 	end
+	self.BaseClass.Think(self)
 end
 
 function SWEP:Precache()

@@ -6,9 +6,12 @@ include('shared.lua')
 function ENT:Initialize()
 	self.DieTime = CurTime() + 15
 
-	self:SetModel("models/Items/CrossbowRounds.mdl")
+	self:SetModel("models/mixerman3d/other/arrow.mdl")
 	self:PhysicsInit(SOLID_VPHYSICS)
-	self:SetCollisionGroup(COLLISION_GROUP_WEAPON)
+	self:SetMoveType(MOVETYPE_VPHYSICS)
+	self:SetSolid(SOLID_VPHYSICS)
+	self:SetCollisionGroup(COLLISION_GROUP_PROJECTILE)
+	self:SetMaterial("models/weapons/v_crossbow/rebar")
 	self:SetTrigger(true)
 
 	local phys = self:GetPhysicsObject()
@@ -20,6 +23,9 @@ function ENT:Initialize()
 	end
 	self.Touched = {}
 	self.OriginalAngles = self:GetAngles()
+	
+	self:SetColor(Color(255,0,0,255))
+	self.Trail = util.SpriteTrail(self, 0, Color(255,0,0), false, 20, 1, 1.5, 0.01, "trails/laser.vmt")
 
 	self:EmitSound("weapons/crossbow/bolt_fly4.wav")
 end
@@ -33,6 +39,8 @@ end
 function ENT:PhysicsCollide(data, phys)
 	if self.Done then return end
 	self.Done = true
+	
+	if IsValid(self.Trail) then self.Trail:Fire("kill", 1, 2) end
 
 	phys:EnableMotion(false)
 	self:EmitSound("physics/metal/sawblade_stick"..math.random(3)..".wav")

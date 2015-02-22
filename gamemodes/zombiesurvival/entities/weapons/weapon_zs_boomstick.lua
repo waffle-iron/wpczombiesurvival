@@ -91,14 +91,14 @@ SWEP.AmmoPerShot = 4
 SWEP.ConeMax = 0.23
 SWEP.ConeMin = 0.2
 
-SWEP.WalkSpeed = SPEED_SLOWER
+SWEP.WalkSpeed = SPEED_SLOWEST
 
 function SWEP:PrimaryAttack()
 	local clip = self:Clip1()
-
-	self.BaseClass.PrimaryAttack(self)
 		
 	self.Owner:ViewPunch(clip * 0.5 * self.Recoil * Angle(math.Rand(-0.1, -0.1), math.Rand(-0.1, 0.1), 0))
 	self.Owner:SetGroundEntity(NULL)
 	self.Owner:SetVelocity(-80 * clip * self.Owner:GetAimVector())
+	
+	self.BaseClass.PrimaryAttack(self)
 end

@@ -9,18 +9,6 @@ hook.Add("AddExtraOptions", "AddExtraOptions.Life", function(panellist, optionsm
 	panellist:AddItem(check)
 	
 	local check = vgui.Create("DCheckBoxLabel", optionsmenu)
-	check:SetText("Gmod Legs: Enabled")
-	check:SetConVar("cl_legs")
-	check:SizeToContents()
-	panellist:AddItem(check)
-	
-	local check = vgui.Create("DCheckBoxLabel", optionsmenu)
-	check:SetText("Gmod Legs: First-Person Death")
-	check:SetConVar("cl_deathview")
-	check:SizeToContents()
-	panellist:AddItem(check)
-	
-	local check = vgui.Create("DCheckBoxLabel", optionsmenu)
 	check:SetText("Enable Classic HUD")
 	check:SetConVar("zs_classichud")
 	check:SizeToContents()

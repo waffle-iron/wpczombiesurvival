@@ -17,14 +17,14 @@ SWEP.ViewModel      = "models/weapons/c_katana.mdl"
 SWEP.WorldModel   	= "models/weapons/w_katana.mdl"
 SWEP.UseHands = true
 
-SWEP.MeleeDamage = 75
-SWEP.MeleeRange = 72
+SWEP.MeleeDamage = 85
+SWEP.MeleeRange = 80
 SWEP.MeleeSize = 1.5
-SWEP.MeleeKnockBack = 8
+SWEP.MeleeKnockBack = 0
 
 SWEP.Primary.Delay = 1.0
 
-SWEP.WalkSpeed = SPEED_FASTEST
+SWEP.WalkSpeed = SPEED_FASTER
 SWEP.HitDecal = "Manhackcut"
 SWEP.NoHitSoundFlesh = true
 SWEP.SwingHoldType = "melee"

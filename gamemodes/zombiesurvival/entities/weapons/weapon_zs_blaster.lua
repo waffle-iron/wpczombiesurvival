@@ -5,11 +5,11 @@ if CLIENT then
 	SWEP.PrintName = "'Blaster' Shotgun"
 	SWEP.CSMuzzleFlashes = true
 	
-	SWEP.AimPos = Vector(-4.281, -11.761, 3.319)
-	SWEP.AimAng = Vector(3.517, 0, 0)
+	SWEP.AimPos = Vector(4.221, 0, 1.776)
+	SWEP.AimAng = Vector(0.216, 0, 0)
 		
-	SWEP.SprintPos = Vector(1.559, -8.881, 2.88)
-	SWEP.SprintAng = Vector(-5.901, 46.7, 0.4)
+	SWEP.SprintPos = Vector(-0.84, -5.93, -5.209)
+	SWEP.SprintAng = Vector(29.149, -33.541, -7.523)
 	
 	SWEP.ZoomAmount = 5
 	SWEP.ViewModelMovementScale = 0.85
@@ -18,11 +18,43 @@ if CLIENT then
 	
 	SWEP.MuzzleEffect = "swb_shotgun"
 	
-	SWEP.HUD3DPos = Vector(4, -3.5, -1.2)
-	SWEP.HUD3DAng = Angle(90, 0, -30)
-	SWEP.HUD3DScale = 0.02
-	SWEP.HUD3DBone = "SS.Grip.Dummy"
+	SWEP.HUD3DPos = Vector(6, 3.1, 1.3)
+	SWEP.HUD3DAng = Angle(-90, -180, -30)
+	SWEP.HUD3DScale = 0.023
+	SWEP.HUD3DBone = "main.bone"
 end
+
+sound.Add(
+{
+	name = "Remington.FireSingle",
+	channel = CHAN_STATIC,
+	volume = 1.0,
+	sound = "weapons/cw_ber_870/shot2.wav"
+})
+
+sound.Add(
+{
+	name = "Remington.ReloadShell",
+	channel = CHAN_WEAPON,
+	volume = 1.0,
+	sound = "weapons/cw_ber_870/insertshell.wav"
+})
+
+sound.Add(
+{
+	name = "Remington.Pump",
+	channel = CHAN_WEAPON,
+	volume = 1.0,
+	sound = "weapons/cw_ber_870/pump.wav"
+})
+
+sound.Add(
+{
+	name = "Remington.Draw",
+	channel = CHAN_WEAPON,
+	volume = 1.0,
+	sound = "weapons/cw_ber_870/draw.wav"
+})
 
 SWEP.PlayBackRate = 1
 SWEP.PlayBackRateSV = 1
@@ -48,10 +80,10 @@ SWEP.Contact		= ""
 SWEP.Purpose		= ""
 SWEP.Instructions	= ""
 
-SWEP.ViewModelFOV	= 55
-SWEP.ViewModelFlip	= false
-SWEP.ViewModel 		= "models/weapons/v_supershorty/v_supershorty.mdl"
-SWEP.WorldModel 	= "models/weapons/w_supershorty.mdl"
+SWEP.ViewModelFOV	= 70
+SWEP.ViewModelFlip	= true
+SWEP.ViewModel		= "models/weapons/v_remington_shot.mdl"
+SWEP.WorldModel		= "models/weapons/w_remington_shot.mdl"
 
 SWEP.Spawnable			= true
 SWEP.AdminSpawnable		= true
@@ -61,9 +93,12 @@ SWEP.Primary.Automatic		= false
 SWEP.Primary.Ammo			= "Buckshot"
 GAMEMODE:SetupDefaultClip(SWEP.Primary)
 
-SWEP.FireDelay = 0.8
-SWEP.FireSound = Sound("Weapon_Shotgun.Single")
-SWEP.Recoil = 2.5
+SWEP.FireDelay = 0.9
+SWEP.FireSound = Sound("Remington.FireSingle")
+SWEP.ShotgunReloadSound = Sound("Remington.ReloadShell")
+SWEP.ShotgunPumpSound = Sound("Remington.Pump")
+SWEP.DrawSound = Sound("Remington.Draw")
+SWEP.Recoil = 3
 SWEP.ShotgunReload = true
 SWEP.ReloadStartWait = 0.6
 SWEP.ReloadFinishWait = 1.1
@@ -71,15 +106,15 @@ SWEP.ReloadShellInsertWait = 0.6
 SWEP.Chamberable = false
 SWEP.UseHands = false
 
-SWEP.HipSpread = 0.036
-SWEP.AimSpread = 0.003
-SWEP.ClumpSpread = 0.02
-SWEP.VelocitySensitivity = 2.2
+SWEP.HipSpread = 0.07
+SWEP.AimSpread = 0.005
+SWEP.VelocitySensitivity = 1.9
 SWEP.MaxSpreadInc = 0.06
-SWEP.SpreadPerShot = 0.02
-SWEP.SpreadCooldown = 1.03
-SWEP.Shots = 7
-SWEP.Damage = 12
+SWEP.ClumpSpread = 0.02
+SWEP.SpreadPerShot = 0.01
+SWEP.SpreadCooldown = 0.8
+SWEP.Shots = 6
+SWEP.Damage = 16
 SWEP.DeployTime = 1
 
 SWEP.ConeMax = 0.18

@@ -7,12 +7,15 @@ hook.Add( "OnNailRemoved", "NailRemoved.Alert", function(nail, ent1, ent2, remov
 	end 
 end )
 
-hook.Add( "PropBreak", "PropBreak.Alert", function(attacker, prop)
+hook.Add( "PropBroken", "PropBroken.Alert", function(ent, attacker)
+	if not string.sub(ent:GetClass(), 1, 5) == "prop_" then return end
+
 	if attacker:IsValid() and attacker:IsPlayer() then
-		if attacker:Team() == TEAM_HUMAN then
-			PrintTranslatedMessage(HUD_PRINTCONSOLE, " "..attacker:Name().." broke prop "..prop:GetModel().." ")
+		if attacker:Team() == TEAM_HUMAN and not ent.HasAlerted then
+			ent.HasAlerted = true
+			PrintTranslatedMessage(HUD_PRINTCONSOLE, " "..attacker:Name().." broke prop "..ent:GetModel().." ")
 		end
-	end 
+	end
 end )
 
 hook.Add( "EntityTakeDamage", "EntityTakeDamage.Alert", function( ent, dmgInfo )
@@ -26,15 +29,10 @@ hook.Add( "EntityTakeDamage", "EntityTakeDamage.Alert", function( ent, dmgInfo )
     end
 end )
 
-hook.Add( "KeyRelease", "KeyRelease.Helper", function( ply, key )
-	if key == IN_USE and ply.b_playersnotified then
-		ply.b_playersnotified = false
-	end
-end )
-
 hook.Add( "PlayerUse", "PlayerUse.Alert", function( ply, ent )
-	if ent:IsValid() and ply:IsValid() and ent:GetClass() == "func_button" and not ply.b_playersnotified then
-		ply.b_playersnotified = true
+	if ent:IsValid() and ply:IsValid() and ent:GetClass() == "func_button" and not ent.HasAlerted then
+		ent.HasAlerted = true
 		PrintTranslatedMessage(HUD_PRINTCONSOLE, " "..ply:Name().." pushed button "..tostring(ent).." ("..ent:GetName()..") ")
+		timer.Simple(1, function() ent.HasAlerted = false end)
 	end
 end )

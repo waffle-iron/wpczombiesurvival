@@ -1,13 +1,7 @@
 -----LibK Database Init-----
 LibK.SetupDatabase( "BMTZombies", BMTZombies )
 
-hook.Add( "PlayerInitialSpawn", "PointSave.InitialSpawn", function( pl )
-	if pl:GetSavedPoints() > 0 or pl:GetSavedPoints() < 0 then
-		pl:SetSavedPoints(0)
-	end
-end )
-
-hook.Add("PlayerSpawn","PointSave.Spawn", function(ply)
+hook.Add( "PlayerSpawn", "PointSave.Spawn", function( ply )
 	if ply:Team() == TEAM_UNDEAD then
 		return
 	end
@@ -22,46 +16,52 @@ hook.Add("PlayerSpawn","PointSave.Spawn", function(ply)
 			pointsave.nick = ply:Nick() or ""
 			pointsave.points = 0
 			pointsave:save()
-		else 
-			if ply:Team() == TEAM_HUMAN then
-				if plyData.points and plyData.points > 0 then 
-					ply:SetPoints(plyData.points)
-				end
+		else
+			if plyData.points and plyData.points > 0 then 
+				ply:SetPoints(plyData.points)
 			end
 		end
 	end)
-end)
+end )
+
+hook.Add( "OnPlayerChangedTeam","PointSave.SaveTeam", function(pl, oldteam, newteam)
+	local id = pl:SteamID()
+	
+	if newteam == TEAM_UNDEAD then
+		pl:SetZombiePoints(pl:GetPoints())
+	else
+		pl:SetZombiePoints(0)
+	end
+	
+	BMTZombies.Points.findBySteamId(id)
+	:Then(function( plyData )
+		if plyData and plyData.points > 0 then 
+			if newteam == TEAM_HUMAN then
+				pl:SetPoints(plyData.points)
+			end			
+		end
+	end)
+end )
+
 hook.Add("PlayerPointsAdded","PointSave.Add", function(ply, points)
 	if ply:Team() == TEAM_UNDEAD then
 		return
 	end
 	
 	local id = ply:SteamID()
+	local mypoints = math.ceil(points/2)
 	
-	if points > 1 then
-		ply:SetSavedPoints(ply:GetSavedPoints() + math.Round(points/2))
-	else
-		ply:SetSavedPoints(ply:GetSavedPoints() + 1)
-	end
+	ply:SetSavedPoints(ply:GetSavedPoints() + mypoints)
 	
 	BMTZombies.Points.findBySteamId(id)
 	:Then(function( plyData )
-		if not plyData then
-			local pointsave = BMTZombies.Points:new( )
-			pointsave.steamId = id or ""
-			pointsave.nick = ply:Nick() or ""
-			pointsave.points = points
-			pointsave:save()
+		if plyData then 
+			plyData.points = plyData.points + mypoints
+			plyData:save()
 		end
-		
-		if points > 1 then
-			plyData.points = plyData.points + math.Round(points/2)
-		else
-			plyData.points = plyData.points + 1
-		end
-		plyData:save()
 	end)
 end)
+
 hook.Add("PlayerPointsRemoved","PointSave.Remove", function(ply, points)
 	if ply:Team() == TEAM_UNDEAD then
 		return
@@ -73,13 +73,7 @@ hook.Add("PlayerPointsRemoved","PointSave.Remove", function(ply, points)
 	
 	BMTZombies.Points.findBySteamId(id)
 	:Then(function( plyData )
-		if not plyData then
-			local pointsave = BMTZombies.Points:new( )
-			pointsave.steamId = id or ""
-			pointsave.nick = ply:Nick() or ""
-			pointsave.points =  ply:GetPoints()
-			pointsave:save()
-		else
+		if plyData then
 			if plyData.points <= 0 then
 				return
 			end
@@ -132,7 +126,7 @@ hook.Add("EndRound", "EndRound.Percentage", function(winner)
 			pct = 100 * mapData.wins / (mapData.wins+mapData.losses)
 			mapData:save()
 			
-			ULib.tsayColor( nil, true, Color( 0, 255, 0 ), "This map has been played ", Color( 80, 208, 208 ), string.format("%d", mapData.numPlayed), Color( 0, 255, 0 ), " times and humans have won ", Color( 255, 0, 0 ), string.format("%d", math.ceil(pct)), Color( 0, 255, 0 ), " of the time." )
+			ULib.tsayColor( nil, true, Color( 0, 255, 0 ), "This map has been played ", Color( 80, 208, 208 ), string.format("%d", mapData.numPlayed), Color( 0, 255, 0 ), " times and humans have won ", Color( 255, 0, 0 ), string.format("%d%", math.ceil(pct)), Color( 0, 255, 0 ), " of the time." )
 		end
 	end)
 end)

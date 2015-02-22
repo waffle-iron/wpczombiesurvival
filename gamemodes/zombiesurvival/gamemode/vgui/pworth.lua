@@ -189,6 +189,11 @@ function MakepWorth()
 		pWorth:Remove()
 		pWorth = nil
 	end
+	
+	if GetConVar("zs_classichud"):GetBool() then
+		MakeOldpWorth()
+		return
+	end
 
 	local maxworth = GAMEMODE.StartingWorth
 	WorthRemaining = maxworth
@@ -347,6 +352,203 @@ function MakepWorth()
 	return frame
 end
 
+function MakeOldpWorth()
+	if pWorth and pWorth:Valid() then
+		pWorth:Remove()
+		pWorth = nil
+	end
+
+	local maxworth = GAMEMODE.StartingWorth
+	WorthRemaining = maxworth
+
+	local wid, hei = 480, math.max(ScrH() * 0.5, 480)
+
+	local frame = vgui.Create("DFrame")
+	pWorth = frame
+	frame:SetSize(wid, hei)
+	frame:SetDeleteOnClose(false)
+	frame:SetKeyboardInputEnabled(false)
+	frame:SetTitle("Choose your starting arsenal")
+
+	local propertysheet = vgui.Create("DPropertySheet", frame)
+	propertysheet:StretchToParent(4, 24, 4, 50)
+
+	local list = vgui.Create("DPanelList", propertysheet)
+	propertysheet:AddSheet("Favorites", list, "icon16/heart.png", false, false)
+	list:EnableVerticalScrollbar(true)
+	list:SetWide(propertysheet:GetWide() - 16)
+	list:SetSpacing(2)
+	list:SetPadding(2)
+
+	local savebutton = EasyButton(nil, "Save the current cart", 0, 10)
+	savebutton.DoClick = SaveDoClick
+	list:AddItem(savebutton)
+
+	local fontname
+	local panhei
+	if #GAMEMODE.SavedCarts >= 8 then
+		panfont = "DefaultFontBold"
+		panhei = 24
+	else
+		panfont = "ZSHUDFontSmall"
+		panhei = 40
+	end
+
+	local defaultcart = cvarDefaultCart:GetString()
+
+	for i, savetab in ipairs(GAMEMODE.SavedCarts) do
+		local cartpan = vgui.Create("DPanel")
+		cartpan:SetCursor("pointer")
+		cartpan:SetSize(list:GetWide(), panhei)
+
+		local cartname = savetab[1]
+
+		local x = 8
+
+		if defaultcart == cartname then
+			local defimage = vgui.Create("DImage", cartpan)
+			defimage:SetImage("icon16/heart.png")
+			defimage:SizeToContents()
+			defimage:SetMouseInputEnabled(true)
+			defimage:SetTooltip("This is your default cart.\nIf you join the game late then you'll spawn with this cart.")
+			defimage:SetPos(x, cartpan:GetTall() * 0.5 - defimage:GetTall() * 0.5)
+			x = x + defimage:GetWide() + 4
+		end
+
+		local cartnamelabel = EasyLabel(cartpan, cartname, panfont)
+		cartnamelabel:SetPos(x, cartpan:GetTall() * 0.5 - cartnamelabel:GetTall() * 0.5)
+
+		x = cartpan:GetWide() - 20
+
+		local checkbutton = vgui.Create("DImageButton", cartpan)
+		checkbutton:SetImage("icon16/accept.png")
+		checkbutton:SizeToContents()
+		checkbutton:SetTooltip("Purchase this saved cart.")
+		x = x - checkbutton:GetWide() - 4
+		checkbutton:SetPos(x, cartpan:GetTall() * 0.5 - checkbutton:GetTall() * 0.5)
+		checkbutton.ID = i
+		checkbutton.DoClick = QuickCheckDoClick
+
+		local loadbutton = vgui.Create("DImageButton", cartpan)
+		loadbutton:SetImage("icon16/folder_go.png")
+		loadbutton:SizeToContents()
+		loadbutton:SetTooltip("Load this saved cart.")
+		x = x - loadbutton:GetWide() - 4
+		loadbutton:SetPos(x, cartpan:GetTall() * 0.5 - loadbutton:GetTall() * 0.5)
+		loadbutton.ID = i
+		loadbutton.DoClick = LoadDoClick
+
+		local defaultbutton = vgui.Create("DImageButton", cartpan)
+		defaultbutton:SetImage("icon16/heart.png")
+		defaultbutton:SizeToContents()
+		if cartname == defaultcart then
+			defaultbutton:SetTooltip("Remove this cart as your default.")
+		else
+			defaultbutton:SetTooltip("Make this cart your default.")
+		end
+		x = x - defaultbutton:GetWide() - 4
+		defaultbutton:SetPos(x, cartpan:GetTall() * 0.5 - defaultbutton:GetTall() * 0.5)
+		defaultbutton.Name = cartname
+		defaultbutton.DoClick = DefaultDoClick
+
+		local deletebutton = vgui.Create("DImageButton", cartpan)
+		deletebutton:SetImage("icon16/bin.png")
+		deletebutton:SizeToContents()
+		deletebutton:SetTooltip("Delete this saved cart.")
+		x = x - deletebutton:GetWide() - 4
+		deletebutton:SetPos(x, cartpan:GetTall() * 0.5 - loadbutton:GetTall() * 0.5)
+		deletebutton.ID = i
+		deletebutton.DoClick = DeleteDoClick
+
+		list:AddItem(cartpan)
+	end
+
+	local isclassic = GAMEMODE:IsClassicMode()
+
+	for catid, catname in ipairs(GAMEMODE.ItemCategories) do
+		local list = vgui.Create("DPanelList", propertysheet)
+		list:SetPaintBackground(false)
+		propertysheet:AddSheet(catname, list, GAMEMODE.ItemCategoryIcons[catid], false, false)
+		list:EnableVerticalScrollbar(true)
+		list:SetWide(propertysheet:GetWide() - 16)
+		list:SetSpacing(2)
+		list:SetPadding(2)
+
+		for i, tab in ipairs(GAMEMODE.Items) do
+			if tab.Category == catid and tab.WorthShop then
+				local itempan = vgui.Create("DPanel")
+				itempan:SetSize(list:GetWide(), 40)
+				list:AddItem(itempan)
+
+				local mdlframe = vgui.Create("DPanel", itempan)
+				mdlframe:SetSize(32, 32)
+				mdlframe:SetPos(4, 4)
+
+				local mdl = tab.Model or (weapons.GetStored(tab.SWEP) or tab).WorldModel
+				if mdl then
+					local mdlpanel = vgui.Create("DModelPanel", mdlframe)
+					mdlpanel:SetSize(mdlframe:GetSize())
+					mdlpanel:SetModel(mdl)
+					local mins, maxs = mdlpanel.Entity:GetRenderBounds()
+					mdlpanel:SetCamPos(mins:Distance(maxs) * Vector(0.75, 0.75, 0.5))
+					mdlpanel:SetLookAt((mins + maxs) / 2)
+				end
+
+				if tab.SWEP or tab.Countables then
+					local counter = vgui.Create("ItemAmountCounter", itempan)
+					counter:SetItemID(i)
+				end
+
+				local namelab = EasyLabel(itempan, tab.Name or "", "ZSHUDFontSmall")
+				namelab:SetPos(42, itempan:GetTall() * 0.5 - namelab:GetTall() * 0.5)
+
+				local pricelab = EasyLabel(itempan, tostring(tab.Worth).." Worth", "ZSHUDFontTiny")
+				pricelab:SetPos(itempan:GetWide() - 20 - pricelab:GetWide(), 4)
+
+				local button = vgui.Create("DImageButton", itempan)
+				button:SetImage("icon16/cart_add.png")
+				button:SizeToContents()
+				button:SetPos(itempan:GetWide() - 20 - button:GetWide(), itempan:GetTall() - button:GetTall() - 4)
+				button:SetTooltip("Add to cart")
+				button.ID = tab.Signature or i
+				button.DoClick = CartDoClick
+				WorthButtons[i] = button
+
+				if tab.Description then
+					itempan:SetTooltip(tab.Description)
+				end
+
+				if tab.NoClassicMode and isclassic or tab.NoZombieEscape and GAMEMODE.ZombieEscape then
+					itempan:SetAlpha(120)
+				end
+			end
+		end
+	end
+
+	local worthlab = EasyLabel(frame, "Worth: "..tostring(WorthRemaining), "ZSHUDFontSmall", COLOR_LIMEGREEN)
+	worthlab:SetPos(8, frame:GetTall() - worthlab:GetTall() - 8)
+	frame.WorthLab = worthlab
+
+	local checkout = EasyButton(frame, "Checkout", 8, 4)
+	checkout:SetPos(frame:GetWide() * 0.5 - checkout:GetWide() * 0.5, frame:GetTall() - checkout:GetTall() - 8)
+	checkout.DoClick = CheckoutDoClick
+
+	local rand = EasyButton(frame, "Random", 8, 4)
+	rand:SetPos(frame:GetWide() - rand:GetWide() - 8, frame:GetTall() - rand:GetTall() - 8)
+	rand.DoClick = RandDoClick
+
+	if #GAMEMODE.SavedCarts == 0 then
+		propertysheet:SetActiveTab(propertysheet.Items[math.min(2, #propertysheet.Items)].Tab)
+	end
+
+	frame:Center()
+	frame:SetAlpha(0)
+	frame:AlphaTo(255, 0.5, 0)
+	frame:MakePopup()
+
+	return frame
+end
+
 local PANEL = {}
 PANEL.m_ItemID = 0
 PANEL.RefreshTime = 1
@@ -382,6 +584,8 @@ vgui.Register("ItemAmountCounter", PANEL, "DLabel")
 PANEL = {}
 
 function PANEL:Init()
+	if GetConVar("zs_classichud"):GetBool() then return end
+
 	self:SetText("")
 
 	self:DockPadding(4, 4, 4, 4)
@@ -413,6 +617,8 @@ function PANEL:Init()
 end
 
 function PANEL:SetWorthID(id)
+	if GetConVar("zs_classichud"):GetBool() then return end
+	
 	self.ID = id
 
 	local tab = FindStartingItem(id)
@@ -460,6 +666,8 @@ function PANEL:SetWorthID(id)
 end
 
 function PANEL:Paint(w, h)
+	if GetConVar("zs_classichud"):GetBool() then return end
+
 	local outline
 	if self.Hovered then
 		outline = self.On and COLOR_GREEN or COLOR_GRAY
@@ -472,6 +680,8 @@ function PANEL:Paint(w, h)
 end
 
 function PANEL:DoClick(silent, force)
+	if GetConVar("zs_classichud"):GetBool() then return end
+
 	local id = self.ID
 	local tab = FindStartingItem(id)
 	if not tab then return end
