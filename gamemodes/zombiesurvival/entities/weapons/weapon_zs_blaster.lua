@@ -88,9 +88,10 @@ SWEP.WorldModel		= "models/weapons/w_remington_shot.mdl"
 SWEP.Spawnable			= true
 SWEP.AdminSpawnable		= true
 
-SWEP.Primary.ClipSize		= 6
+SWEP.Primary.ClipSize		= 5
 SWEP.Primary.Automatic		= false
 SWEP.Primary.Ammo			= "Buckshot"
+
 GAMEMODE:SetupDefaultClip(SWEP.Primary)
 
 SWEP.FireDelay = 0.9

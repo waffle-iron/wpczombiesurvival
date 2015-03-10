@@ -6,6 +6,11 @@ include('shared.lua')
 function ENT:Initialize()
 	self.DieTime = CurTime() + 15
 
+	self.Touched = {}
+	self.OriginalAngles = self:GetAngles()
+	
+	self:Fire("kill", "", 15)
+	
 	self:SetModel("models/mixerman3d/other/arrow.mdl")
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_VPHYSICS)
@@ -13,7 +18,7 @@ function ENT:Initialize()
 	self:SetCollisionGroup(COLLISION_GROUP_PROJECTILE)
 	self:SetMaterial("models/weapons/v_crossbow/rebar")
 	self:SetTrigger(true)
-
+	
 	local phys = self:GetPhysicsObject()
 	if phys:IsValid() then
 		phys:SetMass(4)
@@ -26,14 +31,7 @@ function ENT:Initialize()
 	
 	self:SetColor(Color(255,0,0,255))
 	self.Trail = util.SpriteTrail(self, 0, Color(255,0,0), false, 20, 1, 1.5, 0.01, "trails/laser.vmt")
-
 	self:EmitSound("weapons/crossbow/bolt_fly4.wav")
-end
-
-function ENT:Think()
-	if self.DieTime <= CurTime() then
-		self:Remove()
-	end
 end
 
 function ENT:PhysicsCollide(data, phys)
@@ -42,9 +40,10 @@ function ENT:PhysicsCollide(data, phys)
 	
 	if IsValid(self.Trail) then self.Trail:Fire("kill", 1, 2) end
 
+	self:Fire("kill", "", 8)
+
 	phys:EnableMotion(false)
 	self:EmitSound("physics/metal/sawblade_stick"..math.random(3)..".wav")
-	self.DieTime = CurTime() + 8
 
 	self:SetPos(data.HitPos)
 	self:SetAngles(data.HitNormal:Angle())
@@ -59,18 +58,15 @@ function ENT:PhysicsCollide(data, phys)
 end
 
 function ENT:StartTouch(ent)
-	if not self.Done and not self.Touched[tostring(ent)] and ent:IsValid() then
-		local owner = self:GetOwner()
-		if not owner:IsValid() then owner = self end
+	if self.Done or self.Touched[ent] or not ent:IsValid() then return end
 
-		if ent ~= owner and not (ent:IsPlayer() and ent:Team() == self.Team) then
-			ent:TakeDamage(100, owner, self)
-			ent:EmitSound("weapons/crossbow/hitbod"..math.random(1,2)..".wav")
-			self.Touched[tostring(ent)] = true
-		end
-	end
-end
+	local owner = self:GetOwner()
+	if not owner:IsValid() then owner = self end
 
-function ENT:UpdateTransmitState()
-	return TRANSMIT_PVS
+	if ent == owner or ent:IsPlayer() and (ent:Team() == self.Team or not ent:Alive()) then return end
+
+	self.Touched[ent] = true
+
+	ent:TakeDamage(100, owner, self)
+	ent:EmitSound("weapons/crossbow/hitbod"..math.random(2)..".wav")
 end

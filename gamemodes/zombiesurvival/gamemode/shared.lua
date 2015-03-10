@@ -47,6 +47,7 @@ include("sh_options.lua")
 include("sh_zombieclasses.lua")
 include("sh_animations.lua")
 include("sh_sigils.lua")
+include("sh_channel.lua")
 
 include("noxapi/noxapi.lua")
 
@@ -433,8 +434,9 @@ function GM:PlayerCanPurchase(pl)
     return pl:Team() == TEAM_HUMAN and self:GetWave() > 0 and pl:Alive() and pl:NearArsenalCrate()
 end
 
+local TEAM_SPECTATOR = TEAM_SPECTATOR
 function GM:PlayerCanHearPlayersVoice(listener, talker)
-    return listener:IsValid() and talker:IsValid() and listener:Team() == talker:Team()
+	return listener:IsValid() and talker:IsValid() and listener:Team() == talker:Team() or listener:Team() == TEAM_SPECTATOR
 end
 
 function GM:PlayerTraceAttack(pl, dmginfo, dir, trace)
@@ -461,7 +463,7 @@ function GM:ScalePlayerDamage(pl, hitgroup, dmginfo)
 end
 
 function GM:CanDamageNail(ent, attacker, inflictor, damage, dmginfo)
-    return not attacker:IsPlayer() or attacker:Team() ~= TEAM_HUMAN
+	return not attacker:IsPlayer() or attacker:Team() == TEAM_UNDEAD
 end
 
 function GM:CanPlaceNail(pl, tr)

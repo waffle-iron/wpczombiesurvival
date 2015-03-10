@@ -143,6 +143,7 @@ LANGUAGE.not_unlocked_yet_unlocked_on_x				= "That weapon is not unlocked yet. I
 LANGUAGE.weapon_tier_x								= "Weapon tier %d unlocked."
 LANGUAGE.dont_have_weapon_x							= "Can't sell, you do not have a %s"
 LANGUAGE.sold_x_for_y_points						= "Sold %s for %d points!"
+LANGUAGE.no_free_channel							= "Radio interference from too many already being placed!"
 
 -- Sigils point objectives
 LANGUAGE.sigil_destroyed							= "The Undead have destroyed a Sigil!"

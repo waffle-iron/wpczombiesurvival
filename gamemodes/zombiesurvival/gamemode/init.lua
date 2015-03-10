@@ -10,27 +10,7 @@ This was my first ever gamemode. A lot of stuff is from years ago and some stuff
 
 ]]
 
--- CRAFTING AND ITEM IDEAS
---[[
-ITEMS
-nighkeez: you run a bit faster while wearing them. Also attaches white boot props to your feet.
-AWTH barrel: if it so much as bangs in to something then it blows up with a huge explosion (like fire bomb size).
-stabber: stubber with a knife in the barrel. A melee weapon with very low size but high reach.
-hot milk: puts you to sleep for a stupid amount of time and you regenerate health a little bit.
-gelbanana: green gel banana. using it gives you 8 health.
-body armor: nullifies one hit that does 20 or more damage and then immediately breaks.
-
-RECIPEES
-boot prop + boot prop = nighkeez
-nighkeez + bananas prop = clown shoes
-explosive barrel + explosive barrel = big explosive barrel
-oxygen canister + big explosive barrel = AWTH barrel
-stubber + knife = stabber
-milk + heat source = hot milk
-ammonia + bleach = mustard gas on the spot. spams yellow fumes everywhere and lethally poisons the user.
-bananas + microwave = gelbanana
-metal barrel + something = body armor
---]]
+-- TODO: player introduced to a "main menu" sort of thing. auto joins as spectator. Requires recoding of a lot of logic because right now we assume only two possible teams and no spectator for humans.
 
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
@@ -45,6 +25,7 @@ AddCSLuaFile("sh_options.lua")
 AddCSLuaFile("sh_zombieclasses.lua")
 AddCSLuaFile("sh_animations.lua")
 AddCSLuaFile("sh_sigils.lua")
+AddCSLuaFile("sh_channel.lua")
 
 AddCSLuaFile("cl_draw.lua")
 AddCSLuaFile("cl_util.lua")
@@ -79,6 +60,7 @@ AddCSLuaFile("vgui/dexrotatedimage.lua")
 AddCSLuaFile("vgui/dexnotificationslist.lua")
 AddCSLuaFile("vgui/dexchanginglabel.lua")
 
+AddCSLuaFile("vgui/mainmenu.lua")
 AddCSLuaFile("vgui/pmainmenu.lua")
 AddCSLuaFile("vgui/poptions.lua")
 AddCSLuaFile("vgui/phelp.lua")
@@ -180,7 +162,7 @@ function GM:TryHumanPickup(pl, entity)
     end
 end
 
-/*
+--[[
 function GM:AddResources()
     resource.AddFile("resource/fonts/typenoksidi.ttf")
     resource.AddFile("resource/fonts/hidden.ttf")
@@ -338,7 +320,7 @@ function GM:AddResources()
     resource.AddFile("sound/"..tostring(self.HumanWinSound))
     resource.AddFile("sound/"..tostring(self.DeathSound))
 end
-*/
+--]]
 
 function GM:Initialize()
     self:RegisterPlayerSpawnEntities()
@@ -446,15 +428,15 @@ function GM:ShowTeam(pl)
 end
 
 function GM:ShowSpare1(pl)
-    if pl:Team() == TEAM_UNDEAD then
-        if self:ShouldUseAlternateDynamicSpawn() then
-            pl:CenterNotify(COLOR_RED, translate.ClientGet(pl, "no_class_switch_in_this_mode"))
-        else
-            pl:SendLua("GAMEMODE:OpenClassSelect()")
-        end
-    else
-        pl:SendLua("MakepWeapons()")
-    end
+	if pl:Team() == TEAM_UNDEAD then
+		if self:ShouldUseAlternateDynamicSpawn() then
+			pl:CenterNotify(COLOR_RED, translate.ClientGet(pl, "no_class_switch_in_this_mode"))
+		else
+			pl:SendLua("GAMEMODE:OpenClassSelect()")
+		end
+	elseif pl:Team() == TEAM_HUMAN then
+		pl:SendLua("MakepWeapons()")
+	end
 end
 
 function GM:ShowSpare2(pl)
@@ -462,47 +444,48 @@ function GM:ShowSpare2(pl)
 end
 
 function GM:SetupSpawnPoints()
-    local ztab = ents.FindByClass("info_player_undead")
-    ztab = table.Add(ztab, ents.FindByClass("info_player_zombie"))
-    ztab = table.Add(ztab, ents.FindByClass("info_player_rebel"))
+	local ztab = ents.FindByClass("info_player_undead")
+	ztab = table.Add(ztab, ents.FindByClass("info_player_zombie"))
+	ztab = table.Add(ztab, ents.FindByClass("info_player_rebel"))
 
-    local htab = ents.FindByClass("info_player_human")
-    htab = table.Add(htab, ents.FindByClass("info_player_combine"))
+	local htab = ents.FindByClass("info_player_human")
+	htab = table.Add(htab, ents.FindByClass("info_player_combine"))
 
-    local mapname = string.lower(game.GetMap())
-    -- Terrorist spawns are usually in some kind of house or a main base in CS_  in order to guard the hosties. Put the humans there.
-    if string.sub(mapname, 1, 3) == "cs_" or string.sub(mapname, 1, 3) == "zs_" then
-        ztab = table.Add(ztab, ents.FindByClass("info_player_counterterrorist"))
-        htab = table.Add(htab, ents.FindByClass("info_player_terrorist"))
-    else -- Otherwise, this is probably a DE_, ZM_, or ZH_ map. In DE_ maps, the T's spawn away from the main part of the map and are zombies in zombie plugins so let's do the same.
-        ztab = table.Add(ztab, ents.FindByClass("info_player_terrorist"))
-        htab = table.Add(htab, ents.FindByClass("info_player_counterterrorist"))
-    end
+	local mapname = string.lower(game.GetMap())
+	-- Terrorist spawns are usually in some kind of house or a main base in CS_  in order to guard the hosties. Put the humans there.
+	if string.sub(mapname, 1, 3) == "cs_" or string.sub(mapname, 1, 3) == "zs_" then
+		ztab = table.Add(ztab, ents.FindByClass("info_player_counterterrorist"))
+		htab = table.Add(htab, ents.FindByClass("info_player_terrorist"))
+	else -- Otherwise, this is probably a DE_, ZM_, or ZH_ map. In DE_ maps, the T's spawn away from the main part of the map and are zombies in zombie plugins so let's do the same.
+		ztab = table.Add(ztab, ents.FindByClass("info_player_terrorist"))
+		htab = table.Add(htab, ents.FindByClass("info_player_counterterrorist"))
+	end
 
-    -- Add all the old ZS spawns from GMod9.
-    for _, oldspawn in pairs(ents.FindByClass("gmod_player_start")) do
-        if oldspawn.BlueTeam then
-            table.insert(htab, oldspawn)
-        else
-            table.insert(ztab, oldspawn)
-        end
-    end
+	-- Add all the old ZS spawns from GMod9.
+	for _, oldspawn in pairs(ents.FindByClass("gmod_player_start")) do
+		if oldspawn.BlueTeam then
+			table.insert(htab, oldspawn)
+		else
+			table.insert(ztab, oldspawn)
+		end
+	end
 
-    -- You shouldn't play a DM map since spawns are shared but whatever. Let's make sure that there aren't team spawns first.
-    if #htab == 0 then
-        htab = ents.FindByClass("info_player_start")
-        htab = table.Add(htab, ents.FindByClass("info_player_deathmatch")) -- Zombie Master
-    end
-    if #ztab == 0 then
-        ztab = ents.FindByClass("info_player_start")
-        ztab = table.Add(ztab, ents.FindByClass("info_zombiespawn")) -- Zombie Master
-    end
+	-- You shouldn't play a DM map since spawns are shared but whatever. Let's make sure that there aren't team spawns first.
+	if #htab == 0 then
+		htab = ents.FindByClass("info_player_start")
+		htab = table.Add(htab, ents.FindByClass("info_player_deathmatch")) -- Zombie Master
+	end
+	if #ztab == 0 then
+		ztab = ents.FindByClass("info_player_start")
+		ztab = table.Add(ztab, ents.FindByClass("info_zombiespawn")) -- Zombie Master
+	end
 
-    team.SetSpawnPoint(TEAM_UNDEAD, ztab)
-    team.SetSpawnPoint(TEAM_HUMAN, htab)
+	team.SetSpawnPoint(TEAM_UNDEAD, ztab)
+	team.SetSpawnPoint(TEAM_HUMAN, htab)
+	team.SetSpawnPoint(TEAM_SPECTATOR, htab)
 
-    self.RedeemSpawnPoints = ents.FindByClass("info_player_redeemed")
-    self.BossSpawnPoints = table.Add(ents.FindByClass("info_player_zombie_boss"), ents.FindByClass("info_player_undead_boss"))
+	self.RedeemSpawnPoints = ents.FindByClass("info_player_redeemed")
+	self.BossSpawnPoints = table.Add(ents.FindByClass("info_player_zombie_boss"), ents.FindByClass("info_player_undead_boss"))
 end
 
 function GM:PlayerPointsAdded(pl, amount)
@@ -882,85 +865,83 @@ end
 
 local NextTick = 0
 function GM:Think()
-    local time = CurTime()
-    local wave = self:GetWave()
+	local time = CurTime()
+	local wave = self:GetWave()
 
-    if not self.RoundEnded then
-        if self:GetWaveActive() then
-            if self:GetWaveEnd() <= time and self:GetWaveEnd() ~= -1 then
-                gamemode.Call("SetWaveActive", false)
-            end
-        elseif self:GetWaveStart() ~= -1 then
-            if self:GetWaveStart() <= time then
-                gamemode.Call("SetWaveActive", true)
-            elseif self.BossZombies and not self.PantsMode and not self:IsClassicMode() and not self.ZombieEscape
-            and self.LastBossZombieSpawned ~= wave and wave > 0 and not self.RoundEnded
-            and (self.BossZombiePlayersRequired <= 0 or #player.GetAll() >= self.BossZombiePlayersRequired) then
-                if self:GetWaveStart() - 10 <= time then
-                    self:SpawnBossZombie()
-                else
-                    self:CalculateNextBoss()
-                end
-            end
-        end
-    end
+	if not self.RoundEnded then
+		if self:GetWaveActive() then
+			if self:GetWaveEnd() <= time and self:GetWaveEnd() ~= -1 then
+				gamemode.Call("SetWaveActive", false)
+			end
+		elseif self:GetWaveStart() ~= -1 then
+			if self:GetWaveStart() <= time then
+				gamemode.Call("SetWaveActive", true)
+			elseif self.BossZombies and not self.PantsMode and not self:IsClassicMode() and not self.ZombieEscape
+			and self.LastBossZombieSpawned ~= wave and wave > 0 and not self.RoundEnded
+			and (self.BossZombiePlayersRequired <= 0 or #player.GetAll() >= self.BossZombiePlayersRequired) then
+				if self:GetWaveStart() - 10 <= time then
+					self:SpawnBossZombie()
+				else
+					self:CalculateNextBoss()
+				end
+			end
+		end
+	end
 
-    local humans = team.GetPlayers(TEAM_HUMAN)
-    for _, pl in pairs(humans) do
-        if pl:Team() == TEAM_HUMAN then
-            if pl:GetBarricadeGhosting() then
-                pl:BarricadeGhostingThink()
-            end
+	local humans = team.GetPlayers(TEAM_HUMAN)
+	for _, pl in pairs(humans) do
+		if pl:GetBarricadeGhosting() then
+			pl:BarricadeGhostingThink()
+		end
 
-            if pl.m_PointQueue >= 1 and time >= pl.m_LastDamageDealt + 3 then
-                pl:PointCashOut((pl.m_LastDamageDealtPosition or pl:GetPos()) + Vector(0, 0, 32), FM_NONE)
-            end
-        end
-    end
+		if pl.m_PointQueue >= 1 and time >= pl.m_LastDamageDealt + 3 then
+			pl:PointCashOut((pl.m_LastDamageDealtPosition or pl:GetPos()) + Vector(0, 0, 32), FM_NONE)
+		end
+	end
 
-    if wave == 0 then
-        self:CalculateZombieVolunteers()
-    end
+	if wave == 0 then
+		self:CalculateZombieVolunteers()
+	end
 
-    if NextTick <= time then
-        NextTick = time + 1
+	if NextTick <= time then
+		NextTick = time + 1
 
-        local doafk = not self:GetWaveActive() and wave == 0
-        local dopoison = self:GetEscapeStage() == ESCAPESTAGE_DEATH
+		local doafk = not self:GetWaveActive() and wave == 0
+		local dopoison = self:GetEscapeStage() == ESCAPESTAGE_DEATH
 
-        for _, pl in pairs(humans) do
-            if pl:Alive() then
-                if doafk then
-                    local plpos = pl:GetPos()
-                    if pl.LastAFKPosition and (pl.LastAFKPosition.x ~= plpos.x or pl.LastAFKPosition.y ~= plpos.y) then
-                        pl.LastNotAFK = CurTime()
-                    end
-                    pl.LastAFKPosition = plpos
-                end
+		for _, pl in pairs(humans) do
+			if pl:Alive() then
+				if doafk then
+					local plpos = pl:GetPos()
+					if pl.LastAFKPosition and (pl.LastAFKPosition.x ~= plpos.x or pl.LastAFKPosition.y ~= plpos.y) then
+						pl.LastNotAFK = CurTime()
+					end
+					pl.LastAFKPosition = plpos
+				end
 
-                if pl:WaterLevel() >= 3 and not (pl.status_drown and pl.status_drown:IsValid()) then
-                    pl:GiveStatus("drown")
-                else
-                    pl:PreventSkyCade()
-                end
+				if pl:WaterLevel() >= 3 and not (pl.status_drown and pl.status_drown:IsValid()) then
+					pl:GiveStatus("drown")
+				else
+					pl:PreventSkyCade()
+				end
 
-                if self:GetWave() >= 1 and time >= pl.BonusDamageCheck + 60 then
-                    pl.BonusDamageCheck = time
-                    pl:AddPoints(2)
-                    pl:PrintTranslatedMessage(HUD_PRINTCONSOLE, "minute_points_added", 2)
-                end
+				if self:GetWave() >= 1 and time >= pl.BonusDamageCheck + 60 then
+					pl.BonusDamageCheck = time
+					pl:AddPoints(2)
+					pl:PrintTranslatedMessage(HUD_PRINTCONSOLE, "minute_points_added", 2)
+				end
 
-                if pl.BuffRegenerative and time >= pl.NextRegenerate and pl:Health() < pl:GetMaxHealth() / 2 then
-                    pl.NextRegenerate = time + 5
-                    pl:SetHealth(pl:Health() + 1)
-                end
+				if pl.BuffRegenerative and time >= pl.NextRegenerate and pl:Health() < pl:GetMaxHealth() / 2 then
+					pl.NextRegenerate = time + 5
+					pl:SetHealth(pl:Health() + 1)
+				end
 
-                if dopoison then
-                    pl:TakeSpecialDamage(5, DMG_POISON)
-                end
-            end
-        end
-    end
+				if dopoison then
+					pl:TakeSpecialDamage(5, DMG_POISON)
+				end
+			end
+		end
+	end
 end
 
 -- We calculate the volunteers. If the list changed then broadcast the new list.
@@ -1020,68 +1001,52 @@ function GM:LastBite(victim, attacker)
 end
 
 function GM:CalculateInfliction(victim, attacker)
-    if self.RoundEnded or self:GetWave() == 0 then return self.CappedInfliction end
+	if self.RoundEnded or self:GetWave() == 0 then return self.CappedInfliction end
 
-    local players = 0
-    local zombies = 0
-    local humans = 0
-    local wonhumans = 0
-    local hum
-    for _, pl in pairs(player.GetAll()) do
-        if not pl.Disconnecting then
-            if pl:Team() == TEAM_UNDEAD then
-                zombies = zombies + 1
-            elseif pl:HasWon() then
-                wonhumans = wonhumans + 1
-            else
-                humans = humans + 1
-                hum = pl
-            end
-        end
-    end
+	local players = 0
+	local zombies = 0
+	local humans = 0
+	local wonhumans = 0
+	local hum
+	for _, pl in pairs(player.GetAllActive()) do
+		if not pl.Disconnecting then
+			if pl:Team() == TEAM_UNDEAD then
+				zombies = zombies + 1
+			elseif pl:HasWon() then
+				wonhumans = wonhumans + 1
+			else
+				humans = humans + 1
+				hum = pl
+			end
+		end
+	end
 
-    players = humans + zombies
+	players = humans + zombies
 
-    if players == 0 then return self.CappedInfliction end
+	if players == 0 then return self.CappedInfliction end
 
-    local infliction = math.max(zombies / players, self.CappedInfliction)
-    self.CappedInfliction = infliction
+	local infliction = math.max(zombies / players, self.CappedInfliction)
+	self.CappedInfliction = infliction
 
-    if humans == 1 and 2 < zombies then
-        gamemode.Call("LastHuman", hum)
-    elseif 1 <= infliction then
-        infliction = 1
+	if humans == 1 and 2 < zombies then
+		gamemode.Call("LastHuman", hum)
+	elseif 1 <= infliction then
+		infliction = 1
 
-        if wonhumans >= 1 then
-            gamemode.Call("EndRound", TEAM_HUMAN)
-        else
-            gamemode.Call("EndRound", TEAM_UNDEAD)
+		if wonhumans >= 1 then
+			gamemode.Call("EndRound", TEAM_HUMAN)
+		else
+			gamemode.Call("EndRound", TEAM_UNDEAD)
 
-            if attacker and attacker:IsValid() and attacker:IsPlayer() and attacker:Team() == TEAM_UNDEAD and attacker ~= victim then
-                gamemode.Call("LastBite", victim, attacker)
-            end
-        end
-    end
+			if attacker and attacker:IsValid() and attacker:IsPlayer() and attacker:Team() == TEAM_UNDEAD and attacker ~= victim then
+				gamemode.Call("LastBite", victim, attacker)
+			end
+		end
+	end
 
-    if not self:IsClassicMode() and not self.ZombieEscape and not self:IsBabyMode() and not self.PantsMode then
-        for k, v in ipairs(self.ZombieClasses) do
-            if v.Infliction and infliction >= v.Infliction and not self:IsClassUnlocked(v.Name) then
-                v.Unlocked = true
-
-                if not self.PantsMode and not self:IsClassicMode() and not self:IsBabyMode() and not self.ZombieEscape then
-                    if not v.Locked then
-                        for _, pl in pairs(player.GetAll()) do
-                            pl:CenterNotify(COLOR_RED, translate.ClientFormat(pl, "infliction_reached", v.Infliction * 100))
-                            pl:CenterNotify(translate.ClientFormat(pl, "x_unlocked", translate.ClientGet(pl, v.TranslationName)))
-                        end
-                    end
-                end
-            end
-        end
-		local inflictionwepnotified = false
-		local weapontier = 0
-        for k, v in ipairs(self.Items) do
-			if v.Infliction and infliction >= v.Infliction and not self:IsWeaponUnlocked(v) then
+	if not self:IsClassicMode() and not self.ZombieEscape and not self:IsBabyMode() and not self.PantsMode then
+		for k, v in ipairs(self.ZombieClasses) do
+			if v.Infliction and infliction >= v.Infliction and not self:IsClassUnlocked(v.Name) then
 				v.Unlocked = true
 				inflictionwepnotify = true
 				weapontier = math.floor(v.Wave * self:GetNumberOfWaves())
@@ -1458,8 +1423,8 @@ function GM:InitPostEntityMap(fromze)
     end]]
 end
 
-local function EndRoundPlayerShouldTakeDamage(pl, attacker) return pl:Team() ~= TEAM_HUMAN or not attacker:IsPlayer() end
-local function EndRoundPlayerCanSuicide(pl) return pl:Team() ~= TEAM_HUMAN end
+local function EndRoundPlayerShouldTakeDamage(pl, attacker) return pl:Team() == TEAM_UNDEAD or not attacker:IsPlayer() end
+local function EndRoundPlayerCanSuicide(pl) return pl:Team() == TEAM_UNDEAD end
 
 local function EndRoundSetupPlayerVisibility(pl)
     if GAMEMODE.LastHumanPosition and GAMEMODE.RoundEnded then
@@ -1532,45 +1497,47 @@ function GM:PlayerReady(pl)
 end
 
 function GM:PlayerReadyRound(pl)
-    if not pl:IsValid() then return end
+	if not pl:IsValid() then return end
 
-    self:FullGameUpdate(pl)
-    pl:UpdateAllZombieClasses()
+	self:FullGameUpdate(pl)
+	pl:UpdateAllZombieClasses()
 
-    local classid = pl:GetZombieClass()
-    pl:SetZombieClass(classid, true, pl)
-    
-    if self.OverrideStartingWorth then
-        pl:SendLua("GAMEMODE.StartingWorth="..tostring(self.StartingWorth))
-    end
+	local classid = pl:GetZombieClass()
+	pl:SetZombieClass(classid, true, pl)
+	
+	if self.OverrideStartingWorth then
+		pl:SendLua("GAMEMODE.StartingWorth="..tostring(self.StartingWorth))
+	end
 
-    if pl:Team() == TEAM_UNDEAD then
-        -- This is just so they get updated on what class they are and have their hulls set up right.
-        pl:DoHulls(classid, TEAM_UNDEAD)
-    elseif self:GetWave() <= 0 and self.StartingWorth > 0 and not self.StartingLoadout and not self.ZombieEscape then
-        pl:SendLua("MakepWorth()")
-    else
-        gamemode.Call("GiveDefaultOrRandomEquipment", pl)
-    end
+	if pl:Team() == TEAM_UNDEAD then
+		-- This is just so they get updated on what class they are and have their hulls set up right.
+		pl:DoHulls(classid, TEAM_UNDEAD)
+	elseif pl:Team() == TEAM_HUMAN then
+		if self:GetWave() <= 0 and self.StartingWorth > 0 and not self.StartingLoadout and not self.ZombieEscape then
+			pl:SendLua("MakepWorth()")
+		else
+			gamemode.Call("GiveDefaultOrRandomEquipment", pl)
+		end
+	end
 
-    if self.RoundEnded then
-        pl:SendLua("gamemode.Call(\"EndRound\", "..tostring(ROUNDWINNER)..", \""..game.GetMapNext().."\")")
-        gamemode.Call("DoHonorableMentions", pl)
-    end
+	if self.RoundEnded then
+		pl:SendLua("gamemode.Call(\"EndRound\", "..tostring(ROUNDWINNER)..", \""..game.GetMapNext().."\")")
+		gamemode.Call("DoHonorableMentions", pl)
+	end
 
-    if pl:GetInfo("zs_noredeem") == "1" then
-        pl.NoRedeeming = true
-    end
+	if pl:GetInfo("zs_noredeem") == "1" then
+		pl.NoRedeeming = true
+	end
 
-    if self:GetWave() == 0 then
-        self:SendZombieVolunteers(pl, true)
-    end
+	if self:GetWave() == 0 then
+		self:SendZombieVolunteers(pl, true)
+	end
 
-    if self:IsClassicMode() then
-        pl:SendLua("SetGlobalBool(\"classicmode\", true)")
-    elseif self:IsBabyMode() then
-        pl:SendLua("SetGlobalBool(\"babymode\", true)")
-    end
+	if self:IsClassicMode() then
+		pl:SendLua("SetGlobalBool(\"classicmode\", true)")
+	elseif self:IsBabyMode() then
+		pl:SendLua("SetGlobalBool(\"babymode\", true)")
+	end
 end
 
 function GM:FullGameUpdate(pl)
@@ -1636,117 +1603,120 @@ function GM:PlayerInitialSpawn(pl)
 end
 
 function GM:PlayerInitialSpawnRound(pl)
-    pl:SprintDisable()
-    if pl:KeyDown(IN_WALK) then
-        pl:ConCommand("-walk")
-    end
+	pl:SprintDisable()
+	if pl:KeyDown(IN_WALK) then
+		pl:ConCommand("-walk")
+	end
 
-    pl:SetCanWalk(false)
-    pl:SetCanZoom(false)
-    pl:SetNoCollideWithTeammates(true)
-    pl:SetCustomCollisionCheck(true)
+	pl:SetCanWalk(false)
+	pl:SetCanZoom(false)
+	pl:SetNoCollideWithTeammates(true)
+	pl:SetCustomCollisionCheck(true)
 
-    pl.ZombiesKilled = 0
-    pl.ZombiesKilledAssists = 0
-    pl.BrainsEaten = 0
+	pl.ZombiesKilled = 0
+	pl.ZombiesKilledAssists = 0
+	pl.BrainsEaten = 0
 
-    pl.ResupplyBoxUsedByOthers = 0
+	pl.ResupplyBoxUsedByOthers = 0
 
-    pl.WaveJoined = self:GetWave()
+	pl.WaveJoined = self:GetWave()
 
-    pl.CrowKills = 0
-    pl.CrowVsCrowKills = 0
-    pl.CrowBarricadeDamage = 0
+	pl.CrowKills = 0
+	pl.CrowVsCrowKills = 0
+	pl.CrowBarricadeDamage = 0
 
-    pl.BarricadeDamage = 0
-    pl.DynamicSpawnedOn = 0
+	pl.BarricadeDamage = 0
+	pl.DynamicSpawnedOn = 0
 
-    pl.NextPainSound = 0
+	pl.NextPainSound = 0
 
-    pl.BonusDamageCheck = 0
+	pl.BonusDamageCheck = 0
 
-    pl.LegDamage = 0
+	pl.LegDamage = 0
 
-    pl.DamageDealt = {}
-    pl.DamageDealt[TEAM_UNDEAD] = 0
-    pl.DamageDealt[TEAM_HUMAN] = 0
+	pl.DamageDealt = {}
+	pl.DamageDealt[TEAM_UNDEAD] = 0
+	pl.DamageDealt[TEAM_HUMAN] = 0
 
-    pl.LifeBarricadeDamage = 0
-    pl.LifeHumanDamage = 0
-    pl.LifeBrainsEaten = 0
+	pl.LifeBarricadeDamage = 0
+	pl.LifeHumanDamage = 0
+	pl.LifeBrainsEaten = 0
 
-    pl.m_PointQueue = 0
-    pl.m_LastDamageDealt = 0
+	pl.m_PointQueue = 0
+	pl.m_LastDamageDealt = 0
 
-    pl.HealedThisRound = 0
-    pl.CarryOverHealth = 0
-    pl.RepairedThisRound = 0
-    pl.CarryOverRepair = 0
-    pl.PointsCommission = 0
-    pl.CarryOverCommision = 0
-    pl.NextRegenerate = 0
-    pl.NestsDestroyed = 0
-    pl.NestSpawns = 0
+	pl.HealedThisRound = 0
+	pl.CarryOverHealth = 0
+	pl.RepairedThisRound = 0
+	pl.CarryOverRepair = 0
+	pl.PointsCommission = 0
+	pl.CarryOverCommision = 0
+	pl.NextRegenerate = 0
+	pl.NestsDestroyed = 0
+	pl.NestSpawns = 0
 
-    local nosend = not pl.DidInitPostEntity
-    pl.HumanSpeedAdder = nil
-    pl.HumanSpeedAdder = nil
-    pl.HumanRepairMultiplier = nil
-    pl.HumanHealMultiplier = nil
-    pl.BuffResistant = nil
-    pl.BuffRegenerative = nil
-    pl.BuffMuscular = nil
-    pl.IsWeak = nil
-    pl.HumanSpeedAdder = nil
-    pl:SetPalsy(false, nosend)
-    pl:SetHemophilia(false, nosend)
-    pl:SetUnlucky(false)
-    pl.Clumsy = nil
-    pl.NoGhosting = nil
-    pl.NoObjectPickup = nil
-    pl.DamageVulnerability = nil
+	local nosend = not pl.DidInitPostEntity
+	pl.HumanSpeedAdder = nil
+	pl.HumanSpeedAdder = nil
+	pl.HumanRepairMultiplier = nil
+	pl.HumanHealMultiplier = nil
+	pl.BuffResistant = nil
+	pl.BuffRegenerative = nil
+	pl.BuffMuscular = nil
+	pl.IsWeak = nil
+	pl.HumanSpeedAdder = nil
+	pl:SetPalsy(false, nosend)
+	pl:SetHemophilia(false, nosend)
+	pl:SetUnlucky(false)
+	pl.Clumsy = nil
+	pl.NoGhosting = nil
+	pl.NoObjectPickup = nil
+	pl.DamageVulnerability = nil
 
-    local uniqueid = pl:UniqueID()
+	local uniqueid = pl:UniqueID()
 
-    if table.HasValue(self.FanList, uniqueid) then
-        pl.DamageVulnerability = (pl.DamageVulnerability or 1) + 10
-        pl:PrintTranslatedMessage(HUD_PRINTTALK, "thanks_for_being_a_fan_of_zs")
-    end
+	if table.HasValue(self.FanList, uniqueid) then
+		pl.DamageVulnerability = (pl.DamageVulnerability or 1) + 10
+		pl:PrintTranslatedMessage(HUD_PRINTTALK, "thanks_for_being_a_fan_of_zs")
+	end
 
-    if self.PreviouslyDied[uniqueid] then
-        -- They already died and reconnected.
-        pl:ChangeTeam(TEAM_UNDEAD)
-    elseif LASTHUMAN then
-        -- Joined during last human.
-        pl.SpawnedTime = CurTime()
-        pl:ChangeTeam(TEAM_UNDEAD)
-    elseif self:GetWave() <= 0 then
-        -- Joined during ready phase.
-        pl.SpawnedTime = CurTime()
-        pl:ChangeTeam(TEAM_HUMAN)
-    elseif self:GetNumberOfWaves() == -1 or self.NoNewHumansWave <= self:GetWave() or team.NumPlayers(TEAM_UNDEAD) == 0 and 1 <= team.NumPlayers(TEAM_HUMAN) then -- Joined during game, no zombies, some humans or joined past the deadline.
-        pl:ChangeTeam(TEAM_UNDEAD)
-        self.PreviouslyDied[uniqueid] = CurTime()
-    else
-        -- Joined past the ready phase but before the deadline.
-        pl.SpawnedTime = CurTime()
-        pl:ChangeTeam(TEAM_HUMAN)
-        if self.DynamicSpawning then
-            timer.Simple(0, function() GAMEMODE:AttemptHumanDynamicSpawn(pl) end)
-        end
-    end
+	if self.PreviouslyDied[uniqueid] then
+		-- They already died and reconnected.
+		pl:ChangeTeam(TEAM_UNDEAD)
+	--[[else
+		pl:ChangeTeam(TEAM_SPECTATOR)
+		pl:Spectate(OBS_MODE_ROAMING)]]
+	elseif LASTHUMAN then ----
+		-- Joined during last human.
+		pl.SpawnedTime = CurTime()
+		pl:ChangeTeam(TEAM_UNDEAD)
+	elseif self:GetWave() <= 0 then
+		-- Joined during ready phase.
+		pl.SpawnedTime = CurTime()
+		pl:ChangeTeam(TEAM_HUMAN)
+	elseif self:GetNumberOfWaves() == -1 or self.NoNewHumansWave <= self:GetWave() or team.NumPlayers(TEAM_UNDEAD) == 0 and 1 <= team.NumPlayers(TEAM_HUMAN) then -- Joined during game, no zombies, some humans or joined past the deadline.
+		pl:ChangeTeam(TEAM_UNDEAD)
+		self.PreviouslyDied[uniqueid] = CurTime()
+	else
+		-- Joined past the ready phase but before the deadline.
+		pl.SpawnedTime = CurTime()
+		pl:ChangeTeam(TEAM_HUMAN)
+		if self.DynamicSpawning then
+			timer.Simple(0, function() GAMEMODE:AttemptHumanDynamicSpawn(pl) end)
+		end ----
+	end
 
-    if pl:Team() == TEAM_UNDEAD and not self:GetWaveActive() and self.ZombieClasses["Crow"] then
-        pl:SetZombieClass(self.ZombieClasses["Crow"].Index)
-        pl.DeathClass = self.DefaultZombieClass
-    else
-        pl:SetZombieClass(self.DefaultZombieClass)
-    end
+	if pl:Team() == TEAM_UNDEAD and not self:GetWaveActive() and self.ZombieClasses["Crow"] then
+		pl:SetZombieClass(self.ZombieClasses["Crow"].Index)
+		pl.DeathClass = self.DefaultZombieClass
+	else
+		pl:SetZombieClass(self.DefaultZombieClass)
+	end
 
-    if pl:Team() == TEAM_UNDEAD and self.StoredUndeadFrags[uniqueid] then
-        pl:SetFrags(self.StoredUndeadFrags[uniqueid])
-        self.StoredUndeadFrags[uniqueid] = nil
-    end
+	if pl:Team() == TEAM_UNDEAD and self.StoredUndeadFrags[uniqueid] then
+		pl:SetFrags(self.StoredUndeadFrags[uniqueid])
+		self.StoredUndeadFrags[uniqueid] = nil
+	end
 end
 
 function GM:GetDynamicSpawning()
@@ -1806,10 +1776,10 @@ function GM:PlayerDisconnected(pl)
         self.StoredUndeadFrags[uid] = pl:Frags()
     end
 
-    if pl:Health() > 0 then
-        local lastattacker = pl:GetLastAttacker()
-        if IsValid(lastattacker) then
-            pl:TakeDamage(1000, lastattacker, lastattacker)
+	if pl:Health() > 0 and not pl:IsSpectator() then
+		local lastattacker = pl:GetLastAttacker()
+		if IsValid(lastattacker) then
+			pl:TakeDamage(1000, lastattacker, lastattacker)
 
             PrintTranslatedMessage(HUD_PRINTCONSOLE, "disconnect_killed", pl:Name(), lastattacker:Name())
         end
@@ -2647,31 +2617,25 @@ function GM:SetRandomToZombie()
 end
 
 function GM:OnPlayerChangedTeam(pl, oldteam, newteam)
-    if newteam == TEAM_UNDEAD then
-        pl:SetZombiePoints(pl:GetPoints())
-        pl:SetPoints(0)
-        pl.DamagedBy = {}
-        pl:SetBarricadeGhosting(false)
-        self.CheckedOut[pl:UniqueID()] = true
-    elseif newteam == TEAM_HUMAN then
-        self.PreviouslyDied[pl:UniqueID()] = nil
-    end
-    
-    if pl.m_bThirdPEnabled then
-        pl.m_bShoulderEnabled = false
-        pl.m_bThirdPEnabled = false
-        pl.m_bThirdPDisabled = false
-            
-        net.Start("stp_enabled")
-            net.WriteBit(pl.m_bShoulderEnabled)
-            net.WriteBit(pl.m_bThirdPEnabled)
-            net.WriteBit(pl.m_bThirdPDisabled)
-        net.Send(pl)
-    end
+	if newteam == TEAM_UNDEAD then
+		pl:SetPoints(0)
+		pl.DamagedBy = {}
+		pl:SetBarricadeGhosting(false)
+		self.CheckedOut[pl:UniqueID()] = true
+	elseif newteam == TEAM_HUMAN then
+		self.PreviouslyDied[pl:UniqueID()] = nil
+	end
 
-    pl.m_PointQueue = 0
+	pl:SetLastAttacker(nil)
+	for _, p in pairs(player.GetAll()) do
+		if p.LastAttacker == pl then
+			p.LastAttacker = nil
+		end
+	end
 
-    timer.Simple(0, function() gamemode.Call("CalculateInfliction") end)
+	pl.m_PointQueue = 0
+
+	timer.Simple(0, function() gamemode.Call("CalculateInfliction") end)
 end
 
 function GM:SetPantsMode(mode)
@@ -2804,53 +2768,53 @@ function GM:SetBabyMode(mode)
 end
 
 function GM:SetClosestsToZombie()
-    local allplayers = player.GetAll()
-    local numplayers = #allplayers
-    if numplayers <= 1 then return end
+	local allplayers = player.GetAllActive()
+	local numplayers = #allplayers
+	if numplayers <= 1 then return end
 
-    local desiredzombies = self:GetDesiredStartingZombies()
+	local desiredzombies = self:GetDesiredStartingZombies()
 
-    self:SortZombieSpawnDistances(allplayers)
+	self:SortZombieSpawnDistances(allplayers)
 
-    local zombies = {}
-    for _, pl in pairs(allplayers) do
-        if pl:Team() ~= TEAM_HUMAN or not pl:Alive() then
-            table.insert(zombies, pl)
-        end
-    end
+	local zombies = {}
+	for _, pl in pairs(allplayers) do
+		if pl:Team() ~= TEAM_HUMAN or not pl:Alive() then
+			table.insert(zombies, pl)
+		end
+	end
 
-    -- Need to place some people back on the human team.
-    if #zombies > desiredzombies then
-        local toswap = #zombies - desiredzombies
-        for _, pl in pairs(zombies) do
-            if pl.DiedDuringWave0 and pl:GetInfo("zs_alwaysvolunteer") ~= "1" then
-                pl:SetTeam(TEAM_HUMAN)
-                pl:UnSpectateAndSpawn()
-                toswap = toswap - 1
-                if toswap <= 0 then
-                    break
-                end
-            end
-        end
-    end
+	-- Need to place some people back on the human team.
+	if #zombies > desiredzombies then
+		local toswap = #zombies - desiredzombies
+		for _, pl in pairs(zombies) do
+			if pl.DiedDuringWave0 and pl:GetInfo("zs_alwaysvolunteer") ~= "1" then
+				pl:SetTeam(TEAM_HUMAN)
+				pl:UnSpectateAndSpawn()
+				toswap = toswap - 1
+				if toswap <= 0 then
+					break
+				end
+			end
+		end
+	end
 
-    for i = 1, desiredzombies do
-        local pl = allplayers[i]
-        if pl:Team() ~= TEAM_UNDEAD then
-            pl:ChangeTeam(TEAM_UNDEAD)
-            self.PreviouslyDied[pl:UniqueID()] = CurTime()
-        end
-        pl:SetFrags(0)
-        pl:SetDeaths(0)
-        self.StartingZombie[pl:UniqueID()] = true
-        pl:UnSpectateAndSpawn()
-    end
+	for i = 1, desiredzombies do
+		local pl = allplayers[i]
+		if pl:Team() ~= TEAM_UNDEAD then
+			pl:ChangeTeam(TEAM_UNDEAD)
+			self.PreviouslyDied[pl:UniqueID()] = CurTime()
+		end
+		pl:SetFrags(0)
+		pl:SetDeaths(0)
+		self.StartingZombie[pl:UniqueID()] = true
+		pl:UnSpectateAndSpawn()
+	end
 
-    for _, pl in pairs(allplayers) do
-        if pl:Team() == TEAM_HUMAN and pl._ZombieSpawnDistance <= 128 then
-            pl:SetPos(self:PlayerSelectSpawn(pl):GetPos())
-        end
-    end
+	for _, pl in pairs(allplayers) do
+		if pl:Team() == TEAM_HUMAN and pl._ZombieSpawnDistance <= 128 then
+			pl:SetPos(self:PlayerSelectSpawn(pl):GetPos())
+		end
+	end
 end
 
 function GM:AllowPlayerPickup(pl, ent)
@@ -2868,46 +2832,48 @@ function GM:PlayerShouldTakeDamage(pl, attacker)
 end
 
 function GM:PlayerHurt(victim, attacker, healthremaining, damage)
-    if 0 < healthremaining then
-        victim:PlayPainSound()
-    end
+	if 0 < healthremaining then
+		victim:PlayPainSound()
+	end
 
-    if victim:Team() == TEAM_HUMAN then
-        victim.BonusDamageCheck = CurTime()
+	if victim:Team() == TEAM_HUMAN then
+		victim.BonusDamageCheck = CurTime()
 
-        if healthremaining < 75 and 1 <= healthremaining then
-            victim:ResetSpeed(nil, healthremaining)
-        end
-    end
+		if healthremaining < 75 and 1 <= healthremaining then
+			victim:ResetSpeed(nil, healthremaining)
+		end
+	end
 
-    if attacker:IsValid() then
-        if attacker:IsPlayer() then
-            victim:SetLastAttacker(attacker)
+	if attacker:IsValid() then
+		if attacker:IsPlayer() then
+			victim:SetLastAttacker(attacker)
 
-            local myteam = attacker:Team()
-            local otherteam = victim:Team()
-            if myteam ~= otherteam then
-                damage = math.min(damage, victim.m_PreHurtHealth)
-                victim.m_PreHurtHealth = healthremaining
+			local myteam = attacker:Team()
+			local otherteam = victim:Team()
+			if myteam ~= otherteam then
+				damage = math.min(damage, victim.m_PreHurtHealth)
+				victim.m_PreHurtHealth = healthremaining
 
-                attacker.DamageDealt[myteam] = attacker.DamageDealt[myteam] + damage
+				attacker.DamageDealt[myteam] = attacker.DamageDealt[myteam] + damage
 
-                if myteam == TEAM_UNDEAD then
-                    attacker:AddLifeHumanDamage(damage)
-                elseif otherteam == TEAM_UNDEAD then
-                    victim.DamagedBy[attacker] = (victim.DamagedBy[attacker] or 0) + damage
-                    if (not victim.m_LastWaveStartSpawn or CurTime() >= victim.m_LastWaveStartSpawn + 3)
-                        and (healthremaining <= 0 or not victim.m_LastGasHeal or CurTime() >= victim.m_LastGasHeal + 2) then
-                        attacker.m_PointQueue = attacker.m_PointQueue + damage / victim:GetMaxHealth() * (victim:GetZombieClassTable().Points or 0)
-                    end
-                    attacker.m_LastDamageDealtPosition = victim:GetPos()
-                    attacker.m_LastDamageDealt = CurTime()
-                end
-            end
-        elseif attacker:GetClass() == "trigger_hurt" then
-            victim.LastHitWithTriggerHurt = CurTime()
-        end
-    end
+				if myteam == TEAM_UNDEAD then
+					if otherteam == TEAM_HUMAN then
+						attacker:AddLifeHumanDamage(damage)
+					end
+				elseif myteam == TEAM_HUMAN and otherteam == TEAM_UNDEAD then
+					victim.DamagedBy[attacker] = (victim.DamagedBy[attacker] or 0) + damage
+					if (not victim.m_LastWaveStartSpawn or CurTime() >= victim.m_LastWaveStartSpawn + 3)
+						and (healthremaining <= 0 or not victim.m_LastGasHeal or CurTime() >= victim.m_LastGasHeal + 2) then
+						attacker.m_PointQueue = attacker.m_PointQueue + damage / victim:GetMaxHealth() * (victim:GetZombieClassTable().Points or 0)
+					end
+					attacker.m_LastDamageDealtPosition = victim:GetPos()
+					attacker.m_LastDamageDealt = CurTime()
+				end
+			end
+		elseif attacker:GetClass() == "trigger_hurt" then
+			victim.LastHitWithTriggerHurt = CurTime()
+		end
+	end
 end
 
 -- Don't change speed instantly to stop people from shooting and then running away with a faster weapon.
@@ -3145,180 +3111,182 @@ local function DelayedChangeToZombie(pl)
 end
 
 function GM:DoPlayerDeath(pl, attacker, dmginfo)
-    pl:RemoveStatus("confusion", false, true)
-    pl:RemoveStatus("ghoultouch", false, true)
+	pl:RemoveStatus("confusion", false, true)
+	pl:RemoveStatus("ghoultouch", false, true)
 
-    local inflictor = dmginfo:GetInflictor()
-    local plteam = pl:Team()
-    local ct = CurTime()
-    local suicide = attacker == pl or attacker:IsWorld()
+	local inflictor = dmginfo:GetInflictor()
+	local plteam = pl:Team()
+	local ct = CurTime()
+	local suicide = attacker == pl or attacker:IsWorld()
 
-    pl:Freeze(false)
+	pl:Freeze(false)
 
-    local headshot = pl:LastHitGroup() == HITGROUP_HEAD and pl.m_LastHeadShot and CurTime() <= pl.m_LastHeadShot + 0.1
+	local headshot = pl:LastHitGroup() == HITGROUP_HEAD and pl.m_LastHeadShot and CurTime() <= pl.m_LastHeadShot + 0.1
 
-    if suicide then attacker = pl:GetLastAttacker() or attacker end
-    pl:SetLastAttacker()
+	if suicide then attacker = pl:GetLastAttacker() or attacker end
+	pl:SetLastAttacker()
 
-    if inflictor == NULL then inflictor = attacker end
+	if inflictor == NULL then inflictor = attacker end
 
-    if inflictor == attacker and attacker:IsPlayer() then
-        local wep = attacker:GetActiveWeapon()
-        if wep:IsValid() then
-            inflictor = wep
-        end
-    end
+	if inflictor == attacker and attacker:IsPlayer() then
+		local wep = attacker:GetActiveWeapon()
+		if wep:IsValid() then
+			inflictor = wep
+		end
+	end
 
-    if headshot then
-        local effectdata = EffectData()
-            effectdata:SetOrigin(dmginfo:GetDamagePosition())
-            local force = dmginfo:GetDamageForce()
-            effectdata:SetMagnitude(force:Length() * 3)
-            effectdata:SetNormal(force:GetNormalized())
-            effectdata:SetEntity(pl)
-        util.Effect("headshot", effectdata, true, true)
-    end
+	if headshot then
+		local effectdata = EffectData()
+			effectdata:SetOrigin(dmginfo:GetDamagePosition())
+			local force = dmginfo:GetDamageForce()
+			effectdata:SetMagnitude(force:Length() * 3)
+			effectdata:SetNormal(force:GetNormalized())
+			effectdata:SetEntity(pl)
+		util.Effect("headshot", effectdata, true, true)
+	end
 
-    if not pl:CallZombieFunction("OnKilled", attacker, inflictor, suicide, headshot, dmginfo) then
-        if pl:Health() <= -70 and not pl.NoGibs and not self.ZombieEscape then
-            pl:Gib(dmginfo)
-        elseif not pl.KnockedDown then
-            pl:CreateRagdoll()
-        end
-    end
+	if not pl:CallZombieFunction("OnKilled", attacker, inflictor, suicide, headshot, dmginfo) then
+		if pl:Health() <= -70 and not pl.NoGibs and not self.ZombieEscape then
+			pl:Gib(dmginfo)
+		elseif not pl.KnockedDown then
+			pl:CreateRagdoll()
+		end
+	end
 
-    pl:RemoveStatus("overridemodel", false, true)
+	pl:RemoveStatus("overridemodel", false, true)
 
-    local revive
-    local assistpl
-    if plteam == TEAM_UNDEAD then
-        local classtable = pl:GetZombieClassTable()
+	local revive
+	local assistpl
+	if plteam == TEAM_UNDEAD then
+		local classtable = pl:GetZombieClassTable()
 
-        pl:PlayZombieDeathSound()
+		pl:PlayZombieDeathSound()
 
-        if not classtable.NoDeaths then
-            pl:AddDeaths(1)
-        end
+		if not classtable.NoDeaths then
+			pl:AddDeaths(1)
+		end
 
-        if self:GetWaveActive() then
-            pl.StartSpectating = ct + 2
-        else
-            pl.StartCrowing = ct + 3
-        end
+		if self:GetWaveActive() then
+			pl.StartSpectating = ct + 2
+		else
+			pl.StartCrowing = ct + 3
+		end
 
-        if attacker:IsValid() and attacker:IsPlayer() and attacker ~= pl then
-            if classtable.Revives and not pl.Gibbed and not headshot then
-                if classtable.ReviveCallback then
-                    revive = classtable:ReviveCallback(pl, attacker, dmginfo)
-                elseif math.random(1, 4) ~= 1 then
-                    self:DefaultRevive(pl)
-                    revive = true
-                end
-            end
+		if attacker:IsValid() and attacker:IsPlayer() and attacker ~= pl then
+			if classtable.Revives and not pl.Gibbed and not headshot then
+				if classtable.ReviveCallback then
+					revive = classtable:ReviveCallback(pl, attacker, dmginfo)
+				elseif math.random(1, 4) ~= 1 then
+					self:DefaultRevive(pl)
+					revive = true
+				end
+			end
 
-            if not revive and attacker:Team() ~= TEAM_UNDEAD then
-                assistpl = gamemode.Call("HumanKilledZombie", pl, attacker, inflictor, dmginfo, headshot, suicide)
-            end
-        end
+			if not revive and attacker:Team() == TEAM_HUMAN then
+				assistpl = gamemode.Call("HumanKilledZombie", pl, attacker, inflictor, dmginfo, headshot, suicide)
+			end
+		end
 
-        if not revive and (pl.LifeBarricadeDamage ~= 0 or pl.LifeHumanDamage ~= 0 or pl.LifeBrainsEaten ~= 0) then
-            net.Start("zs_lifestats")
-                net.WriteUInt(math.ceil(pl.LifeBarricadeDamage or 0), 24)
-                net.WriteUInt(math.ceil(pl.LifeHumanDamage or 0), 24)
-                net.WriteUInt(pl.LifeBrainsEaten or 0, 16)
-            net.Send(pl)
-        end
+		if not revive and (pl.LifeBarricadeDamage ~= 0 or pl.LifeHumanDamage ~= 0 or pl.LifeBrainsEaten ~= 0) then
+			net.Start("zs_lifestats")
+				net.WriteUInt(math.ceil(pl.LifeBarricadeDamage or 0), 24)
+				net.WriteUInt(math.ceil(pl.LifeHumanDamage or 0), 24)
+				net.WriteUInt(pl.LifeBrainsEaten or 0, 16)
+			net.Send(pl)
+		end
 
-        pl:CallZombieFunction("PostOnKilled", attacker, inflictor, suicide, headshot, dmginfo)
-    else
-        pl.NextSpawnTime = ct + 4
+		pl:CallZombieFunction("PostOnKilled", attacker, inflictor, suicide, headshot, dmginfo)
+	elseif plteam == TEAM_HUMAN then
+		pl.NextSpawnTime = ct + 4
 
-        pl:PlayDeathSound()
+		pl:PlayDeathSound()
 
-        if attacker:IsPlayer() and attacker ~= pl then
-            gamemode.Call("ZombieKilledHuman", pl, attacker, inflictor, dmginfo, headshot, suicide)
-        end
+		if attacker:IsPlayer() and attacker ~= pl then
+			gamemode.Call("ZombieKilledHuman", pl, attacker, inflictor, dmginfo, headshot, suicide)
+		end
 
-        pl:DropAll()
-        timer.Simple(0, function() DelayedChangeToZombie(pl) end) -- We don't want people shooting barrels near teammates.
-        self.PreviouslyDied[pl:UniqueID()] = CurTime()
-        if self:GetWave() == 0 then
-            pl.DiedDuringWave0 = true
-        end
+		pl:DropAll()
+		timer.Simple(0, function() DelayedChangeToZombie(pl) end) -- We don't want people shooting barrels near teammates.
+		self.PreviouslyDied[pl:UniqueID()] = CurTime()
+		if self:GetWave() == 0 then
+			pl.DiedDuringWave0 = true
+		end
 
-        local frags = pl:Frags()
-        if frags < 0 then
-            pl.ChangeTeamFrags = math.ceil(frags / 5)
-        else
-            pl.ChangeTeamFrags = 0
-        end
+		local frags = pl:Frags()
+		if frags < 0 then
+			pl.ChangeTeamFrags = math.ceil(frags / 5)
+		else
+			pl.ChangeTeamFrags = 0
+		end
 
-        if pl.SpawnedTime then
-            pl.SurvivalTime = math.max(ct - pl.SpawnedTime, pl.SurvivalTime or 0)
-            pl.SpawnedTime = nil
-        end
+		if pl.SpawnedTime then
+			pl.SurvivalTime = math.max(ct - pl.SpawnedTime, pl.SurvivalTime or 0)
+			pl.SpawnedTime = nil
+		end
 
-        if team.NumPlayers(TEAM_HUMAN) <= 1 then
-            self.LastHumanPosition = pl:WorldSpaceCenter()
+		if team.NumPlayers(TEAM_HUMAN) <= 1 then
+			self.LastHumanPosition = pl:WorldSpaceCenter()
 
-            net.Start("zs_lasthumanpos")
-                net.WriteVector(self.LastHumanPosition)
-            net.Broadcast()
-        end
+			net.Start("zs_lasthumanpos")
+				net.WriteVector(self.LastHumanPosition)
+			net.Broadcast()
+		end
 
-        local hands = pl:GetHands()
-        if IsValid(hands) then
-            hands:Remove()
-        end
-    end
+		local hands = pl:GetHands()
+		if IsValid(hands) then
+			hands:Remove()
+		end
+	end
 
-    if revive or pl:CallZombieFunction("NoDeathMessage", attacker, dmginfo) then return end
+	if revive or pl:CallZombieFunction("NoDeathMessage", attacker, dmginfo) or pl:IsSpectator() then return end
 
-    if attacker == pl then
-        net.Start("zs_pl_kill_self")
-            net.WriteEntity(pl)
-            net.WriteUInt(plteam, 16)
-        net.Broadcast()
-    elseif attacker:IsPlayer() then
-        if assistpl then
-            net.Start("zs_pls_kill_pl")
-                net.WriteEntity(pl)
-                net.WriteEntity(attacker)
-                net.WriteEntity(assistpl)
-                net.WriteString(inflictor:GetClass())
-                net.WriteUInt(plteam, 16)
-                net.WriteUInt(attacker:Team(), 16) -- Assuming assistants are always on the same team.
-                net.WriteBit(headshot)
-            net.Broadcast()
+	if attacker == pl then
+		net.Start("zs_pl_kill_self")
+			net.WriteEntity(pl)
+			net.WriteUInt(plteam, 16)
+		net.Broadcast()
+	elseif attacker:IsPlayer() then
+		if assistpl then
+			net.Start("zs_pls_kill_pl")
+				net.WriteEntity(pl)
+				net.WriteEntity(attacker)
+				net.WriteEntity(assistpl)
+				net.WriteString(inflictor:GetClass())
+				net.WriteUInt(plteam, 16)
+				net.WriteUInt(attacker:Team(), 16) -- Assuming assistants are always on the same team.
+				net.WriteBit(headshot)
+			net.Broadcast()
 
-            gamemode.Call("PlayerKilledByPlayer", pl, assistpl, inflictor, headshot, dmginfo, true)
-        else
-            net.Start("zs_pl_kill_pl")
-                net.WriteEntity(pl)
-                net.WriteEntity(attacker)
-                net.WriteString(inflictor:GetClass())
-                net.WriteUInt(plteam, 16)
-                net.WriteUInt(attacker:Team(), 16)
-                net.WriteBit(headshot)
-            net.Broadcast()
-        end
+			gamemode.Call("PlayerKilledByPlayer", pl, assistpl, inflictor, headshot, dmginfo, true)
+		else
+			net.Start("zs_pl_kill_pl")
+				net.WriteEntity(pl)
+				net.WriteEntity(attacker)
+				net.WriteString(inflictor:GetClass())
+				net.WriteUInt(plteam, 16)
+				net.WriteUInt(attacker:Team(), 16)
+				net.WriteBit(headshot)
+			net.Broadcast()
+		end
 
-        gamemode.Call("PlayerKilledByPlayer", pl, attacker, inflictor, headshot, dmginfo)
-    else
-        net.Start("zs_death")
-            net.WriteEntity(pl)
-            net.WriteString(inflictor:GetClass())
-            net.WriteString(attacker:GetClass())
-            net.WriteUInt(plteam, 16)
-        net.Broadcast()
-    end
+		gamemode.Call("PlayerKilledByPlayer", pl, attacker, inflictor, headshot, dmginfo)
+	else
+		net.Start("zs_death")
+			net.WriteEntity(pl)
+			net.WriteString(inflictor:GetClass())
+			net.WriteString(attacker:GetClass())
+			net.WriteUInt(plteam, 16)
+		net.Broadcast()
+	end
 end
 
 function GM:PlayerKilledByPlayer(pl, attacker, inflictor, headshot, dmginfo)
 end
 
 function GM:PlayerCanPickupWeapon(pl, ent)
-    if pl:Team() == TEAM_UNDEAD then return ent:GetClass() == pl:GetZombieClassTable().SWEP end
+	if pl:IsSpectator() then return false end
+
+	if pl:Team() == TEAM_UNDEAD then return ent:GetClass() == pl:GetZombieClassTable().SWEP end
 
     return not ent.ZombieOnly and ent:GetClass() ~= "weapon_stunstick"
 end
@@ -3546,187 +3514,187 @@ VoiceSetTranslate["models/player/moe_glados_p.mdl"] = "female"
 VoiceSetTranslate["models/grim.mdl"] = "combine"
 VoiceSetTranslate["models/jason278-players/gabe_3.mdl"] = "monk"
 function GM:PlayerSpawn(pl)
-    pl:StripWeapons()
-    pl:RemoveStatus("confusion", false, true)
+	pl:StripWeapons()
+	pl:RemoveStatus("confusion", false, true)
 
-    if pl:GetMaterial() ~= "" then
-        pl:SetMaterial("")
-    end
+	if pl:GetMaterial() ~= "" then
+		pl:SetMaterial("")
+	end
 
-    pl:UnSpectate()
+	pl:UnSpectate()
 
-    pl.StartCrowing = nil
-    pl.StartSpectating = nil
-    pl.NextSpawnTime = nil
-    pl.Gibbed = nil
+	pl.StartCrowing = nil
+	pl.StartSpectating = nil
+	pl.NextSpawnTime = nil
+	pl.Gibbed = nil
 
-    pl.SpawnNoSuicide = CurTime() + 1
-    pl.SpawnedTime = CurTime()
+	pl.SpawnNoSuicide = CurTime() + 1
+	pl.SpawnedTime = CurTime()
 
-    pl:ShouldDropWeapon(false)
+	pl:ShouldDropWeapon(false)
 
-    pl:SetLegDamage(0)
-    pl:SetLastAttacker()
+	pl:SetLegDamage(0)
+	pl:SetLastAttacker()
 
-    if pl:Team() == TEAM_UNDEAD then
-        pl:RemoveStatus("overridemodel", false, true)
+	if pl:Team() == TEAM_UNDEAD then
+		pl:RemoveStatus("overridemodel", false, true)
 
-        if not pl.Revived then
-            pl.DamagedBy = {}
-        end
+		if not pl.Revived then
+			pl.DamagedBy = {}
+		end
 
-        pl.LifeBarricadeDamage = 0
-        pl.LifeHumanDamage = 0
-        pl.LifeBrainsEaten = 0
+		pl.LifeBarricadeDamage = 0
+		pl.LifeHumanDamage = 0
+		pl.LifeBrainsEaten = 0
 
-        if self:GetEscapeSequence() and self:GetEscapeStage() >= ESCAPESTAGE_BOSS then
-            local bossindex = pl:GetBossZombieIndex()
-            if bossindex ~= -1 then
-                pl:SetZombieClass(bossindex)
-            end
-        elseif pl.DeathClass and self:GetWaveActive() then
-            pl:SetZombieClass(pl.DeathClass)
-            pl.DeathClass = nil
-        end
+		if self:GetEscapeSequence() and self:GetEscapeStage() >= ESCAPESTAGE_BOSS then
+			local bossindex = pl:GetBossZombieIndex()
+			if bossindex ~= -1 then
+				pl:SetZombieClass(bossindex)
+			end
+		elseif pl.DeathClass and self:GetWaveActive() then
+			pl:SetZombieClass(pl.DeathClass)
+			pl.DeathClass = nil
+		end
 
-        local classtab = pl:GetZombieClassTable()
-        pl:DoHulls(pl:GetZombieClass(), TEAM_UNDEAD)
+		local classtab = pl:GetZombieClassTable()
+		pl:DoHulls(pl:GetZombieClass(), TEAM_UNDEAD)
 
-        if classtab.Model then
-            pl:SetModel(classtab.Model)
-        elseif classtab.UsePlayerModel then
-            local desiredname = player_manager.TranslateToPlayerModelName( pl:GetModel() )
-            if #desiredname == 0 then
-                pl:SelectRandomPlayerModel()
-            else
-                pl:SetModel(player_manager.TranslatePlayerModel(desiredname))
-            end
-        elseif classtab.UsePreviousModel then
-            local curmodel = string.lower(pl:GetModel())
-            if table.HasValue(self.RestrictedModels, curmodel) then
-                pl:SelectRandomPlayerModel()
-            end
-        elseif classtab.UseRandomModel then
-            pl:SelectRandomPlayerModel()
-        else
-            pl:SetModel("models/player/zombie_classic.mdl")
-        end
+		if classtab.Model then
+			pl:SetModel(classtab.Model)
+		elseif classtab.UsePlayerModel then
+			local desiredname = pl:GetInfo("cl_playermodel")
+			if #desiredname == 0 then
+				pl:SelectRandomPlayerModel()
+			else
+				pl:SetModel(player_manager.TranslatePlayerModel(desiredname))
+			end
+		elseif classtab.UsePreviousModel then
+			local curmodel = string.lower(pl:GetModel())
+			if table.HasValue(self.RestrictedModels, curmodel) or string.sub(curmodel, 1, 14) ~= "models/player/" then
+				pl:SelectRandomPlayerModel()
+			end
+		elseif classtab.UseRandomModel then
+			pl:SelectRandomPlayerModel()
+		else
+			pl:SetModel("models/player/zombie_classic.mdl")
+		end
 
-        local numundead = team.NumPlayers(TEAM_UNDEAD)
-        if self.OutnumberedHealthBonus <= numundead or classtab.Boss then
-            pl:SetHealth(classtab.Health)
-        else
-            pl:SetHealth(classtab.Health * 1.5)
-        end
+		local numundead = team.NumPlayers(TEAM_UNDEAD)
+		if self.OutnumberedHealthBonus <= numundead or classtab.Boss then
+			pl:SetHealth(classtab.Health)
+		else
+			pl:SetHealth(classtab.Health * 1.5)
+		end
 
-        if classtab.SWEP then
-            pl:Give(classtab.SWEP)
-        end
+		if classtab.SWEP then
+			pl:Give(classtab.SWEP)
+		end
 
-        pl:SetNoTarget(true)
-        pl:SetMaxHealth(1)
+		pl:SetNoTarget(true)
+		pl:SetMaxHealth(1)
 
-        pl:ResetSpeed()
-        pl:SetCrouchedWalkSpeed(classtab.CrouchedWalkSpeed or 0.70)
+		pl:ResetSpeed()
+		pl:SetCrouchedWalkSpeed(classtab.CrouchedWalkSpeed or 0.70)
 
-        if not pl.Revived or not self:GetWaveActive() or CurTime() > self:GetWaveEnd() then
-            pl.StartCrowing = 0
-        end
+		if not pl.Revived or not self:GetWaveActive() or CurTime() > self:GetWaveEnd() then
+			pl.StartCrowing = 0
+		end
 
-        if pl.ForceSpawnAngles then
-            pl:SetEyeAngles(pl.ForceSpawnAngles)
-            pl.ForceSpawnAngles = nil
-        end
+		if pl.ForceSpawnAngles then
+			pl:SetEyeAngles(pl.ForceSpawnAngles)
+			pl.ForceSpawnAngles = nil
+		end
 
-        if pl.SpawnedOnSpawnPoint and not pl.DidntSpawnOnSpawnPoint and not pl.Revived and not pl:GetZombieClassTable().NeverAlive then
-            pl:GiveStatus("zombiespawnbuff", 3)
-        end
-        pl.DidntSpawnOnSpawnPoint = nil
-        pl.SpawnedOnSpawnPoint = nil
+		if pl.SpawnedOnSpawnPoint and not pl.DidntSpawnOnSpawnPoint and not pl.Revived and not pl:GetZombieClassTable().NeverAlive then
+			pl:GiveStatus("zombiespawnbuff", 3)
+		end
+		pl.DidntSpawnOnSpawnPoint = nil
+		pl.SpawnedOnSpawnPoint = nil
 
-        pl:CallZombieFunction("OnSpawned")
-    else
-        pl.m_PointQueue = 0
-        pl.PackedItems = {}
+		pl:CallZombieFunction("OnSpawned")
+	elseif pl:Team() == TEAM_HUMAN then
+		pl.m_PointQueue = 0
+		pl.PackedItems = {}
 
-        local desiredname = pl:GetInfo("cl_playermodel")
-        local modelname = player_manager.TranslatePlayerModel(#desiredname == 0 and self.RandomPlayerModels[math.random(#self.RandomPlayerModels)] or desiredname)
-        local lowermodelname = string.lower(modelname)
-        if table.HasValue(self.RestrictedModels, lowermodelname) then
-            modelname = "models/player/alyx.mdl"
-            lowermodelname = modelname
-        end
-        pl:SetModel(modelname)
+		local desiredname = pl:GetInfo("cl_playermodel")
+		local modelname = player_manager.TranslatePlayerModel(#desiredname == 0 and self.RandomPlayerModels[math.random(#self.RandomPlayerModels)] or desiredname)
+		local lowermodelname = string.lower(modelname)
+		if table.HasValue(self.RestrictedModels, lowermodelname) then
+			modelname = "models/player/alyx.mdl"
+			lowermodelname = modelname
+		end
+		pl:SetModel(modelname)
 
-        -- Cache the voice set.
-        if VoiceSetTranslate[lowermodelname] then
-            pl.VoiceSet = VoiceSetTranslate[lowermodelname]
-        elseif string.find(lowermodelname, "female", 1, true) then
-            pl.VoiceSet = "female"
-        else
-            pl.VoiceSet = "male"
-        end
+		-- Cache the voice set.
+		if VoiceSetTranslate[lowermodelname] then
+			pl.VoiceSet = VoiceSetTranslate[lowermodelname]
+		elseif string.find(lowermodelname, "female", 1, true) then
+			pl.VoiceSet = "female"
+		else
+			pl.VoiceSet = "male"
+		end
 
-        pl.HumanSpeedAdder = nil
+		pl.HumanSpeedAdder = nil
 
-        pl.BonusDamageCheck = CurTime()
+		pl.BonusDamageCheck = CurTime()
 
-        pl:ResetSpeed()
-        pl:SetJumpPower(DEFAULT_JUMP_POWER)
-        pl:SetCrouchedWalkSpeed(0.65)
+		pl:ResetSpeed()
+		pl:SetJumpPower(DEFAULT_JUMP_POWER)
+		pl:SetCrouchedWalkSpeed(0.65)
 
-        pl:SetNoTarget(false)
-        pl:SetMaxHealth(100)
+		pl:SetNoTarget(false)
+		pl:SetMaxHealth(100)
 
-        if self.ZombieEscape then
-            pl:Give("weapon_zs_zeknife")
-            pl:Give("weapon_zs_zegrenade")
-            pl:Give(table.Random(self.ZombieEscapeWeapons))
-        else
-            pl:Give("weapon_zs_fists")
-            
-            if self.StartingLoadout then
-                self:GiveStartingLoadout(pl)
-            elseif pl.m_PreRedeem then
-                if self.RedeemLoadout then
-                    for _, class in pairs(self.RedeemLoadout) do
-                        pl:Give(class)
-                    end
-                else
-                    pl:Give("weapon_zs_redeemers")
-                    pl:Give("weapon_zs_swissarmyknife")
-                end
-            end
-        end
+		if self.ZombieEscape then
+			pl:Give("weapon_zs_zeknife")
+			pl:Give("weapon_zs_zegrenade")
+			pl:Give(table.Random(self.ZombieEscapeWeapons))
+		else
+			pl:Give("weapon_zs_fists")
+			
+			if self.StartingLoadout then
+				self:GiveStartingLoadout(pl)
+			elseif pl.m_PreRedeem then
+				if self.RedeemLoadout then
+					for _, class in pairs(self.RedeemLoadout) do
+						pl:Give(class)
+					end
+				else
+					pl:Give("weapon_zs_redeemers")
+					pl:Give("weapon_zs_swissarmyknife")
+				end
+			end
+		end
 
-        local oldhands = pl:GetHands()
-        if IsValid(oldhands) then
-            oldhands:Remove()
-        end
+		local oldhands = pl:GetHands()
+		if IsValid(oldhands) then
+			oldhands:Remove()
+		end
 
-        local hands = ents.Create("zs_hands")
-        if hands:IsValid() then
-            hands:DoSetup(pl)
-            hands:Spawn()
-        end
-    end
+		local hands = ents.Create("zs_hands")
+		if hands:IsValid() then
+			hands:DoSetup(pl)
+			hands:Spawn()
+		end
+	end
 
-    pl:DoMuscularBones()
-    pl:DoNoodleArmBones()
+	pl:DoMuscularBones()
+	pl:DoNoodleArmBones()
 
-    local pcol = Vector(pl:GetInfo("cl_playercolor"))
-    pcol.x = math.Clamp(pcol.x, 0, 2.5)
-    pcol.y = math.Clamp(pcol.y, 0, 2.5)
-    pcol.z = math.Clamp(pcol.z, 0, 2.5)
-    pl:SetPlayerColor(pcol)
+	local pcol = Vector(pl:GetInfo("cl_playercolor"))
+	pcol.x = math.Clamp(pcol.x, 0, 2.5)
+	pcol.y = math.Clamp(pcol.y, 0, 2.5)
+	pcol.z = math.Clamp(pcol.z, 0, 2.5)
+	pl:SetPlayerColor(pcol)
 
-    local wcol = Vector(pl:GetInfo("cl_weaponcolor"))
-    wcol.x = math.Clamp(wcol.x, 0, 2.5)
-    wcol.y = math.Clamp(wcol.y, 0, 2.5)
-    wcol.z = math.Clamp(wcol.z, 0, 2.5)
-    pl:SetWeaponColor(wcol)
+	local wcol = Vector(pl:GetInfo("cl_weaponcolor"))
+	wcol.x = math.Clamp(wcol.x, 0, 2.5)
+	wcol.y = math.Clamp(wcol.y, 0, 2.5)
+	wcol.z = math.Clamp(wcol.z, 0, 2.5)
+	pl:SetWeaponColor(wcol)
 
-    pl.m_PreHurtHealth = pl:Health()
+	pl.m_PreHurtHealth = pl:Health()
 end
 
 function GM:SetWave(wave)
@@ -3772,200 +3740,198 @@ end
 
 GM.NextEscapeDamage = 0
 function GM:WaveStateChanged(newstate)
-    if newstate then
-        if self:GetWave() == 0 then
-            self:SetClosestsToZombie()
+	if newstate then
+		if self:GetWave() == 0 then
+			self:SetClosestsToZombie()
 
-            local humans = {}
-            for _, pl in pairs(player.GetAll()) do
-                if pl:Team() == TEAM_HUMAN and pl:Alive() then
-                    table.insert(humans, pl)
-                end
-            end
+			local humans = {}
+			for _, pl in pairs(player.GetAll()) do
+				if pl:Team() == TEAM_HUMAN and pl:Alive() then
+					table.insert(humans, pl)
+				end
+			end
 
-            if #humans >= 1 then
-                for _, pl in pairs(humans) do
-                    gamemode.Call("GiveDefaultOrRandomEquipment", pl)
-                    pl.BonusDamageCheck = CurTime()
-                end
-            end
+			if #humans >= 1 then
+				for _, pl in pairs(humans) do
+					gamemode.Call("GiveDefaultOrRandomEquipment", pl)
+					pl.BonusDamageCheck = CurTime()
+				end
+			end
 
-            -- We should spawn a crate in a random spawn point if no one has any.
-            if not self.ZombieEscape and #ents.FindByClass("prop_arsenalcrate") == 0 then
-                local have = false
-                for _, pl in pairs(humans) do   
-                    if pl:HasWeapon("weapon_zs_arsenalcrate") then
-                        have = true
-                        break
-                    end
-                end
+			-- We should spawn a crate in a random spawn point if no one has any.
+			if not self.ZombieEscape and #ents.FindByClass("prop_arsenalcrate") == 0 then
+				local have = false
+				for _, pl in pairs(humans) do	
+					if pl:HasWeapon("weapon_zs_arsenalcrate") then
+						have = true
+						break
+					end
+				end
 
-                if not have and #humans >= 1 then
-                    local spawn = self:PlayerSelectSpawn(humans[math.random(#humans)])
-                    if spawn and spawn:IsValid() then
-                        local ent = ents.Create("prop_arsenalcrate")
-                        if ent:IsValid() then
-                            ent:SetPos(spawn:GetPos())
-                            ent:Spawn()
-                            ent:DropToFloor()
-                            ent:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER) -- Just so no one gets stuck in it.
-                            ent.NoTakeOwnership = true
-                        end
-                    end
-                end
-            end
-        end
+				if not have and #humans >= 1 then
+					local spawn = self:PlayerSelectSpawn(humans[math.random(#humans)])
+					if spawn and spawn:IsValid() then
+						local ent = ents.Create("prop_arsenalcrate")
+						if ent:IsValid() then
+							ent:SetPos(spawn:GetPos())
+							ent:Spawn()
+							ent:DropToFloor()
+							ent:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER) -- Just so no one gets stuck in it.
+							ent.NoTakeOwnership = true
+						end
+					end
+				end
+			end
+		end
 
-        local prevwave = self:GetWave()
+		local prevwave = self:GetWave()
 
-        if self:GetUseSigils() and prevwave >= self:GetNumberOfWaves() then return end
+		if self:GetUseSigils() and prevwave >= self:GetNumberOfWaves() then return end
 
-        gamemode.Call("SetWave", prevwave + 1)
-        gamemode.Call("SetWaveStart", CurTime())
-        if self.ZombieEscape then
-            gamemode.Call("SetWaveEnd", -1)
-            SetGlobalInt("numwaves", -1)
-        else
-            gamemode.Call("SetWaveEnd", self:GetWaveStart() + self:GetWaveOneLength() + (self:GetWave() - 1) * (GetGlobalBool("classicmode") and self.TimeAddedPerWaveClassic or self.TimeAddedPerWave))
-        end
+		gamemode.Call("SetWave", prevwave + 1)
+		gamemode.Call("SetWaveStart", CurTime())
+		if self.ZombieEscape then
+			gamemode.Call("SetWaveEnd", -1)
+			SetGlobalInt("numwaves", -1)
+		else
+			gamemode.Call("SetWaveEnd", self:GetWaveStart() + self:GetWaveOneLength() + (self:GetWave() - 1) * (GetGlobalBool("classicmode") and self.TimeAddedPerWaveClassic or self.TimeAddedPerWave))
+		end
 
-        net.Start("zs_wavestart")
-            net.WriteInt(self:GetWave(), 16)
-            net.WriteFloat(self:GetWaveEnd())
-        net.Broadcast()
+		net.Start("zs_wavestart")
+			net.WriteInt(self:GetWave(), 16)
+			net.WriteFloat(self:GetWaveEnd())
+		net.Broadcast()
 
-        for _, pl in pairs(player.GetAll()) do
-            if pl:Team() == TEAM_UNDEAD then
-                pl.m_LastWaveStartSpawn = CurTime()
-                if pl:GetZombieClassTable().Name == "Crow" then
-                    pl:SetZombieClass(pl.DeathClass or 1)
-                    pl:UnSpectateAndSpawn()
-                elseif not pl:Alive() and not pl.Revive then
-                    pl:UnSpectateAndSpawn()
-                end
-            end
-        end
+		for _, pl in pairs(team.GetPlayers(TEAM_UNDEAD)) do
+			pl.m_LastWaveStartSpawn = CurTime()
+			if pl:GetZombieClassTable().Name == "Crow" then
+				pl:SetZombieClass(pl.DeathClass or 1)
+				pl:UnSpectateAndSpawn()
+			elseif not pl:Alive() and not pl.Revive then
+				pl:UnSpectateAndSpawn()
+			end
+		end
 
-        local curwave = self:GetWave()
-        for _, ent in pairs(ents.FindByClass("logic_waves")) do
-            if ent.Wave == curwave or ent.Wave == -1 then
-                ent:Input("onwavestart", ent, ent, curwave)
-            end
-        end
-        for _, ent in pairs(ents.FindByClass("logic_wavestart")) do
-            if ent.Wave == curwave or ent.Wave == -1 then
-                ent:Input("onwavestart", ent, ent, curwave)
-            end
-        end
-    elseif self:GetWave() >= self:GetNumberOfWaves() then -- Last wave is over
-        if self:GetUseSigils() then
-            if self:GetEscapeStage() == ESCAPESTAGE_BOSS then
-                self:SetEscapeStage(ESCAPESTAGE_DEATH)
+		local curwave = self:GetWave()
+		for _, ent in pairs(ents.FindByClass("logic_waves")) do
+			if ent.Wave == curwave or ent.Wave == -1 then
+				ent:Input("onwavestart", ent, ent, curwave)
+			end
+		end
+		for _, ent in pairs(ents.FindByClass("logic_wavestart")) do
+			if ent.Wave == curwave or ent.Wave == -1 then
+				ent:Input("onwavestart", ent, ent, curwave)
+			end
+		end
+	elseif self:GetWave() >= self:GetNumberOfWaves() then -- Last wave is over
+		if self:GetUseSigils() then
+			if self:GetEscapeStage() == ESCAPESTAGE_BOSS then
+				self:SetEscapeStage(ESCAPESTAGE_DEATH)
 
-                PrintMessage(3, "Escape sequence death fog stage")
+				PrintMessage(3, "Escape sequence death fog stage")
 
-                gamemode.Call("SetWaveEnd", -1)
-            elseif self:GetEscapeStage() == ESCAPESTAGE_ESCAPE then
-                self:SetEscapeStage(ESCAPESTAGE_BOSS)
+				gamemode.Call("SetWaveEnd", -1)
+			elseif self:GetEscapeStage() == ESCAPESTAGE_ESCAPE then
+				self:SetEscapeStage(ESCAPESTAGE_BOSS)
 
-                -- 2 minutes to get out with everyone spawning as bosses.
-                gamemode.Call("SetWaveEnd", CurTime() + 120)
+				-- 2 minutes to get out with everyone spawning as bosses.
+				gamemode.Call("SetWaveEnd", CurTime() + 120)
 
-                PrintMessage(3, "Escape sequence boss stage")
+				PrintMessage(3, "Escape sequence boss stage")
 
-                -- Start spawning boss zombies.
-            elseif self:GetEscapeStage() == ESCAPESTAGE_NONE then
-                -- If we're using sigils, remove them all and spawn the doors.
-                for _, sigil in pairs(ents.FindByClass("prop_obj_sigil")) do
-                    local ent = ents.Create("prop_obj_exit")
-                    if ent:IsValid() then
-                        ent:SetPos(sigil.NodePos or sigil:GetPos())
-                        ent:SetAngles(sigil:GetAngles())
-                        ent:Spawn()
-                    end
+				-- Start spawning boss zombies.
+			elseif self:GetEscapeStage() == ESCAPESTAGE_NONE then
+				-- If we're using sigils, remove them all and spawn the doors.
+				for _, sigil in pairs(ents.FindByClass("prop_obj_sigil")) do
+					local ent = ents.Create("prop_obj_exit")
+					if ent:IsValid() then
+						ent:SetPos(sigil.NodePos or sigil:GetPos())
+						ent:SetAngles(sigil:GetAngles())
+						ent:Spawn()
+					end
 
-                    sigil:Destroy()
-                end
+					sigil:Destroy()
+				end
 
-                --[[net.Start("zs_waveend")
-                    net.WriteInt(self:GetWave(), 16)
-                    net.WriteFloat(CurTime())
-                net.Broadcast()]]
-                PrintMessage(3, "Escape sequence started")
+				--[[net.Start("zs_waveend")
+					net.WriteInt(self:GetWave(), 16)
+					net.WriteFloat(CurTime())
+				net.Broadcast()]]
+				PrintMessage(3, "Escape sequence started")
 
-                -- 2 minutes to escape.
-                gamemode.Call("SetWaveActive", true)
-                gamemode.Call("SetWaveEnd", CurTime() + 120)
-                self:SetEscapeStage(ESCAPESTAGE_ESCAPE)
+				-- 2 minutes to escape.
+				gamemode.Call("SetWaveActive", true)
+				gamemode.Call("SetWaveEnd", CurTime() + 120)
+				self:SetEscapeStage(ESCAPESTAGE_ESCAPE)
 
-                local curwave = self:GetWave()
-                for _, ent in pairs(ents.FindByClass("logic_waves")) do
-                    if ent.Wave == curwave or ent.Wave == -1 then
-                        ent:Input("onwaveend", ent, ent, curwave)
-                    end
-                end
-                for _, ent in pairs(ents.FindByClass("logic_waveend")) do
-                    if ent.Wave == curwave or ent.Wave == -1 then
-                        ent:Input("onwaveend", ent, ent, curwave)
-                    end
-                end
-            end
-        else
-            -- If not using sigils then humans all win.
-            gamemode.Call("EndRound", TEAM_HUMAN)
+				local curwave = self:GetWave()
+				for _, ent in pairs(ents.FindByClass("logic_waves")) do
+					if ent.Wave == curwave or ent.Wave == -1 then
+						ent:Input("onwaveend", ent, ent, curwave)
+					end
+				end
+				for _, ent in pairs(ents.FindByClass("logic_waveend")) do
+					if ent.Wave == curwave or ent.Wave == -1 then
+						ent:Input("onwaveend", ent, ent, curwave)
+					end
+				end
+			end
+		else
+			-- If not using sigils then humans all win.
+			gamemode.Call("EndRound", TEAM_HUMAN)
 
-            local curwave = self:GetWave()
-            for _, ent in pairs(ents.FindByClass("logic_waves")) do
-                if ent.Wave == curwave or ent.Wave == -1 then
-                    ent:Input("onwaveend", ent, ent, curwave)
-                end
-            end
-            for _, ent in pairs(ents.FindByClass("logic_waveend")) do
-                if ent.Wave == curwave or ent.Wave == -1 then
-                    ent:Input("onwaveend", ent, ent, curwave)
-                end
-            end
-        end
-    else
-        gamemode.Call("SetWaveStart", CurTime() + (GetGlobalBool("classicmode") and self.WaveIntermissionLengthClassic or self.WaveIntermissionLength))
+			local curwave = self:GetWave()
+			for _, ent in pairs(ents.FindByClass("logic_waves")) do
+				if ent.Wave == curwave or ent.Wave == -1 then
+					ent:Input("onwaveend", ent, ent, curwave)
+				end
+			end
+			for _, ent in pairs(ents.FindByClass("logic_waveend")) do
+				if ent.Wave == curwave or ent.Wave == -1 then
+					ent:Input("onwaveend", ent, ent, curwave)
+				end
+			end
+		end
+	else
+		gamemode.Call("SetWaveStart", CurTime() + (GetGlobalBool("classicmode") and self.WaveIntermissionLengthClassic or self.WaveIntermissionLength))
 
-        net.Start("zs_waveend")
-            net.WriteInt(self:GetWave(), 16)
-            net.WriteFloat(self:GetWaveStart())
-        net.Broadcast()
+		net.Start("zs_waveend")
+			net.WriteInt(self:GetWave(), 16)
+			net.WriteFloat(self:GetWaveStart())
+		net.Broadcast()
 
-        for _, pl in pairs(player.GetAll()) do
-            if pl:Team() == TEAM_HUMAN and pl:Alive() then
-                if self.EndWaveHealthBonus > 0 then
-                    pl:SetHealth(math.min(pl:GetMaxHealth(), pl:Health() + self.EndWaveHealthBonus))
-                end
-            elseif pl:Team() == TEAM_UNDEAD and not pl:Alive() and not pl.Revive then
-                local curclass = pl.DeathClass or pl:GetZombieClass()
-                local crowindex = GAMEMODE.ZombieClasses["Crow"].Index
-                pl:SetZombieClass(crowindex)
-                pl:DoHulls(crowindex, TEAM_UNDEAD)
-                pl.DeathClass = nil
-                pl:UnSpectateAndSpawn()
-                pl.DeathClass = curclass
-            end
+		for _, pl in pairs(player.GetAll()) do
+			if pl:Team() == TEAM_HUMAN and pl:Alive() then
+				if self.EndWaveHealthBonus > 0 then
+					pl:SetHealth(math.min(pl:GetMaxHealth(), pl:Health() + self.EndWaveHealthBonus))
+				end
+			elseif pl:Team() == TEAM_UNDEAD and not pl:Alive() and not pl.Revive then
+				local curclass = pl.DeathClass or pl:GetZombieClass()
+				local crowindex = GAMEMODE.ZombieClasses["Crow"].Index
+				pl:SetZombieClass(crowindex)
+				pl:DoHulls(crowindex, TEAM_UNDEAD)
+				pl.DeathClass = nil
+				pl:UnSpectateAndSpawn()
+				pl.DeathClass = curclass
+			end
 
-            pl.SkipCrow = nil
-        end
+			pl.SkipCrow = nil
+		end
 
-        local curwave = self:GetWave()
-        for _, ent in pairs(ents.FindByClass("logic_waves")) do
-            if ent.Wave == curwave or ent.Wave == -1 then
-                ent:Input("onwaveend", ent, ent, curwave)
-            end
-        end
-        for _, ent in pairs(ents.FindByClass("logic_waveend")) do
-            if ent.Wave == curwave or ent.Wave == -1 then
-                ent:Input("onwaveend", ent, ent, curwave)
-            end
-        end
-    end
+		local curwave = self:GetWave()
+		for _, ent in pairs(ents.FindByClass("logic_waves")) do
+			if ent.Wave == curwave or ent.Wave == -1 then
+				ent:Input("onwaveend", ent, ent, curwave)
+			end
+		end
+		for _, ent in pairs(ents.FindByClass("logic_waveend")) do
+			if ent.Wave == curwave or ent.Wave == -1 then
+				ent:Input("onwaveend", ent, ent, curwave)
+			end
+		end
+	end
 
-    gamemode.Call("OnWaveStateChanged")
+	gamemode.Call("OnWaveStateChanged")
 end
 
 function GM:PlayerSwitchFlashlight(pl, newstate)
@@ -3977,7 +3943,7 @@ function GM:PlayerSwitchFlashlight(pl, newstate)
         return false
     end
 
-    return true
+	return pl:Team() == TEAM_HUMAN
 end
 
 function GM:PlayerStepSoundTime(pl, iType, bWalking)
