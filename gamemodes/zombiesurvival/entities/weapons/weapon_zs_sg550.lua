@@ -52,6 +52,8 @@ SWEP.SpeedDec = 30
 SWEP.BulletDiameter = 5.56
 SWEP.CaseLength = 45
 
+SWEP.Infliction = 0.8
+
 SWEP.Slot = 4
 SWEP.SlotPos = 0
 SWEP.NormalHoldType = "ar2"

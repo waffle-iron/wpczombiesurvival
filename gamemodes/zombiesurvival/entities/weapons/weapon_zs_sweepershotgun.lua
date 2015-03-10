@@ -35,6 +35,8 @@ SWEP.AutoSpawnable = true
 SWEP.AllowDrop = true
 SWEP.AmmoEnt = "item_box_buckshot_ttt"
 
+SWEP.Infliction = 0.5
+
 SWEP.Slot = 1
 SWEP.SlotPos = 0
 SWEP.NormalHoldType = "shotgun"

@@ -56,7 +56,6 @@ if SERVER then
 			util.Effect("Explosion", effectdata)
 			
 			owner:Kill()
-			owner:Gib()
 
 			for k, v in pairs( player.GetAll( ) ) do
 				v:ConCommand( "play siege/big_explosion.wav\n" )

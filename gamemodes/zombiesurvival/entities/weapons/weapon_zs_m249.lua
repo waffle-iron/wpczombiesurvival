@@ -33,6 +33,8 @@ SWEP.Kind = WEAPON_HEAVY
 SWEP.AutoSpawnable = true
 SWEP.AllowDrop = true
 
+SWEP.Infliction = 0.8
+
 SWEP.Slot = 3
 SWEP.SlotPos = 0
 SWEP.NormalHoldType = "ar2"

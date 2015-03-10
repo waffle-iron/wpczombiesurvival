@@ -1835,7 +1835,9 @@ net.Receive("zs_wavestart", function(length)
 	end
 	
 	if not GAMEMODE.ObjectiveMap then
-		GAMEMODE:CenterNotify(COLOR_GREEN, translate.Format("weapon_tier_x", wave))
+		if LocalPlayer():IsValid() and LocalPlayer():Team() == TEAM_HUMAN then
+			GAMEMODE:CenterNotify(COLOR_GREEN, translate.Format("weapon_tier_x", wave))
+		end
 	end
 
 	surface_PlaySound("ambient/creatures/town_zombie_call1.wav")
@@ -1922,16 +1924,17 @@ net.Receive("zs_lasthuman", function(length)
 	gamemode.Call("LastHuman", pl)
 end)
 
+net.Receive("zs_weapontiers", function(length)
+	local tab = GAMEMODE.Items[net.ReadUInt(8)]
+	tab.Unlocked = net.ReadBit()==1
+end)
+
 net.Receive("zs_gamemodecall", function(length)
 	gamemode.Call(net.ReadString())
 end)
 
 net.Receive("zs_lasthumanpos", function(length)
 	GAMEMODE.LastHumanPosition = net.ReadVector()
-end)
-
-net.Receive("zs_weaponlocks",function(length)
-	GAMEMODE.WeaponUnlocks = net.ReadTable()
 end)
 
 net.Receive("stp_enabled",function(length)

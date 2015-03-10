@@ -39,6 +39,8 @@ SWEP.Kind = WEAPON_HEAVY
 SWEP.AutoSpawnable = true
 SWEP.AllowDrop = true
 
+SWEP.Infliction = 0.5
+
 SWEP.SpeedDec = 20
 SWEP.BulletDiameter = 5.56
 SWEP.CaseLength = 45

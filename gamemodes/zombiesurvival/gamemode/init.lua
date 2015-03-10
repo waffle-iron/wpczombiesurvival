@@ -410,6 +410,7 @@ function GM:AddNetworkStrings()
     util.AddNetworkString("zs_weaponlocks")
     
     util.AddNetworkString("stp_enabled")
+	util.AddNetworkString("zs_weapontiers")
 end
 
 function GM:IsClassicMode()
@@ -1077,6 +1078,31 @@ function GM:CalculateInfliction(victim, attacker)
                 end
             end
         end
+		local inflictionwepnotified = false
+		local weapontier = 0
+        for k, v in ipairs(self.Items) do
+			if v.Infliction and infliction >= v.Infliction and not self:IsWeaponUnlocked(v) then
+				v.Unlocked = true
+				inflictionwepnotify = true
+				weapontier = math.floor(v.Wave * self:GetNumberOfWaves())
+				
+				net.Start("zs_weapontiers")
+					net.WriteUInt(k, 8)
+					net.WriteBit(v.Unlocked)
+				net.Broadcast()
+				
+				if inflictionwepnotify and weapontier ~= self.m_LastTierTold then
+					self.m_LastTierTold = weapontier
+					if weapontier > 0 then
+						for _, pl in pairs(player.GetAll()) do
+							if pl:Team()==TEAM_HUMAN then pl:CenterNotify(COLOR_GREEN, translate.ClientFormat(pl, "weapon_tier_x", weapontier)) end
+						end
+					end
+				elseif inflictionwepnotify then 
+					inflictionwepnotify = false
+				end
+			end
+        end
     end
 
     for _, ent in pairs(ents.FindByClass("logic_infliction")) do
@@ -1383,12 +1409,6 @@ function GM:RestartGame()
                 net.WriteBit(ply.m_bThirdPEnabled)
                 net.WriteBit(ply.m_bThirdPDisabled)
             net.Send(pl)
-        end
-    end
-    
-    for _, tab in pairs(self.Items) do
-        if tab.SWEP and self.WeaponUnlocks[tab.SWEP].Unlocked then
-            self.WeaponUnlocks[tab.SWEP].Unlocked = false
         end
     end
 
@@ -2018,17 +2038,18 @@ concommand.Add("zs_pointsshopbuy", function(sender, command, arguments)
         return
     end
     
-    if itemtab.SWEP then
-        if not GAMEMODE.WeaponUnlocks[itemtab.SWEP].Unlocked then
-            if GAMEMODE.ObjectiveMap then
-                sender:CenterNotify(COLOR_RED, translate.ClientFormat(sender, "not_unlocked_yet_unlocked_on_x", 2))
-                sender:SendLua("surface.PlaySound(\"buttons/button10.wav\")")
-            else
-                sender:CenterNotify(COLOR_RED, translate.ClientFormat(sender, "not_unlocked_yet_unlocked_on_x", GAMEMODE.WeaponUnlocks[itemtab.SWEP].Wave))
-                sender:SendLua("surface.PlaySound(\"buttons/button10.wav\")")
-            end
-            return
-        end
+	if not GAMEMODE:IsWeaponUnlocked(itemtab) then
+		if GAMEMODE.ObjectiveMap then
+			sender:CenterNotify(COLOR_RED, translate.ClientFormat(sender, "not_unlocked_yet_unlocked_on_x", 2))
+			sender:SendLua("surface.PlaySound(\"buttons/button10.wav\")")
+		elseif itemtab.Wave then
+			sender:CenterNotify(COLOR_RED, translate.ClientFormat(sender, "not_unlocked_yet_unlocked_on_x", math.floor(itemtab.Wave * GAMEMODE:GetNumberOfWaves())))
+			sender:SendLua("surface.PlaySound(\"buttons/button10.wav\")")
+		else
+			sender:CenterNotify(COLOR_RED, translate.ClientFormat(sender, "not_unlocked_yet_unlocked_on_x", 0))
+			sender:SendLua("surface.PlaySound(\"buttons/button10.wav\")")				
+		end
+		return
     end
 
     cost = math.ceil(cost)
@@ -2139,7 +2160,7 @@ concommand.Add("zs_pointsshopsell", function(sender, command, arguments)
     if num then
         itemtab = GAMEMODE.Items[num]
     else
-        for i, tab in pairs(GAMEMODE.Items) do
+        for i, tab in ipairs(GAMEMODE.Items) do
             if tab.Signature == id then
                 itemtab = tab
                 break
@@ -2156,7 +2177,7 @@ concommand.Add("zs_pointsshopsell", function(sender, command, arguments)
             return
         end
         
-        cost = math.ceil(itemtab.Worth/6)
+        cost = math.floor(tab.Worth/6)
     
         sender:StripWeapon(itemtab.SWEP)
         sender:AddPoints(cost)
@@ -3945,50 +3966,6 @@ function GM:WaveStateChanged(newstate)
     end
 
     gamemode.Call("OnWaveStateChanged")
-    gamemode.Call("UpdateWeaponUnlockes", newstate)
-end
-
-function GM:UpdateWeaponUnlockes(waveactive)
-    if waveactive then
-        for _, tab in pairs(self.Items) do
-            if tab.SWEP then
-				if self:GetWave() >= 0 and self.WeaponUnlocks[tab.SWEP].Wave == 0 then
-					self.WeaponUnlocks[tab.SWEP].Unlocked = true
-                elseif not self.WeaponUnlocks[tab.SWEP].Unlocked then
-                    self.WeaponUnlocks[tab.SWEP].Unlocked = self:IsWeaponUnlocked(tab.SWEP)
-                end
-            end
-        end
-        
-        net.Start("zs_weaponlocks")
-            net.WriteTable(self.WeaponUnlocks)
-        net.Broadcast()
-    end
-end
-
-function GM:IsWeaponUnlocked(classname)
-    local weaponwave = self.WeaponUnlocks[classname].Wave
-    local infliction = self:CalculateInfliction()
-    local IsObjective = self.ObjectiveMap
-    local wave = self:GetWave()
-    
-    if weaponwave == nil then
-        return true
-    end
-    
-    if IsObjective and wave >= 1 and not self:GetWaveActive() then
-        return true
-    elseif wave == self:GetNumberOfWaves() then
-        return true
-    elseif wave >= weaponwave then
-        return true
-    elseif infliction >= 0.8 and weaponwave <= self:GetNumberOfWaves() then
-        return true
-    elseif infliction >= 0.5 and weaponwave <= 4 then
-        return true
-    end
-    
-    return false
 end
 
 function GM:PlayerSwitchFlashlight(pl, newstate)

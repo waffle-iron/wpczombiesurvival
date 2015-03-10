@@ -126,7 +126,7 @@ hook.Add("EndRound", "EndRound.Percentage", function(winner)
 			pct = 100 * mapData.wins / (mapData.wins+mapData.losses)
 			mapData:save()
 			
-			ULib.tsayColor( nil, true, Color( 0, 255, 0 ), "This map has been played ", Color( 80, 208, 208 ), string.format("%d", mapData.numPlayed), Color( 0, 255, 0 ), " times and humans have won ", Color( 255, 0, 0 ), string.format("%d%", math.ceil(pct)), Color( 0, 255, 0 ), " of the time." )
+			ULib.tsayColor( nil, true, Color( 0, 255, 0 ), "This map has been played ", Color( 80, 208, 208 ), string.format("%d", mapData.numPlayed), Color( 0, 255, 0 ), " times and humans have won ", Color( 255, 0, 0 ), string.format("%d", math.ceil(pct)), "%", Color( 0, 255, 0 ), " of the time." )
 		end
 	end)
 end)

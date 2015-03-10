@@ -1,5 +1,5 @@
-CreateClientConVar("zs_damagefloatersstyle", "0", true, false)
-CreateClientConVar("zs_classichud", "0", true, false)
+CreateClientConVar("zs_damagefloatersstyle", "1", true, false)
+CreateClientConVar("zs_classichud", "1", true, false)
 
 hook.Add("AddExtraOptions", "AddExtraOptions.Life", function(panellist, optionsmenu)
 	local check = vgui.Create("DCheckBoxLabel", optionsmenu)

@@ -25,6 +25,8 @@ SWEP.Base = "weapon_zs_base"
 
 SWEP.HoldType = "crossbow"
 
+SWEP.Infliction = 0.5
+
 SWEP.ViewModel = "models/weapons/c_mantuna_crossbow.mdl"
 SWEP.WorldModel = "models/weapons/w_crossbow.mdl"
 SWEP.UseHands = true

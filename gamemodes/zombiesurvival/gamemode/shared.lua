@@ -110,6 +110,11 @@ function GM:AddCustomAmmo()
     game.AddAmmoType({name = "drone"})
 end
 
+function GM:IsWeaponUnlocked(tab)
+	if self:GetWave() <= -1 or self:GetNumberOfWaves() <= -1 then return true end
+	return tab.Unlocked or self:GetWave() >= math.floor(tab.Wave * self:GetNumberOfWaves())
+end
+
 function GM:CanRemoveOthersNail(pl, nailowner, ent)
     local plpoints = pl:Frags()
     local ownerpoints = nailowner:Frags()

@@ -32,7 +32,11 @@ end )
 hook.Add( "PlayerUse", "PlayerUse.Alert", function( ply, ent )
 	if ent:IsValid() and ply:IsValid() and ent:GetClass() == "func_button" and not ent.HasAlerted then
 		ent.HasAlerted = true
-		PrintTranslatedMessage(HUD_PRINTCONSOLE, " "..ply:Name().." pushed button "..tostring(ent).." ("..ent:GetName()..") ")
+		if ent:GetName() == "" then
+			PrintTranslatedMessage(HUD_PRINTCONSOLE, " "..ply:Name().." pushed button "..tostring(ent).." ")
+		else
+			PrintTranslatedMessage(HUD_PRINTCONSOLE, " "..ply:Name().." pushed button "..tostring(ent).." ("..ent:GetName()..") ")
+		end
 		timer.Simple(1, function() ent.HasAlerted = false end)
 	end
 end )
