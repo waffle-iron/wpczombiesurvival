@@ -752,6 +752,7 @@ function GM:_HUDPaint()
 		self:ZombieHUD(screenscale * 0.75)
 	else
 		self:HumanHUD(screenscale, screenscale * 0.75)
+	end
 
 	if GetGlobalBool("classicmode") then
 		draw_SimpleTextBlurry(translate.Get("classic_mode"), "ZSHUDFontSmaller", 4, ScrH() - 4, COLOR_GRAY, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
