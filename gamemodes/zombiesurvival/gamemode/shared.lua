@@ -105,10 +105,12 @@ function GM:AddCustomAmmo()
     game.AddAmmoType({name = "pulse"})
     game.AddAmmoType({name = "stone"})
 
-    game.AddAmmoType({name = "spotlamp"})
-    game.AddAmmoType({name = "manhack"})
-    game.AddAmmoType({name = "manhack_saw"})
-    game.AddAmmoType({name = "drone"})
+	game.AddAmmoType({name = "spotlamp"})
+	game.AddAmmoType({name = "manhack"})
+	game.AddAmmoType({name = "manhack_saw"})
+	game.AddAmmoType({name = "drone"})
+
+	game.AddAmmoType({name = "dummy"})
 end
 
 function GM:IsWeaponUnlocked(tab)
