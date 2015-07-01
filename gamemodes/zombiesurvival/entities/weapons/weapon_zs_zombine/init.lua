@@ -4,17 +4,17 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 function SWEP:Grenade()
-	if not self.Owner:Alive() then return end
+	local owner = self.Owner
+	
+	if not owner:Alive() then return end
 
-	local ent = ents.Create( "env_explosion" )
-	ent:SetPos( self.Owner:GetPos() )
-	ent:SetOwner( self.Owner )
-	ent:Spawn()
-	ent:SetKeyValue( "iMagnitude", "60" )
-	ent:Fire( "Explode", 0, 0 )
-	ent:EmitSound("ambient/fire/gascan_ignite1.wav")
+	owner:EmitSound("ambient/fire/gascan_ignite1.wav")
+	local effectdata = EffectData()
+		effectdata:SetOrigin(owner:GetPos())
+	util.Effect("Explosion", effectdata)
+	util.BlastDamage2(self, owner, owner:GetPos(), 80, 36)
 		
-	self.Owner:Kill( )
+	owner:Kill( )
 end
 
 function SWEP:Reload()

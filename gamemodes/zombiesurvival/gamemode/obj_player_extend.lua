@@ -468,6 +468,10 @@ function meta:ShouldNotCollide(ent)
 		if ent:IsPlayer() then
 			return self:Team() == ent:Team() or self.NoCollideAll or ent.NoCollideAll
 		end
+		
+		if string.find(ent:GetClass(),"ragdoll") then
+			return true
+		end
 
 		return self:GetBarricadeGhosting() and ent:IsBarricadeProp() or self:Team() == TEAM_HUMAN and ent:GetPhysicsObject():IsValid() and ent:GetPhysicsObject():HasGameFlag(FVPHYSICS_PLAYER_HELD)
 	end

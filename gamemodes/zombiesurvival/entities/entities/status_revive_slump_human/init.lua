@@ -11,6 +11,11 @@ function ENT:Think()
 			self:SetZombieInitializeTime(0)
 
 			if not owner:Alive() then
+				local rag = owner:GetRagdollEntity()
+				if rag and rag:IsValid() then
+					rag:Remove()
+				end
+			
 				owner:SecondWind()
 				owner:Freeze(true)
 				owner:TemporaryNoCollide()

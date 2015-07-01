@@ -99,6 +99,7 @@ function SWEP:SecondaryAttack()
 	end
 
 	local tr = owner:TraceLine(64, MASK_SOLID, owner:GetMeleeFilter())
+		
 	local trent = tr.Entity
 
 	if not trent:IsValid()

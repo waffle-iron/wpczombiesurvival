@@ -3,7 +3,7 @@ CLASS.TranslationName = "class_zombine"
 CLASS.Description = "description_zombine"
 CLASS.Help = "controls_zombine"
 
-CLASS.Wave = 5 / 6
+CLASS.Wave = 1
 
 CLASS.Health = 450
 CLASS.Speed = 125
@@ -12,7 +12,7 @@ CLASS.Mass = DEFAULT_MASS * 2
 
 CLASS.CanTaunt = true
 
-CLASS.Points = 6
+CLASS.Points = 9
 
 CLASS.SWEP = "weapon_zs_zombine"
 

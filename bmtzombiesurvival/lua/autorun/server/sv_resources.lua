@@ -1,4 +1,5 @@
 resource.AddWorkshop( "393607601" )
+resource.AddWorkshop( "420236593" )
 
 resource.AddFile( "sound/weapons/npc/zombine/zo_attack1.wav" )
 resource.AddFile( "sound/weapons/npc/zombine/zo_attack2.wav" )

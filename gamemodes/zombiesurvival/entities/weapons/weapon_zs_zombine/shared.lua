@@ -3,7 +3,7 @@ SWEP.Base = "weapon_zs_zombie"
 SWEP.MeleeReach = 48
 SWEP.MeleeDelay = 0.8
 SWEP.MeleeSize = 1.5
-SWEP.MeleeDamage = 30
+SWEP.MeleeDamage = 35
 SWEP.MeleeDamageType = DMG_SLASH
 
 SWEP.Primary.Delay = 1.1
@@ -15,13 +15,22 @@ function SWEP:SendAttackAnim()
 	self:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
 end
 
-SWEP.NextGrenade = 0
 function SWEP:SecondaryAttack()
-	if CurTime() < self.NextGrenade then return end
+	if CurTime() <= self:GetNextSecondaryFire() then return end
+	
+	local owner = self.Owner
+	
+	if SERVER then
+		local hand = owner:LookupBone("ValveBiped.Bip01_R_Hand")
+		
+		self.SpriteTrail = util.SpriteTrail(self, 0, Color(255,0,0), false, 8.0, 1, 0.5, 0.01, "trails/laser.vmt")
+		self.SpriteTrail:SetPos(owner:GetBonePosition(hand))
+		self.SpriteTrail:FollowBone(owner, hand)
+	end
 
 	self:SendWeaponAnim(ACT_VM_SECONDARYATTACK) -- grenade animation
-	self.Owner:DoAnimationEvent(ACT_GMOD_GESTURE_TAUNT_ZOMBIE)
-	self.Owner:EmitSound("weapons/npc/zombine/zombie_voice_idle"..math.random(14)..".wav")
+	owner:DoAnimationEvent(ACT_GMOD_GESTURE_TAUNT_ZOMBIE)
+	owner:EmitSound("weapons/npc/zombine/zombie_voice_idle"..math.random(14)..".wav")
 	
 	timer.Simple(0.9, function(wep) self:SendWeaponAnim(ACT_VM_THROW) end) -- timer to pull up grenade
 	
@@ -29,7 +38,13 @@ function SWEP:SecondaryAttack()
 		timer.Simple(3, function(wep) self:Grenade()  end)
 	end
 
-	self.NextGrenade = CurTime() + 5 -- to make sure you can't spam the grenade
+	self:SetNextSecondaryFire(CurTime() + 5) -- to make sure you can't spam the grenade
+end
+
+function SWEP:Think()
+	if not self.Owner:Alive() then
+		self.SpriteTrail:Fire("Kill")
+	end
 end
 
 function SWEP:CheckMoaning()

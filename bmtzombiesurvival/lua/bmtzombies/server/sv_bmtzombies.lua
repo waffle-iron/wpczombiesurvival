@@ -49,14 +49,13 @@ hook.Add("PlayerPointsAdded","PointSave.Add", function(ply, points)
 	end
 	
 	local id = ply:SteamID()
-	local mypoints = math.ceil(points/2)
 	
-	ply:SetSavedPoints(ply:GetSavedPoints() + mypoints)
+	ply:SetSavedPoints(ply:GetSavedPoints() + points)
 	
 	BMTZombies.Points.findBySteamId(id)
 	:Then(function( plyData )
 		if plyData then 
-			plyData.points = plyData.points + mypoints
+			plyData.points = plyData.points + points
 			plyData:save()
 		end
 	end)

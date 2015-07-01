@@ -1048,27 +1048,34 @@ function GM:CalculateInfliction(victim, attacker)
 		for k, v in ipairs(self.ZombieClasses) do
 			if v.Infliction and infliction >= v.Infliction and not self:IsClassUnlocked(v.Name) then
 				v.Unlocked = true
-				inflictionwepnotify = true
-				weapontier = math.floor(v.Wave * self:GetNumberOfWaves())
-				
-				net.Start("zs_weapontiers")
-					net.WriteUInt(k, 8)
-					net.WriteBit(v.Unlocked)
-				net.Broadcast()
-				
-				if inflictionwepnotify and weapontier ~= self.m_LastTierTold then
-					self.m_LastTierTold = weapontier
-					if weapontier > 0 then
-						for _, pl in pairs(player.GetAll()) do
-							if pl:Team()==TEAM_HUMAN then pl:CenterNotify(COLOR_GREEN, translate.ClientFormat(pl, "weapon_tier_x", weapontier)) end
-						end
-					end
-				elseif inflictionwepnotify then 
-					inflictionwepnotify = false
-				end
 			end
         end
     end
+	
+	for k, v in ipairs(self.Items) do
+		if v.Infliction and infliction >= v.Infliction and not self:IsWeaponUnlocked(v) then
+			inflictionwepnotify = true
+			weapontier = math.floor(v.Wave * self:GetNumberOfWaves())
+			
+			v.Unlocked = true
+					
+			net.Start("zs_weapontiers")
+				net.WriteUInt(k, 8)
+				net.WriteBit(v.Unlocked)
+			net.Broadcast()
+					
+			if inflictionwepnotify and weapontier ~= self.m_LastTierTold then
+				self.m_LastTierTold = weapontier
+				if weapontier > 0 then
+					for _, pl in pairs(player.GetAll()) do
+						if pl:Team()==TEAM_HUMAN then pl:CenterNotify(COLOR_GREEN, translate.ClientFormat(pl, "weapon_tier_x", weapontier)) end
+					end
+				end
+			elseif inflictionwepnotify then 
+				inflictionwepnotify = false
+			end
+		end
+	end
 
     for _, ent in pairs(ents.FindByClass("logic_infliction")) do
         if ent.Infliction <= infliction then

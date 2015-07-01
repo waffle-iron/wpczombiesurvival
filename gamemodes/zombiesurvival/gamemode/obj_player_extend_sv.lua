@@ -432,11 +432,18 @@ end
 
 function meta:SecondWind(pl)
 	if self.Gibbed or self:Alive() or self:Team() ~= TEAM_UNDEAD then return end
-
+	
 	local pos = self:GetPos()
 	local angles = self:EyeAngles()
 	local lastattacker = self:GetLastAttacker()
 	local dclass = self.DeathClass
+	local rag = self:GetRagdollEntity()
+	
+	if rag and rag:IsValid() then
+		pos = rag:GetPos()
+		angles = rag:EyeAngles()
+	end
+	
 	self.DeathClass = nil
 	self.Revived = true
 	self:UnSpectateAndSpawn()

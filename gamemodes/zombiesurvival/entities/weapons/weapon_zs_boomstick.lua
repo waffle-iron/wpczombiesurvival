@@ -85,7 +85,7 @@ SWEP.VelocitySensitivity = 2.2
 SWEP.MaxSpreadInc = 0.07
 SWEP.SpreadPerShot = 0.04
 SWEP.SpreadCooldown = 1.03
-SWEP.Shots = 12
+SWEP.Shots = 6
 SWEP.Damage = 36
 SWEP.DeployTime = 1
 SWEP.AmmoPerShot = 4
@@ -96,11 +96,163 @@ SWEP.ConeMin = 0.2
 SWEP.WalkSpeed = SPEED_SLOWEST
 
 function SWEP:PrimaryAttack()
-	local clip = self:Clip1()
-		
-	self.Owner:ViewPunch(clip * 0.5 * self.Recoil * Angle(math.Rand(-0.1, -0.1), math.Rand(-0.1, 0.1), 0))
-	self.Owner:SetGroundEntity(NULL)
-	self.Owner:SetVelocity(-80 * clip * self.Owner:GetAimVector())
+	if not self:CanPrimaryAttack() then return end
+
+	if self.ShotgunReloadState != 0 then
+		return
+	end
 	
-	self.BaseClass.PrimaryAttack(self)
+	if self.ReloadDelay then
+		return
+	end
+	
+	if self.dt.Safe then
+		self:CycleFiremodes()
+		return
+	end
+	
+	mag = self:Clip1()
+	
+	if mag == 0 then
+		self:EmitSound("SWB_Empty", 100, 100)
+		self:SetNextPrimaryFire(CT + 0.25)
+		return
+	end
+	
+	if self.dt.State == SWB_RUNNING or self.dt.State == SWB_ACTION then
+		return
+	end
+	
+	if self.BurstAmount and self.BurstAmount > 0 then
+		if self.dt.Shots >= self.BurstAmount then
+			return
+		end
+		
+		self.dt.Shots = self.dt.Shots + 1
+	end
+	
+	
+	self.Owner:SetAnimation(PLAYER_ATTACK1)
+	CT = CurTime()
+	
+	if self.dt.Suppressed then
+		self:SendWeaponAnim(ACT_VM_PRIMARYATTACK_SILENCED)
+	else
+		self:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
+	end
+	
+	local vm = self.Owner:GetViewModel()
+	if self.FireAnimFunc then
+		self:FireAnimFunc()
+	else
+		if self.dt.State == SWB_AIMING then
+			if mag - self.AmmoPerShot <= 0 and self.DryFire then
+				if self.dt.Suppressed then
+					self:SendWeaponAnim(ACT_VM_DRYFIRE_SILENCED)
+				else
+					self:SendWeaponAnim(ACT_VM_DRYFIRE)
+				end
+			else
+				if self.dt.Suppressed then
+					self:SendWeaponAnim(ACT_VM_PRIMARYATTACK_SILENCED)
+				else
+					self:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
+				end
+			end
+			
+			if self.FadeCrosshairOnAim and vm and vm:IsValid() then
+				if SP then
+					if SERVER then
+						vm:SetPlaybackRate(self.PlayBackRate or 1)
+					end
+				else
+					if SERVER then
+						vm:SetPlaybackRate(self.PlayBackRateSV or 1)
+					else
+						vm:SetPlaybackRate(self.PlayBackRate or 1)
+					end
+				end
+			end
+		else
+			if mag - self.AmmoPerShot <= 0 and self.DryFire then
+				if self.dt.Suppressed then
+					self:SendWeaponAnim(ACT_VM_DRYFIRE_SILENCED)
+				else
+					self:SendWeaponAnim(ACT_VM_DRYFIRE)
+				end
+			else
+				if self.dt.Suppressed then
+					self:SendWeaponAnim(ACT_VM_PRIMARYATTACK_SILENCED)
+				else
+					self:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
+				end
+			end
+			
+			if self.FadeCrosshairOnAim and vm and vm:IsValid() then
+				vm:SetPlaybackRate(self.PlayBackRateHip or 1)
+			end
+		end
+	end
+	
+	if IsFirstTimePredicted() then
+		if self.dt.Suppressed then
+			self:EmitSound(self.FireSoundSuppressed, 105, 100)
+		else
+			self:EmitSound(self.FireSound, 105, 100)
+		end
+		
+		self:FireBullet(self.Damage * (self.dt.Suppressed and 0.9 or 1), self.CurCone, self.Shots * mag)
+		self:MakeRecoil()
+		
+		self.SpreadWait = CT + self.SpreadCooldown
+		mul = 1
+	
+		if self.Owner:Crouching() then
+			mul = mul * 0.75
+		end
+		
+		if self.Owner.Expertise then
+			mul = mul * (1 - self.Owner.Expertise["wepprof"].val * 0.002)
+			
+			if SERVER then
+				if self.dt.State == SWB_AIMING then
+					self.Owner:ProgressStat("steadyaim", self.Recoil * 1.5)
+					self.Owner:ProgressStat("wepprof", self.Recoil * 0.5)
+				else
+					self.Owner:ProgressStat("wepprof", self.Recoil * 1.5)
+				end
+				
+				self.Owner:ProgressStat("rechandle", self.Recoil)
+			end
+		end
+		
+		if self.BurstAmount > 0 then
+			self.AddSpread = math.Clamp(self.AddSpread + self.SpreadPerShot * self.BurstSpreadIncMul * mul, 0, self.MaxSpreadInc)
+		else
+			self.AddSpread = math.Clamp(self.AddSpread + self.SpreadPerShot * mul, 0, self.MaxSpreadInc)
+		end
+		
+		self.AddSpreadSpeed = math.Clamp(self.AddSpreadSpeed - 0.2, 0, 1)
+		
+		if CLIENT then
+			if self.dt.State == SWB_AIMING then
+				self.FireMove = 1
+			else
+				self.FireMove = 0.4
+			end
+		end
+		
+		if SP and SERVER then
+			SendUserMessage("SWB_Recoil", self.Owner)
+		end
+	end
+	
+	self.Owner:ViewPunch(mag * 0.5 * self.Recoil * Angle(math.Rand(-0.1, -0.1), math.Rand(-0.1, 0.1), 0))
+	self.Owner:SetGroundEntity(NULL)
+	self.Owner:SetVelocity(-80 * mag * self.Owner:GetAimVector())
+	
+	self:TakePrimaryAmmo(mag)
+	self:SetNextPrimaryFire(CT + self.FireDelay)
+	self:SetNextSecondaryFire(CT + self.FireDelay)
+	self.ReloadWait = CT + (self.WaitForReloadAfterFiring and self.WaitForReloadAfterFiring or self.FireDelay)
 end
