@@ -1,5 +1,5 @@
 hook.Add( "EntityTakeDamage", "PreventPlayerDeath", function( ent, dmgInfo )
-    if IsValid(ent) and ent:IsPlayer() then
+    if IsValid(ent) and ent:IsPlayer() and gamemode.Call("PlayerShouldTakeDamage", ent, dmgInfo:GetAttacker()) then
         if ent:Health() - dmgInfo:GetDamage() <= 0 then
 			if ent:HasWeapon("weapon_zs_c4") then
 				dmgInfo:SetDamage(0)

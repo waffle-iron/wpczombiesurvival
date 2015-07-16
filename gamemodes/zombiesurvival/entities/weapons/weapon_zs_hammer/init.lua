@@ -98,7 +98,24 @@ function SWEP:SecondaryAttack()
 		return
 	end
 
-	local tr = owner:TraceLine(64, MASK_SOLID, owner:GetMeleeFilter())
+	local tr = owner:TraceLine(64, MASK_SOLID, function(ent)
+		if GAMEMODE.RoundEnded and ent == owner then
+			return false
+		end
+		
+		if ent:IsRagdoll() or ent:GetClass() == owner:GetRagdollEntity() then
+			return false
+		end
+		
+		for _, i in pairs(team.GetPlayers(owner:Team())) do
+			if ent == i then
+				return false
+			end
+		end
+
+		return true
+	end
+	)
 		
 	local trent = tr.Entity
 

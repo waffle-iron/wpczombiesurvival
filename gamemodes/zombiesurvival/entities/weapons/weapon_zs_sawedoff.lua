@@ -2,12 +2,15 @@ AddCSLuaFile()
 
 if CLIENT then
 	SWEP.DrawCrosshair = false
-	SWEP.PrintName = "'Sawed-Off' Shotgun"
-	SWEP.Description = "A double barrel sawed-off shotgun, you can fire each barrel simultaneously or both at the same time"
+	SWEP.PrintName = "'Double Barrel' Shotgun"
+	SWEP.Description = "A double barrel shotgun, you can fire each barrel simultaneously or both at the same time"
 	SWEP.CSMuzzleFlashes = true
+	
+	SWEP.AimPos = Vector(-4.719, 2, 2.481)
+	SWEP.AimAng = Vector(0 ,0, 0)
 
-	SWEP.SprintPos = Vector(8.52, -9.881, 1.08)
-	SWEP.SprintAng = Vector(-11, 52.099, 0.699)
+	SWEP.SprintPos = Vector(11.456, -5.865, 1)
+	SWEP.SprintAng = Vector(0, 66.833, 15.477)
 	
 	SWEP.ViewModelMovementScale = 0.85
 	SWEP.Shell = "shotshell"
@@ -15,11 +18,70 @@ if CLIENT then
 	
 	SWEP.MuzzleEffect = "swb_shotgun"
 	
-	SWEP.HUD3DBone = "Body"
-	SWEP.HUD3DPos = Vector(4.7, 0.4, 14.8)
-	SWEP.HUD3DAng = Angle(180, 0, -50)
-	SWEP.HUD3DScale = 0.025
+	SWEP.VMPos = Vector(0, 4.719, -2.481)
+	SWEP.VMAng = Vector(0, -90, 0)
+	
+	SWEP.HUD3DBone = "RW_Weapon"
+	SWEP.HUD3DPos = Vector(7.5, -1.7, 1.2)
+	SWEP.HUD3DAng = Angle(0, -90, 65)
+	SWEP.HUD3DScale = 0.017
 end
+
+sound.Add({
+	name = 			"TFA_KF2_DB.1",
+	channel = 		CHAN_USER_BASE+10,
+	volume = 		1.0,
+	sound = 		{ "weapons/kf2/doublebarrel/fire3.wav", "weapons/kf2/doublebarrel/fire2.wav"}
+})
+
+sound.Add({
+	name = 			"TFA_KF2_DB.2",
+	channel = 		CHAN_USER_BASE+10,
+	volume = 		1.0,
+	sound = 			"weapons/kf2/doublebarrel/fire1.wav"
+})
+
+sound.Add({
+	name = 			"TFA_KF2_DB.Open",
+	channel = 		CHAN_USER_BASE+11,
+	volume = 		0.9,
+	sound = 			"weapons/kf2/doublebarrel/open.wav"
+})
+
+sound.Add({
+	name = 			"TFA_KF2_DB.Close",
+	channel = 		CHAN_USER_BASE+11,
+	volume = 		0.9,
+	sound = 			"weapons/kf2/doublebarrel/close.wav"
+})
+
+sound.Add({
+	name = 			"TFA_KF2_DB.Insert",
+	channel = 		CHAN_USER_BASE+11,
+	volume = 		0.9,
+	sound = 			"weapons/kf2/doublebarrel/insert.wav"
+})
+
+sound.Add({
+	name = 			"TFA_KF2_DB.Equip",
+	channel = 		CHAN_USER_BASE+11,
+	volume = 		0.9,
+	sound = 			"weapons/kf2/doublebarrel/equip.wav"
+})
+
+sound.Add({
+	name = 			"TFA_KF2_DB.Cloth",
+	channel = 		CHAN_USER_BASE+11,
+	volume = 		0.9,
+	sound = 			"weapons/kf2/doublebarrel/cloth1.wav"
+})
+
+sound.Add({
+	name = 			"TFA_KF2_DB.Cloth2",
+	channel = 		CHAN_USER_BASE+11,
+	volume = 		0.9,
+	sound = 			"weapons/kf2/doublebarrel/cloth2.wav"
+})
 
 SWEP.PlayBackRate = 1
 SWEP.PlayBackRateSV = 1
@@ -47,79 +109,26 @@ SWEP.Contact		= ""
 SWEP.Purpose		= ""
 SWEP.Instructions	= ""
 
-SWEP.ViewModelFOV	= 55
+SWEP.ViewModelFOV	= 65
 SWEP.ViewModelFlip	= false
-SWEP.ViewModel		= "models/weapons/tayley/v_bm16.mdl"
-SWEP.WorldModel		= "models/weapons/stalkerwep/bm16/w_bm16.mdl"
+SWEP.ViewModel		= "models/weapons/killingfloor2/c_doublebarrel.mdl"
+SWEP.WorldModel		= "models/weapons/killingfloor2/w_doublebarrel.mdl"
+
+SWEP.WeaponBaseType = "tfa"
 
 SWEP.Spawnable			= true
 SWEP.AdminSpawnable		= true
+SWEP.UseHands 			= true
 
 SWEP.Primary.ClipSize 		= 2
 SWEP.Primary.Automatic		= false
 SWEP.Primary.Ammo			= "Buckshot"
 GAMEMODE:SetupDefaultClip(SWEP.Primary)
 
-sound.Add(
-{
-	name = "BM16_Fire_Both",
-	channel = CHAN_WEAPON,
-	volume = 1.0,
-	sound = "weapons/razborka_bm16/bm16_fire_both.wav"
-})
-
-sound.Add(
-{
-	name = "BM16_Fire",
-	channel = CHAN_WEAPON,
-	volume = 1.0,
-	sound = "weapons/razborka_bm16/bm16_fire.wav"
-})
-
-sound.Add(
-{
-	name = "bm16.openstart",
-	channel = CHAN_WEAPON,
-	volume = 1.0,
-	sound = "weapons/razborka_bm16/bm16_open_start.wav"
-})
-
-sound.Add(
-{
-	name = "bm16.openfinish",
-	channel = CHAN_WEAPON,
-	volume = 1.0,
-	sound = "weapons/razborka_bm16/bm16_open_finish.wav"
-})
-
-sound.Add(
-{
-	name = "bm16.shellin",
-	channel = CHAN_WEAPON,
-	volume = 1.0,
-	sound = {"weapons/razborka_bm16/bm16_shell_in1.wav", "weapons/razborka_bm16/bm16_shell_in2.wav"}
-})
-
-sound.Add(
-{
-	name = "bm16.hammer",
-	channel = CHAN_WEAPON,
-	volume = 1.0,
-	sound = "weapons/razborka_bm16/bm16_pull_hammer.wav"
-})
-
-sound.Add(
-{
-	name = "bm16.close",
-	channel = CHAN_WEAPON,
-	volume = 1.0,
-	sound = "weapons/razborka_bm16/bm16_close.wav"
-})
-
 SWEP.FireDelay = 0.1
 SWEP.FireDelay_Both = 0.25
-SWEP.FireSound = Sound("BM16_Fire")
-SWEP.FireSoundBoth = Sound("BM16_Fire_Both")
+SWEP.FireSound = Sound("TFA_KF2_DB.1")
+SWEP.FireSoundBoth = Sound("TFA_KF2_DB.2")
 SWEP.Recoil = 3.5
 
 SWEP.HipSpread = 0.056
@@ -131,7 +140,7 @@ SWEP.SpreadPerShot = 0.04
 SWEP.SpreadCooldown = 1.03
 SWEP.Shots = 6
 SWEP.Damage = 28
-SWEP.DeployTime = 1
+SWEP.DeployTime = 1.8
 
 SWEP.ConeMax = 0.14
 SWEP.ConeMin = 0.105
@@ -139,6 +148,40 @@ SWEP.ConeMin = 0.105
 SWEP.WalkSpeed = SPEED_SLOWER
 
 local barrel, ammo
+
+function SWEP:FireAnimationEvent(pos, ang, ev, name)
+	if ev == 5001 then
+		if self.MuzzleEffect then
+			self:CreateMuzzle(pos, ang)
+		end
+		
+		if self.NoStockMuzzle then
+			return true
+		end
+		
+		return self.dt.Suppressed
+	end
+	
+	if ev == 5011 then
+		if self.MuzzleEffect then
+			self:CreateMuzzle(pos, ang)
+		end
+		
+		if self.NoStockMuzzle then
+			return true
+		end
+		
+		return self.dt.Suppressed
+	end
+	
+	if ev == 20 then
+		if self.Shell then
+			self:CreateShell()
+		end
+		
+		return self.NoStockShells
+	end
+end
 
 function SWEP:Deploy()
 	barrel = self:Clip1()

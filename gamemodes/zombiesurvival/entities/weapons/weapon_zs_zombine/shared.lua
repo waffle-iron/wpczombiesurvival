@@ -15,13 +15,23 @@ function SWEP:SendAttackAnim()
 	self:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
 end
 
+function SWEP:SetupDataTables()
+	self:NetworkVar( "Float" , 0 , "GrenadeTimer" )
+	self:NetworkVar( "Float" , 0 , "GrenadeAnimTime" )
+end
+
+function SWEP:Initialize()
+	self:SetGrenadeTimer(0)
+	self:SetGrenadeAnimTime(0)
+end
+
 function SWEP:SecondaryAttack()
 	if CurTime() <= self:GetNextSecondaryFire() then return end
 	
 	local owner = self.Owner
 	
 	if SERVER then
-		local hand = owner:LookupBone("ValveBiped.Bip01_R_Hand")
+		local hand = owner:LookupBone("ValveBiped.Anim_Attachment_RH")
 		
 		self.SpriteTrail = util.SpriteTrail(self, 0, Color(255,0,0), false, 8.0, 1, 0.5, 0.01, "trails/laser.vmt")
 		self.SpriteTrail:SetPos(owner:GetBonePosition(hand))

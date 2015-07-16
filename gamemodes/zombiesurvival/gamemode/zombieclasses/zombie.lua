@@ -175,7 +175,7 @@ if SERVER then
 
 	function CLASS:ProcessDamage(pl, dmginfo)
 		local attacker, inflictor, damage = dmginfo:GetAttacker(), dmginfo:GetInflictor(), dmginfo:GetDamage()
-		if attacker ~= pl and damage >= pl:Health() and pl:LastHitGroup() ~= HITGROUP_HEAD and damage < 70 and not inflictor.IsMelee and not inflictor.NoReviveFromKills and dmginfo:GetDamageType() ~= DMG_BLAST and dmginfo:GetDamageType() ~= DMG_BURN and dmginfo:GetDamageType() ~= DMG_CRUSH and (pl.NextZombieRevive or 0) <= CurTime() and pl:LastHitGroup() ~= HITGROUP_LEFTLEG and pl:LastHitGroup() ~= HITGROUP_RIGHTLEG then
+		if attacker ~= pl and damage >= pl:Health() and pl:LastHitGroup() ~= HITGROUP_HEAD and damage < 70 and not inflictor.IsMelee and dmginfo:GetDamageType() ~= DMG_BLAST and dmginfo:GetDamageType() ~= DMG_BURN and (pl.NextZombieRevive or 0) <= CurTime() and pl:LastHitGroup() ~= HITGROUP_LEFTLEG and pl:LastHitGroup() ~= HITGROUP_RIGHTLEG then
 			pl.NextZombieRevive = CurTime() + 3
 
 			dmginfo:SetDamage(0)

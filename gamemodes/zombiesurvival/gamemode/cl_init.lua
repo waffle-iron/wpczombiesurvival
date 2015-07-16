@@ -1229,6 +1229,16 @@ function GM:PlayerBindPress(pl, bind, wasin)
 	
 			if pl:Team() == TEAM_UNDEAD then
 				self.ZombieThirdPerson = not self.ZombieThirdPerson
+				if pl.m_bThirdPEnabled then
+					pl.m_bShoulderEnabled = false
+					pl.m_bThirdPEnabled = false
+					
+					net.Start("stp_enabled")
+						net.WriteBit(pl.m_bShoulderEnabled)
+						net.WriteBit(pl.m_bThirdPEnabled)
+						net.WriteBit(pl.m_bThirdPDisabled)
+					net.SendToServer()
+				end
 			elseif pl:Team() == TEAM_HUMAN then
 				pl.m_bShoulderEnabled = true
 				pl.m_bThirdPEnabled = not pl.m_bThirdPEnabled
