@@ -4,7 +4,6 @@ SWEP.MeleeReach = 48
 SWEP.MeleeDelay = 0.8
 SWEP.MeleeSize = 1.5
 SWEP.MeleeDamage = 35
-SWEP.MeleeDamageType = DMG_SLASH
 
 SWEP.Primary.Delay = 1.1
 
@@ -15,28 +14,10 @@ function SWEP:SendAttackAnim()
 	self:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
 end
 
-function SWEP:SetupDataTables()
-	self:NetworkVar( "Float" , 0 , "GrenadeTimer" )
-	self:NetworkVar( "Float" , 0 , "GrenadeAnimTime" )
-end
-
-function SWEP:Initialize()
-	self:SetGrenadeTimer(0)
-	self:SetGrenadeAnimTime(0)
-end
-
 function SWEP:SecondaryAttack()
 	if CurTime() <= self:GetNextSecondaryFire() then return end
 	
 	local owner = self.Owner
-	
-	if SERVER then
-		local hand = owner:LookupBone("ValveBiped.Anim_Attachment_RH")
-		
-		self.SpriteTrail = util.SpriteTrail(self, 0, Color(255,0,0), false, 8.0, 1, 0.5, 0.01, "trails/laser.vmt")
-		self.SpriteTrail:SetPos(owner:GetBonePosition(hand))
-		self.SpriteTrail:FollowBone(owner, hand)
-	end
 
 	self:SendWeaponAnim(ACT_VM_SECONDARYATTACK) -- grenade animation
 	owner:DoAnimationEvent(ACT_GMOD_GESTURE_TAUNT_ZOMBIE)
@@ -49,12 +30,6 @@ function SWEP:SecondaryAttack()
 	end
 
 	self:SetNextSecondaryFire(CurTime() + 5) -- to make sure you can't spam the grenade
-end
-
-function SWEP:Think()
-	if not self.Owner:Alive() then
-		self.SpriteTrail:Fire("Kill")
-	end
 end
 
 function SWEP:CheckMoaning()

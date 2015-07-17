@@ -12,7 +12,7 @@ function SWEP:Grenade()
 	local effectdata = EffectData()
 		effectdata:SetOrigin(owner:GetPos())
 	util.Effect("Explosion", effectdata)
-	util.BlastDamage2(self, owner, owner:GetPos(), 80, 36)
+	util.BlastDamage2(self, owner, owner:GetPos(), 128, 80)
 		
 	owner:Kill( )
 end
