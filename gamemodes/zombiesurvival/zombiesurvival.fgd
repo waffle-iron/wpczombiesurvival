@@ -713,6 +713,11 @@
 	input setkeepfists(integer)   : "If 1 the next stripallweapons inputs strip all weapons but fists"
 ]
 
+@SolidClass base(func_brush, Trigger, Targetname) = func_zbrush : "ZS : Based on the stock func_brush, this allows use of filters."
+[
+	//Literally a mash up of other classes here. Will be dirty to all hell currently but working on it.
+]
+
 ///////////////////////////////////////////////////////////////////////////////////
 // Gamemode - Worth Weapons + Items ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////
