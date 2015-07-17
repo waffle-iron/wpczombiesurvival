@@ -190,6 +190,7 @@ LANGUAGE.class_flesh_creeper						= "육체 기는"
 LANGUAGE.class_gore_child							= "고어 어린이"
 LANGUAGE.class_giga_gore_child						= "기가 고어 어린이"
 LANGUAGE.class_zombine								= "두 법원"
+LANGUAGE.class_legion								= "동식물 분류의 아강"
 
 -- Class descriptions
 LANGUAGE.description_zombie							= "체력도 좋고 힘도 쓸만한 좀비.\n머리를 맞지 않는다면 죽이기가 어렵다."
@@ -222,6 +223,7 @@ LANGUAGE.description_flesh_creeper					= "육체 덩굴은. \nN이 둥지에서 
 LANGUAGE.description_gore_child						= "일단 좀비가, 태어나지 않은 아이가.뿐만 아니라 감염된 \n특별한 능력을 보유하지, 그들의 힘은 그 수에서 온다."
 LANGUAGE.description_giga_gore_child				= "너무 오랫동안 체크를 해제 된 고어 어린이의 결과입니다. \n보는 공포, 자신의 거대한 몸은 \n. 좀비가 줄기 세포의 결과이고, n은 또한 항상 견인에서 찾을 수 있습니다 고어 어린이를위한 호스트가 될 그것."
 LANGUAGE.description_zombine						= "A는 headcrab에 의해 감염된 군인을 결합합니다. \n그는 빠르게 공격과 인체에 심각한 손상을 할 수있는 보조 수류탄 공격을 사용할 수 있습니다."
+LANGUAGE.description_legion							= "당신의 일반적인 하늘 cader에 위협이 좀비 비행뿐만 아니라 자신의 공격에 무거운 펀치를 팩 악화 그는 단지 총알에서 절반 피해를 할 수 있습니다."
 
 -- Class control schemes
 
@@ -250,6 +252,7 @@ LANGUAGE.controls_flesh_creeper						= "> 1: 헤드 스매쉬 \n> 2: 둥지"
 LANGUAGE.controls_gore_child						= "> 1: 집게발"
 LANGUAGE.controls_giga_gore_child					= "> 1: 스매시\n> 2: 고어 어린이를 던져"
 LANGUAGE.controls_zombine							= "> 1: 집게발\n> 2: 수류탄 자살"
+LANGUAGE.controls_legion							= "> 1: 집게발\n> 2: 플라이/워크"
 
 -- The help file... Quite big! I wouldn't blame you if you didn't translate this part.
 LANGUAGE.help_cat_introduction						= "좀비 서바이벌"

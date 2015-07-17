@@ -186,6 +186,7 @@ LANGUAGE.class_flesh_creeper						= "Flesh Creeper"
 LANGUAGE.class_gore_child							= "Gore Child"
 LANGUAGE.class_giga_gore_child						= "Giga Gore Child"
 LANGUAGE.class_zombine								= "Zombine"
+LANGUAGE.class_legion								= "Legion"
 
 -- Class descriptions
 LANGUAGE.description_zombie							= "De basis zombie is erg duurzaam een heeft sterke klauwen.\nHet is moeilijk om hen dood te houden, zeker als je ze niet in hun hoofd schiet."
@@ -214,6 +215,7 @@ LANGUAGE.description_flesh_creeper					= "Vlees Creepers beschikken over de moge
 LANGUAGE.description_gore_child						= "Eenmaal zombified, raakt een ongeboren kind ook besmet zijn. \nHet bezitten geen speciale vaardigheden, hun kracht komt van hun nummers."
 LANGUAGE.description_giga_gore_child				= "Het resultaat van een Gore Child die ongehinderd is het te lang. \nEen horror om te zien, hun enorme lichaam is het resultaat van zombified stamcellen. \nZe hebben ook een gastheer voor Gore Kinderen die altijd kan worden gevonden op sleeptouw geworden met het."
 LANGUAGE.description_zombine						= "Een Combineer soldaat die is geïnfecteerd door een headcrab. \nHij valt snel en kan een tweede granaat aanval die ernstige schade aan de mens kan doen gebruiken."
+LANGUAGE.description_legion							= "Een bedreiging voor uw gemeenschappelijke hemel Cader, kan deze zombie vliegen en packs een zware punch met zijn aanvallen aswell en erger neemt hij slechts de helft van de schade van kogels."
 
 -- Class control schemes
 LANGUAGE.controls_zombie							= "> PRIMARY: Klauwen\n> SECONDARY: Schreeuw\n> RELOAD: Kreun\n> SPRINT: Dood spelen\n> FATAAL GERAAKT IN DE BENEN: Opstaan / Transformeren"

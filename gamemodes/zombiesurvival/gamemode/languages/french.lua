@@ -187,6 +187,7 @@ LANGUAGE.class_flesh_creeper													= "Flesh Creeper"
 LANGUAGE.class_gore_child														= "Gore Enfant"
 LANGUAGE.class_giga_gore_child													= "Giga Gore Enfant"
 LANGUAGE.class_zombine															= "Zombine"
+LANGUAGE.class_legion															= "Legion"
  
 -- Class descriptions
 LANGUAGE.description_zombie                                                     = "Le zombie de base est résistant et porte de puissants coups.\nDur à abattre, surtout si on ne lui tire pas en pleine tête."
@@ -215,6 +216,7 @@ LANGUAGE.description_flesh_creeper										= "Flesh Creepers possèdent la capa
 LANGUAGE.description_gore_child											= "Une fois zombified, l'enfant à naître est infecté aussi. \nPossédant pas de capacités spéciales, leur force vient de leur nombre."
 LANGUAGE.description_giga_gore_child									= "Le résultat d'un enfant Gore qui a été laissé décochée depuis trop longtemps. \nUne horreur pour les yeux, leur corps massif est le résultat de cellules souches zombifiés. \nIls deviennent aussi un hôte pour Gore enfants qui peut toujours être trouvé dans le remorquage avec elle."
 LANGUAGE.description_zombine											= "Une moissonneuse-batteuse soldat qui a été infecté par un headcrab. \nIl attaque rapidement et peut utiliser une attaque à la grenade secondaire qui peut causer des dommages graves à l'homme."
+LANGUAGE.description_legion												= "Une menace pour votre cader ciel commun, ce zombie peut voler et a du punch lourd avec ses attaques ainsi et pour le pire, il ne prend que la moitié les dégâts causés par les balles"
  
 -- Class control schemes
 LANGUAGE.controls_zombie                                                        = "> PRIMAIRE: Attaque\n> SECONDARY: Crier\n> RECHARGER: Crier\n> SPRINT: Feindre la mort\n> TIR FATAL DANS LES JAMBES: Résurrection / Transformation"
@@ -238,6 +240,7 @@ LANGUAGE.controls_flesh_creeper													= "> PRIMARY: Chef Smash\n> SECONDAR
 LANGUAGE.controls_gore_child													= "> PRIMARY: Attaque"
 LANGUAGE.controls_giga_gore_child										= "> PRIMARY: Smash\n> SECONDARY: Jetez Gore Enfant"
 LANGUAGE.controls_zombine														= "> PRIMARY: Attaque\n> SECONDARY: Grenade Suicide"
+LANGUAGE.controls_legion														= "> PRIMARY: Attaque\n> SECONDARY: Fly/Marche"
  
 -- The help file... Quite big! I wouldn't blame you if you didn't translate this part.
 LANGUAGE.help_cat_introduction                                          = "Introduction"

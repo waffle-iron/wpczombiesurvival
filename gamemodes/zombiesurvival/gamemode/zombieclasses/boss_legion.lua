@@ -1,7 +1,7 @@
-CLASS.Name = "Shade"
-CLASS.TranslationName = "class_shade"
-CLASS.Description = "description_shade"
-CLASS.Help = "controls_shade"
+CLASS.Name = "Legion"
+CLASS.TranslationName = "class_legion"
+CLASS.Description = "description_legion"
+CLASS.Help = "controls_legion"
 
 CLASS.Wave = 0
 CLASS.Threshold = 0
@@ -15,25 +15,46 @@ CLASS.NoFallSlowdown = true
 
 CLASS.NoShadow = true
 
-CLASS.Health = 1200
-CLASS.Speed = 125
+CLASS.Health = 800
+CLASS.Speed = 100
 
 CLASS.FearPerInstance = 1
 
-CLASS.Points = 30
+CLASS.Points = 40
 
-CLASS.SWEP = "weapon_zs_shade"
+CLASS.SWEP = "weapon_zs_legion"
 
-CLASS.Model = Model("models/player/zombie_fast.mdl")
+CLASS.Model = Model("models/Zombie/Poison.mdl")
 
 CLASS.VoicePitch = 0.8
 
 CLASS.PainSounds = {Sound("npc/barnacle/barnacle_pull1.wav"), Sound("npc/barnacle/barnacle_pull2.wav"), Sound("npc/barnacle/barnacle_pull3.wav"), Sound("npc/barnacle/barnacle_pull4.wav")}
 CLASS.DeathSounds = {Sound("zombiesurvival/wraithdeath1.ogg"), Sound("zombiesurvival/wraithdeath2.ogg"), Sound("zombiesurvival/wraithdeath3.ogg"), Sound("zombiesurvival/wraithdeath4.ogg")}
 
-local ACT_HL2MP_IDLE_MAGIC = ACT_HL2MP_IDLE_MAGIC
-local ACT_HL2MP_RUN_MAGIC = ACT_HL2MP_RUN_MAGIC
-local ACT_HL2MP_RUN_ZOMBIE = ACT_HL2MP_RUN_ZOMBIE
+CLASS.ViewOffset = Vector(0, 0, 50)
+CLASS.Hull = {Vector(-16, -16, 0), Vector(16, 16, 64)}
+CLASS.HullDuck = {Vector(-16, -16, 0), Vector(16, 16, 35)}
+
+function CLASS:CalcMainActivity(pl, velocity)
+	if velocity:Length2D() <= 0.5 then
+		pl.CalcIdeal = ACT_IDLE
+	else
+		pl.CalcSeqOverride = 2
+	end
+
+	return true
+end
+
+function CLASS:DoAnimationEvent(pl, event, data)
+	if event == PLAYERANIMEVENT_ATTACK_PRIMARY then
+		pl:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MELEE_ATTACK1, true)
+		return ACT_INVALID
+	end
+end
+
+function CLASS:UpdateAnimation(pl, velocity, maxseqgroundspeed)
+	pl:FixModelAngles(velocity)
+end
 
 function CLASS:PlayerFootstep(pl, vFootPos, iFoot, strSoundName, fVolume, pFilter)
 	return true
@@ -43,41 +64,10 @@ function CLASS:PlayerStepSoundTime(pl, iType, bWalking)
 	return 1000
 end
 
-function CLASS:CalcMainActivity(pl, velocity)
-	if pl.ShadeControl and pl.ShadeControl:IsValid() then
-		if velocity:Length2D() <= 0.5 then
-			pl.CalcIdeal = ACT_HL2MP_IDLE_MAGIC
-		else
-			pl.CalcIdeal = ACT_HL2MP_RUN_MAGIC
-		end
-
-		return true
-	end
-
-	pl.CalcIdeal = ACT_HL2MP_RUN_ZOMBIE
-
-	return true
-end
-
-function CLASS:DoAnimationEvent(pl, event, data)
-	if event == PLAYERANIMEVENT_ATTACK_PRIMARY then
-		pl:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_HL2MP_GESTURE_RANGE_ATTACK_MELEE2, true)
-		return ACT_INVALID
-	end
-end
-
-function CLASS:UpdateAnimation(pl, velocity, maxseqgroundspeed)
-	pl:SetPlaybackRate(1)
-	pl:SetCycle(0.35 + math.abs(math.sin(CurTime() * 1.5)) * 0.3)
-
-	return true
-end
-
 function CLASS:ProcessDamage(pl, dmginfo)
 	local attacker = dmginfo:GetAttacker()
 	if not SHADEFLASHLIGHTDAMAGE and attacker:IsPlayer() and attacker:Team() == TEAM_HUMAN then
-		dmginfo:SetDamage(0)
-		dmginfo:ScaleDamage(0)
+		dmginfo:ScaleDamage(0.5)
 
 		if SERVER then
 			local center = pl:LocalToWorld(pl:OBBCenter())
@@ -98,6 +88,7 @@ function CLASS:ProcessDamage(pl, dmginfo)
 end
 
 function CLASS:OnKilled(pl, attacker, inflictor, suicide, headshot, dmginfo, assister)
+	pl:SetMoveType(MOVETYPE_WALK)
 	pl:GetRagdollEntity:Remove()
 	pl:SetBloodColor(BLOOD_COLOR_ZOMBIE)
 	return true
@@ -107,6 +98,8 @@ if SERVER then
 	function CLASS:OnSpawned(pl)
 		pl:CreateAmbience("shadeambience")
 		pl:SetRenderMode(RENDERMODE_TRANSALPHA)
+		pl:SetMoveType(MOVETYPE_FLY)
+		pl:SetMoveCollide(MOVECOLLIDE_FLY_BOUNCE)
 		pl:SetBloodColor(BLOOD_COLOR_MECH)
 	end
 
@@ -116,7 +109,7 @@ if SERVER then
 end
 
 if CLIENT then
-	CLASS.Icon = "zombiesurvival/killicons/shade"
+	CLASS.Icon = "zombiesurvival/killicons/legion"
 end
 
 if not CLIENT then return end
@@ -151,7 +144,7 @@ function CLASS:PreRenderEffects(pl)
 		baseblend = baseblend + (1 - math.Clamp((CurTime() - status:GetLastReflect()) * 2, 0, 1) ^ 0.5) * 0.75
 	end
 
-	render.SetColorModulation(red, 0.1, 1 - red)
+	render.SetColorModulation(1 - red, 1 - red, 0)
 	render.SetBlend(baseblend + math.abs(math.cos(CurTime())) ^ 2 * 0.1)
 	render.SuppressEngineLighting(true)
 	render.ModelMaterialOverride(matWhite)

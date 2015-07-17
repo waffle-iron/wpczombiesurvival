@@ -144,6 +144,7 @@ end
 
 if SERVER then
 	function CLASS:OnKilled(pl, attacker, inflictor, suicide, headshot, dmginfo)
+		pl:GetRagdollEntity:Remove()
 		pl:FakeDeath(pl:LookupSequence("death_0"..math.random(4)), self.ModelScale)
 
 		return true

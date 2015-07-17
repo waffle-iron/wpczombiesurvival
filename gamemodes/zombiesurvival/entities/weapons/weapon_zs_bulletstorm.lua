@@ -85,48 +85,37 @@ SWEP.WalkSpeed = SPEED_SLOW
 
 SWEP.Primary.DefaultNumShots = SWEP.Shots
 SWEP.Primary.DefaultDelay = SWEP.FireDelay
-SWEP.Primary.DefaultAmmoPerShot = SWEP.AmmoPerShot
 SWEP.Primary.IronsightsNumShots = SWEP.Shots * 2
 SWEP.Primary.IronsightsDelay = SWEP.FireDelay * 1.6666
-SWEP.Primary.IronsightsAmmoPerShot = SWEP.AmmoPerShot * 2
 
 function SWEP:SecondaryAttack()
-	self:ToggleBulletStorm(false)
 	self.BaseClass.SecondaryAttack(self)
-end
-
-function SWEP:ToggleBulletStorm(setidle)
+	
 	if self.dt.State == SWB_AIMING then
-		self.Shots = self.Primary.IronsightsNumShots
-		self.FireDelay = self.Primary.IronsightsDelay
-		self.AmmoPerShot = self.Primary.IronsightsAmmoPerShot
-		self.SpreadPerShot = 0.02
-		self.MaxSpreadInc = 0.063
-		self.ClumpSpread = 0.014
-		
-		if setidle then
-			self.dt.State = SWB_IDLE
-		end
+		self.Primary.NumShots = self.Primary.IronsightsNumShots
+		self.Primary.Delay = self.Primary.IronsightsDelay
 
 		self:EmitSound("npc/scanner/scanner_scan4.wav", 40)
-	else
-		self.Shots = self.Primary.DefaultNumShots
-		self.FireDelay = self.Primary.DefaultDelay
-		self.AmmoPerShot = self.Primary.DefaultAmmoPerShot
-		self.SpreadPerShot = 0.01
-		self.MaxSpreadInc = 0.05
-		self.ClumpSpread = 0
+	end
+end
+
+function SWEP:CanPrimaryAttack()
+	if self.dt.State == SWB_AIMING and self:Clip1() == 1 then
+		self.Primary.NumShots = self.Primary.DefaultNumShots
+		self.Primary.Delay = self.Primary.DefaultDelay
 
 		self:EmitSound("npc/scanner/scanner_scan2.wav", 40)
 	end
+
+	return self.BaseClass.CanPrimaryAttack(self)
 end
 
-function SWEP:PrimaryAttack()
-	if self.dt.State == SWB_AIMING and self:Clip1() == 1 then
-		self:ToggleBulletStorm(true)
+function SWEP:TakeAmmo()
+	if self.dt.State == SWB_AIMING) then
+		self:TakePrimaryAmmo(2)
+	else
+		self.BaseClass.TakeAmmo(self)
 	end
-
-	self.BaseClass.PrimaryAttack(self)
 end
 
 util.PrecacheSound("npc/scanner/scanner_scan4.wav")

@@ -9,6 +9,8 @@ CLASS.SWEP = "weapon_zs_chemzombie"
 CLASS.Model = Model("models/Zombie/Poison.mdl")
 CLASS.Speed = 160
 
+CLASS.Hidden = false
+
 CLASS.Points = 3
 
 CLASS.PainSounds = {Sound("npc/metropolice/knockout2.wav"), Sound("npc/metropolice/pain1.wav"), Sound("npc/metropolice/pain2.wav"), Sound("npc/metropolice/pain3.wav"), Sound("npc/metropolice/pain4.wav")}
@@ -29,18 +31,11 @@ function CLASS:CalcMainActivity(pl, velocity)
 	return true
 end
 
-local StepSounds = {
-	"npc/zombie_poison/pz_left_foot1.wav"
-}
-local ScuffSounds = {
-	"npc/zombie_poison/pz_right_foot1.wav"
-}
-local mathrandom = math.random
 function CLASS:PlayerFootstep(pl, vFootPos, iFoot, strSoundName, fVolume, pFilter)
-	if iFoot == 0 and mathrandom() < 0.333 then
-		pl:EmitSound(ScuffSounds[mathrandom(#ScuffSounds)], 80, 90)
+	if iFoot == 0 and math.random(1,3) < 3 then
+		pl:EmitSound("NPC_PoisonZombie.FootstepRight")
 	else
-		pl:EmitSound(StepSounds[mathrandom(#StepSounds)], 80, 90)
+		pl:EmitSound("NPC_PoisonZombie.FootstepLeft")
 	end
 
 	return true
@@ -89,10 +84,8 @@ if SERVER then
 
 	function CLASS:OnKilled(pl, attacker, inflictor, suicide, headshot, dmginfo, assister)
 		if attacker ~= pl and not suicide then
-			local pos = pl:LocalToWorld(pl:OBBCenter())
-
 			pl:Gib(dmginfo)
-			timer.Simple(0, function() ChemBomb(pl, pos) end)
+			timer.SimpleEx(0, ChemBomb, pl, pl:LocalToWorld(pl:OBBCenter()))
 
 			return true
 		end

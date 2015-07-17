@@ -186,6 +186,7 @@ LANGUAGE.class_flesh_creeper						 = "Flesh Creeper"
 LANGUAGE.class_gore_child							 = "Gore Criança"
 LANGUAGE.class_giga_gore_child						 = "Giga Gore Criança"
 LANGUAGE.class_zombine								 = "Zombine"
+LANGUAGE.class_legion								 = "Legion"
 
 -- Class descriptions
 LANGUAGE.description_zombie							 = "O Zombie básico que é muito duravel e tem garras potentes.\nÉ dificil de ser derrubado, especialmente se não é disparado na cabeça."
@@ -214,6 +215,7 @@ LANGUAGE.description_flesh_creeper					 = "Flesh Creepers possuem a capacidade d
 LANGUAGE.description_gore_child						 = "Uma vez zumbi, um nascituro é infectado também. \nPossessing nenhuma habilidade especial, a sua força vem de seus números."
 LANGUAGE.description_giga_gore_child				 = "O resultado de uma Gore Criança que foi deixada desmarcada por muito tempo. \nUm horror de se ver, o seu corpo maciço é o resultado de células-tronco zumbis. \nEles também se tornar um anfitrião para Gore Crianças que sempre pode ser encontrada no reboque com ele."
 LANGUAGE.description_zombine						 = "A Combine soldado que tenha sido infectado por um headcrab. \nEle ataca rapidamente e pode usar um ataque de granada secundária que pode causar sérios danos aos seres humanos."
+LANGUAGE.description_legion							 = "A verdadeira ameaça para o seu céu cader comum, este zombie pode voar e um soco pesado com seus ataques bem pior e ele só leva metade do dano das balas."
 
 LANGUAGE.controls_zombie							 = "> PRIMARIO: Garras\n> SECUNDÁRIO: Gritar\n> RECARREGAR: Queixar\n> SPRINT: Fingir morte\n> DISPARO FATAL NAS PERNAS: Reviver / Transformar"
 LANGUAGE.controls_poison_zombie						 = "> PRIMARIO: Claws\n> SECUNDÁRIO: Atirar carne\n> RELOAD: Gritar"
@@ -236,6 +238,7 @@ LANGUAGE.controls_flesh_creeper						 = "> PRIMARIO: Cabeça Smash\n> SECUNDÁRI
 LANGUAGE.controls_gore_child						 = "> PRIMARIO: Claws"
 LANGUAGE.controls_giga_gore_child					 = "> PRIMARIO: Smash\n> SECUNDÁRIO: Jogue Gore Criança"
 LANGUAGE.controls_zombine							 = "> PRIMARIO: Claws\n> SECUNDÁRIO: Grenade Suicídio"
+LANGUAGE.controls_legion							 = "> PRIMARIO: Claws\n> SECUNDÁRIO: Mosca/Caminhada"
 
 LANGUAGE.help_cat_introduction						 = "Introdução"
 LANGUAGE.help_cat_survival							 = "Sobrevivência"

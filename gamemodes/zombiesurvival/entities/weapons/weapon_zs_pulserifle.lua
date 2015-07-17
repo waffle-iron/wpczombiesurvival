@@ -62,6 +62,7 @@ SWEP.FireDelay = 0.2
 SWEP.FireSound = Sound("Airboat.FireGunHeavy")
 SWEP.Recoil = 0.6
 SWEP.Chamberable = false
+SWEP.CanRicochet = false
 
 SWEP.HipSpread = 0.035
 SWEP.AimSpread = 0.004

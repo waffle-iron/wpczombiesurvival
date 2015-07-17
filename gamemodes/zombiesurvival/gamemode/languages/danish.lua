@@ -187,6 +187,7 @@ LANGUAGE.class_flesh_creeper						= "Flesh Creeper"
 LANGUAGE.class_gore_child							= "Gore Child"
 LANGUAGE.class_giga_gore_child						= "Giga Gore Child"
 LANGUAGE.class_zombine								= "Zombine"
+LANGUAGE.class_legion								= "Legion"
 
 -- Class descriptions
 LANGUAGE.description_zombie							= "Dette er den mest normale af de udøde. Den er meget kraftig, og har kraftige klør. \nDen er svær at holde nede, specielt hvis den ikke bliver skudt i hovedet."
@@ -215,6 +216,7 @@ LANGUAGE.description_flesh_creeper					= "Flesh Creepers besidder evnen til at s
 LANGUAGE.description_gore_child						= "Når zombified, bliver et ufødt barn smittet så godt. \nBesiddelse ingen særlige evner, deres styrke kommer fra deres numre."
 LANGUAGE.description_giga_gore_child				= "Resultatet af en Gore barn, som er blevet efterladt umarkeret for længe. \nA rædsel at se, deres massive krop er resultatet af zombified stamceller. \nDe også blevet en vært til Gore Børn der kan altid findes på slæb med det."
 LANGUAGE.description_zombine						= "En Kombiner soldat, der er blevet inficeret med en headcrab. \nHan angriber hurtigt og kan bruge en sekundær granat angreb, der kan gøre alvorlig skade på mennesker."
+LANGUAGE.description_legion							= "En trussel mod jeres fælles himmel Cader, kan denne zombie flyve og packs en tung slag med hans angreb staalindustrien og værre, han tager kun halvdelen af skader fra kugler."
 
 -- Class control schemes
 LANGUAGE.controls_zombie							= "> PRIMARY: Claws\n> SECONDARY: Scream\n> RELOAD: Moan\n> SPRINT: Feign death\n> ON FATAL HIT IN LEGS: Revive / Transform"
@@ -238,3 +240,4 @@ LANGUAGE.controls_flesh_creeper						= "> PRIMARY: Head Smash\n> SECONDARY: Nest
 LANGUAGE.controls_gore_child						= "> PRIMARY: Claws"
 LANGUAGE.controls_giga_gore_child					= "> PRIMARY: Smash\n> SECONDARY: Throw Gore Child"
 LANGUAGE.controls_zombine							= "> PRIMARY: Claws\n> SECONDARY: Grenade Suicide"
+LANGUAGE.controls_legion							= "> PRIMARY: Claws\n> SECONDARY: Fly/Walk"

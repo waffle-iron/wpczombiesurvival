@@ -870,6 +870,13 @@ function meta:GiveWeaponByType(weapon, plyr, ammo)
 end
 
 function meta:Gib()
+	self:GetRagdollEntity():Remove()
+	
+	BGOMakeGibsAutomatic(self.targent,0.45,"bodychunk")
+	BGOMakeGibsAutomatic(self.targent,0.35,"organ")
+	BGOMakeGibsAutomatic(self.targent,0.2)
+	
+	--[[
 	local pos = self:WorldSpaceCenter()
 	local headoffset = self:LocalToWorld(self:OBBMaxs()).z - pos.z
 
@@ -881,6 +888,7 @@ function meta:Gib()
 	self.Gibbed = CurTime()
 
 	timer.Simple(0, function() GAMEMODE:CreateGibs(pos, pos2) end)
+	--]]
 end
 
 function meta:GetLastAttacker()

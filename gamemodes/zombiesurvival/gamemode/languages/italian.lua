@@ -188,6 +188,7 @@ translate.AddLanguage("it", "Italian")
 	LANGUAGE.class_gore_child											= "Gore Child"
 	LANGUAGE.class_giga_gore_child										= "Giga Gore Child"
 	LANGUAGE.class_zombine												= "Zombine"
+	LANGUAGE.class_legion												= "Legion"
      
     -- Class descriptions
     LANGUAGE.description_zombie                                     = "Lo zombie di base è molto resistente e ha dei potenti artigli.\nE' duro da uccidere, specie se non si spara alla testa."
@@ -216,7 +217,8 @@ translate.AddLanguage("it", "Italian")
 	LANGUAGE.description_gore_child									= "Una volta Zombified, un bambino non ancora nato si infetta pure. \nPossedere abilità speciali, la loro forza viene dal loro numero."
 	LANGUAGE.description_giga_gore_child							= "Il risultato di un Bambino Gore, che è stato lasciato incontrollato per troppo tempo. \nUn orrore a vedersi, il loro corpo massiccio è il risultato di cellule staminali zombificati. \ndiventano anche un host per Gore bambini che può sempre essere trovato a rimorchio con esso."
 	LANGUAGE.description_zombine									= "Un Combine soldato che è stato infettato da un headcrab. \nAttacca rapidamente e può utilizzare una granata secondaria che può fare gravi danni per gli esseri umani."
-     
+    LANGUAGE.description_legion										= "Una minaccia per il vostro cielo Cader comune, questo zombie può volare e imballa un pugno pesante, con i suoi attacchi come bene e male si richiede solo metà del danno da proiettili."
+	 
     -- Class control schemes
     LANGUAGE.controls_zombie                                        = "> PRIMARIO: Artigli\n> SECONDARIO: Urlo\n> RICARICA: Lamento\n> SPRINT: Finta morte\n> Ucciso colpito alle gambe: Resurrezione / Trasformazione"
     LANGUAGE.controls_poison_zombie                         = "> PRIMARIO: Artigli\n> SECONDARIO: Lancio di carne\n> RICARICA: Urlo"
@@ -239,3 +241,4 @@ translate.AddLanguage("it", "Italian")
 	LANGUAGE.controls_gore_child									= "> PRIMARIO: Artigli"
 	LANGUAGE.controls_giga_gore_child								= "> PRIMARIO: Smash\n> SECONDARIO: Gettare Gore Bambino"
 	LANGUAGE.controls_zombine										= "> PRIMARIO: Artigli\n> SECONDARIO: Grenade Suicide"
+	LANGUAGE.controls_legion										= "> PRIMARIO: Artigli\n> SECONDARIO: Volare/Camminata"

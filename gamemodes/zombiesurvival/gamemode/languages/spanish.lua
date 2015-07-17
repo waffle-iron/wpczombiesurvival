@@ -187,6 +187,7 @@ LANGUAGE.class_flesh_creeper = "carne de la enredadera"
 LANGUAGE.class_gore_child = "Gore niño"
 LANGUAGE.class_giga_gore_child = "Giga Gore Niño"
 LANGUAGE.class_zombine = "Zombine"
+LANGUAGE.class_legion = "Legión"
 
 
 -- Class descriptions
@@ -216,6 +217,7 @@ LANGUAGE.description_flesh_creeper = "Flesh Enredaderas poseen la capacidad de c
 LANGUAGE.description_gore_child = "Una vez zombi, un niño no nacido se infecta también. \nPoseer habilidades especiales, su fuerza proviene de su número."
 LANGUAGE.description_giga_gore_child = "El resultado de un Gore Niño que se ha dejado sin control durante demasiado tiempo. \nUna de terror para la vista, su enorme cuerpo es el resultado de las células madre zombies. \nTambién se convierta en una gran cantidad de Gore niños que siempre se puede encontrar en el remolque con él."
 LANGUAGE.description_zombine = "Un Combine soldado que ha sido infectado por un headcrab. \nAtaca rápidamente y puede usar un ataque con granadas secundaria que puede causar graves daños a los seres humanos."
+LANGUAGE.description_legion	= "Una amenaza para tu cielo Cader común, este zombie puede volar y paquetes de un fuerte golpe con sus ataques, así y peor que sólo toma la mitad el daño de las balas."
 
 -- Class control schemes
 LANGUAGE.controls_zombie = "> PRIMARIO: Garras\n> SECUNDARIO: Gritar\n> RECARGA: Gemido\n> SPRINT: Fingir muerte\n> MUERTE A TIROS EN LAS PIERNAS: Resucitar / Transformar"
@@ -239,3 +241,4 @@ LANGUAGE.controls_flesh_creeper	= "> PRIMARIO: Jefe de Smash\n> SECUNDARIO: Nido
 LANGUAGE.controls_gore_child = "> PRIMARIO: Garras"
 LANGUAGE.controls_giga_gore_child = "> PRIMARIO: Smash\n> SECUNDARIO: Tire a Gore Niño"
 LANGUAGE.controls_zombine = "> PRIMARIO: Garras\n> SECUNDARIO: Grenade Suicidio"
+LANGUAGE.controls_legion = "> PRIMARIO: Garras\n> SECUNDARIO: Mosca/Caminar"

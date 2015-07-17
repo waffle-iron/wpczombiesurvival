@@ -187,6 +187,7 @@ LANGUAGE.class_flesh_creeper						= "Flesh Creeper"
 LANGUAGE.class_gore_child							= "Gore Kinder"
 LANGUAGE.class_giga_gore_child						= "Giga Gore Kinder"
 LANGUAGE.class_zombine								= "Zombine"
+LANGUAGE.class_legion								= "Legion"
 
 -- Class descriptions
 LANGUAGE.description_zombie							= "Der normale Zombie ist sehr beständig und hat kraftvolle Klauen.\nEs ist schwer ihn unten zu halten, vor allem wenn er nicht in den Kopf geschossen wird."
@@ -215,6 +216,7 @@ LANGUAGE.description_flesh_creeper					= "Flesh Creepers besitzen die Fähigkeit
 LANGUAGE.description_gore_child						= "Sobald zombified, ein Kind im Mutterleib infiziert auch. \nBesitzen keine besonderen Fähigkeiten, kommt ihre Kraft aus ihrer Zahl."
 LANGUAGE.description_giga_gore_child				= "Das Ergebnis einer Gore Kinder der zu lange Zeit nicht gegengesteuert wurde. \nEin Horror zu erblicken, ist ihre massigen Körper das Ergebnis zombified Stammzellen. \nSie auch ein Wirt für Gore Kinder, die immer im Schlepptau zu finden sind werden mit ihm."
 LANGUAGE.description_zombine						= "Ein Kombinieren Soldaten, die von einem headcrab infiziert wurde. \nEr greift schnell und kann eine sekundäre Granatenangriff, die schwere Schäden für den Menschen tun können, zu verwenden."
+LANGUAGE.description_legion							= "Eine Bedrohung zu Ihren gemeinsamen Himmel cader kann diese Zombie-Fliegen und packt einen schweren Schlag mit seinen Angriffen sowie und schlimmer er nimmt nur die Hälfte der Schäden, die durch Kugeln."
 
 -- Class control schemes
 LANGUAGE.controls_zombie							= "> HAUPTWAFFE: Klauen\n> SEKUNDÄRWAFFE: Schrei\n> NACHLADEN: Stöhnen\n> SPRINTEN: Tod vortäuschen\n> BEI FATALEM ANGRIFF AUF DIE BEINE: Wiederbeleben / Transformieren"
@@ -238,6 +240,7 @@ LANGUAGE.controls_flesh_creeper						= "> HAUPTWAFFE: Leiter Smash\n> SEKUNDÄRW
 LANGUAGE.controls_gore_child						= "> HAUPTWAFFE: Klauen"
 LANGUAGE.controls_giga_gore_child					= "> HAUPTWAFFE: Smash\n> SEKUNDÄRWAFFE: Werfen Gore Kinder"
 LANGUAGE.controls_zombine							= "> HAUPTWAFFE: Klauen\n> SEKUNDÄRWAFFE: Granate Suicide"
+LANGUAGE.controls_legion							= "> HAUPTWAFFE: Klauen\n> SEKUNDÄRWAFFE: Fly/Wanderung"
 
 -- The help file... Quite big! I wouldn't blame you if you didn't translate this part.
 LANGUAGE.help_cat_introduction						= "Einführung"
