@@ -168,8 +168,8 @@ end
 
 function CLASS:ProcessDamage(pl, dmginfo)
 	local attacker = dmginfo:GetAttacker()
-	if not SHADEFLASHLIGHTDAMAGE and attacker:IsPlayer() and attacker:Team() == TEAM_HUMAN then
-		dmginfo:ScaleDamage(0.65)
+	if attacker:IsPlayer() and attacker:Team() == TEAM_HUMAN then
+		dmginfo:SetDamage(dmginfo:GetDamage * 0.65)
 	end
 end
 
