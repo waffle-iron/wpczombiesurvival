@@ -166,6 +166,13 @@ function CLASS:DoAnimationEvent(pl, event, data)
 	end
 end
 
+function CLASS:ProcessDamage(pl, dmginfo)
+	local attacker = dmginfo:GetAttacker()
+	if not SHADEFLASHLIGHTDAMAGE and attacker:IsPlayer() and attacker:Team() == TEAM_HUMAN then
+		dmginfo:ScaleDamage(0.65)
+	end
+end
+
 function CLASS:DoesntGiveFear(pl)
 	return pl.FeignDeath and pl.FeignDeath:IsValid()
 end
