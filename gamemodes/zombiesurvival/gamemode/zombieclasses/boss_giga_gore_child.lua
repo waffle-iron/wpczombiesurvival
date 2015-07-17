@@ -9,7 +9,7 @@ CLASS.Unlocked = true
 CLASS.Hidden = true
 CLASS.Boss = true
 
-CLASS.Health = 2000
+CLASS.Health = 2250
 CLASS.Speed = 170
 
 CLASS.Points = 30
@@ -26,7 +26,7 @@ CLASS.VoicePitch = 1
 
 CLASS.ModelScale = 1.6
 
-CLASS.CanFeignDeath = true
+CLASS.CanFeignDeath = false
 
 CLASS.Mass = 500
 CLASS.ViewOffset = DEFAULT_VIEW_OFFSET * CLASS.ModelScale
@@ -121,8 +121,8 @@ end
 function CLASS:Move(pl, move)
 	local wep = pl:GetActiveWeapon()
 	if wep:IsValid() and wep.IsSwinging and wep:IsSwinging() then
-		move:SetMaxSpeed(move:GetMaxSpeed() * 0.25)
-		move:SetMaxClientSpeed(move:GetMaxClientSpeed() * 0.25)
+		move:SetMaxSpeed(move:GetMaxSpeed() * 0.3)
+		move:SetMaxClientSpeed(move:GetMaxClientSpeed() * 0.3)
 
 		return true
 	end
