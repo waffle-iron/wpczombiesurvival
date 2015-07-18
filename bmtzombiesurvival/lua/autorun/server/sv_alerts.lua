@@ -22,7 +22,7 @@ hook.Add( "EntityTakeDamage", "EntityTakeDamage.Alert", function( ent, dmgInfo )
     if IsValid(ent) and ent:IsPlayerHolding() then
 		local attacker = dmgInfo:GetAttacker()
 		local holder = ent:GetHolder()
-		if IsValid(holder) and IsValid(attacker) and not attacker:Team() == TEAM_UNDEAD then
+		if IsValid(holder) and IsValid(attacker) and attacker:IsPlayer() and not attacker:Team() == TEAM_UNDEAD then
 			local propname = holder:GetHolding():GetModel()
 			PrintTranslatedMessage(HUD_PRINTCONSOLE, " "..attacker:Name().." hit a prop with model ("..propname..") out of the hands of "..holder:Name().." ")
 		end

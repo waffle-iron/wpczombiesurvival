@@ -98,7 +98,6 @@ function CLASS:ProcessDamage(pl, dmginfo)
 end
 
 function CLASS:OnKilled(pl, attacker, inflictor, suicide, headshot, dmginfo, assister)
-	pl:GetRagdollEntity:Remove()
 	pl:SetBloodColor(BLOOD_COLOR_ZOMBIE)
 	return true
 end

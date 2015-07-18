@@ -111,7 +111,7 @@ function SWEP:CanPrimaryAttack()
 end
 
 function SWEP:TakeAmmo()
-	if self.dt.State == SWB_AIMING) then
+	if self.dt.State == SWB_AIMING then
 		self:TakePrimaryAmmo(2)
 	else
 		self.BaseClass.TakeAmmo(self)

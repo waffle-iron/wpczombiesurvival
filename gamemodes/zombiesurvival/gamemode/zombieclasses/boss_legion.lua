@@ -1,7 +1,7 @@
 CLASS.Name = "Legion"
 CLASS.TranslationName = "class_legion"
 CLASS.Description = "description_legion"
-CLASS.Help = "controls_legion"
+CLASS.Help = "controls_poison_zombie"
 
 CLASS.Wave = 0
 CLASS.Threshold = 0
@@ -15,7 +15,7 @@ CLASS.NoFallSlowdown = true
 
 CLASS.NoShadow = true
 
-CLASS.Health = 800
+CLASS.Health = 1500
 CLASS.Speed = 100
 
 CLASS.FearPerInstance = 1
@@ -66,8 +66,8 @@ end
 
 function CLASS:ProcessDamage(pl, dmginfo)
 	local attacker = dmginfo:GetAttacker()
-	if not SHADEFLASHLIGHTDAMAGE and attacker:IsPlayer() and attacker:Team() == TEAM_HUMAN then
-		dmginfo:ScaleDamage(0.5)
+	if attacker:IsPlayer() and attacker:Team() == TEAM_HUMAN then
+		dmginfo:SetDamage(dmginfo:GetDamage() * 0.5)
 
 		if SERVER then
 			local center = pl:LocalToWorld(pl:OBBCenter())
@@ -88,9 +88,21 @@ function CLASS:ProcessDamage(pl, dmginfo)
 end
 
 function CLASS:OnKilled(pl, attacker, inflictor, suicide, headshot, dmginfo, assister)
-	pl:SetMoveType(MOVETYPE_WALK)
-	pl:GetRagdollEntity:Remove()
-	pl:SetBloodColor(BLOOD_COLOR_ZOMBIE)
+	return true
+end
+
+function CLASS:Move(pl, mv)
+	local dir = pl:EyeAngles()
+	if pl:KeyDown(IN_MOVELEFT) then
+		dir:RotateAroundAxis(dir:Up(), 20)
+	elseif pl:KeyDown(IN_MOVERIGHT) then
+		dir:RotateAroundAxis(dir:Up(), -20)
+	end
+
+	if pl:KeyDown(IN_FORWARD) then
+		mv:SetVelocity(dir:Forward() * (self.Speed * 1.5))
+	end
+	
 	return true
 end
 
@@ -98,8 +110,6 @@ if SERVER then
 	function CLASS:OnSpawned(pl)
 		pl:CreateAmbience("shadeambience")
 		pl:SetRenderMode(RENDERMODE_TRANSALPHA)
-		pl:SetMoveType(MOVETYPE_FLY)
-		pl:SetMoveCollide(MOVECOLLIDE_FLY_BOUNCE)
 		pl:SetBloodColor(BLOOD_COLOR_MECH)
 	end
 
@@ -114,7 +124,7 @@ end
 
 if not CLIENT then return end
 
-local ToZero = {"ValveBiped.Bip01_L_Thigh", "ValveBiped.Bip01_R_Thigh", "ValveBiped.Bip01_L_Calf", "ValveBiped.Bip01_R_Calf", "ValveBiped.Bip01_L_Foot", "ValveBiped.Bip01_R_Foot"}
+local ToZero = {"ValveBiped.Bip01_Pelvis" ,"ValveBiped.Bip01_L_Thigh", "ValveBiped.Bip01_R_Thigh", "ValveBiped.Bip01_L_Calf", "ValveBiped.Bip01_R_Calf", "ValveBiped.Bip01_L_Foot", "ValveBiped.Bip01_R_Foot", "ValveBiped.Bip01_R_Toe0", "ValveBiped.Bip01_L_Toe0"}
 function CLASS:BuildBonePositions(pl)
 	for _, bonename in pairs(ToZero) do
 		local boneid = pl:LookupBone(bonename)

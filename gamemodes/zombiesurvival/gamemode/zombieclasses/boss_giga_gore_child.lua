@@ -166,20 +166,12 @@ function CLASS:DoAnimationEvent(pl, event, data)
 	end
 end
 
-function CLASS:ProcessDamage(pl, dmginfo)
-	local attacker = dmginfo:GetAttacker()
-	if attacker:IsPlayer() and attacker:Team() == TEAM_HUMAN then
-		dmginfo:SetDamage(dmginfo:GetDamage * 0.65)
-	end
-end
-
 function CLASS:DoesntGiveFear(pl)
 	return pl.FeignDeath and pl.FeignDeath:IsValid()
 end
 
 if SERVER then
 	function CLASS:OnKilled(pl, attacker, inflictor, suicide, headshot, dmginfo)
-		pl:GetRagdollEntity:Remove()
 		pl:FakeDeath(pl:LookupSequence("death_0"..math.random(4)), self.ModelScale)
 
 		return true

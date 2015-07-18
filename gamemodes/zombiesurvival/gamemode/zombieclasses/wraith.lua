@@ -103,8 +103,6 @@ function CLASS:OnKilled(pl, attacker, inflictor, suicide, headshot, dmginfo, ass
 			effectdata:SetEntity(pl)
 		util.Effect("wraithdeath", effectdata, nil, true)
 	end
-	
-	pl:GetRagdollEntity():Remove()
 
 	return true
 end
