@@ -6,7 +6,7 @@ if CLIENT then
 	SWEP.Description = "An alternate to the 'Tosser' SMG. Fires faster, has more mag capacity but lacks the same stopping power and recoils more and more after sustained fire."
 	SWEP.CSMuzzleFlashes = true
 
-	SWEP.AimPos = Vector(-4.361, -4.849, 1.759)
+	SWEP.AimPos = Vector(-6.481, -15.478, 2.72)
 	SWEP.AimAng = Vector(0, 0, 0)
 	
 	SWEP.SprintPos = Vector(3.799, -9.28, 1.679)
@@ -18,7 +18,7 @@ if CLIENT then
 	
 	SWEP.MuzzleEffect = "swb_rifle_small"
 	
-	SWEP.HUD3DBone = "ValveBiped.Gun"
+	SWEP.HUD3DBone = "ValveBiped.base"
 	SWEP.HUD3DPos = Vector(1.5, -5.25, 2.3)
 	SWEP.HUD3DAng = Angle(180, 0, 270)
 	SWEP.HUD3DScale = 0.03
