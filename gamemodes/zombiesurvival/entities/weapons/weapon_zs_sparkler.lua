@@ -20,7 +20,7 @@ if CLIENT then
 	
 	SWEP.HUD3DBone = "ValveBiped.base"
 	SWEP.HUD3DPos = Vector(1.5, -5.25, 2.3)
-	SWEP.HUD3DAng = Angle(180, 0, 270)
+	SWEP.HUD3DAng = Angle(180, 0, 0)
 	SWEP.HUD3DScale = 0.03
 end
 
