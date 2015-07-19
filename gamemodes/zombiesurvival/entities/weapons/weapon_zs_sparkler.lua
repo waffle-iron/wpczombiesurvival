@@ -7,7 +7,7 @@ if CLIENT then
 	SWEP.CSMuzzleFlashes = true
 
 	SWEP.AimPos = Vector(-4.361, -4.849, 1.759)
-	SWEP.AimAng = Vector(0, -0.201, 0)
+	SWEP.AimAng = Vector(0, 0, 0)
 	
 	SWEP.SprintPos = Vector(3.799, -9.28, 1.679)
 	SWEP.SprintAng = Vector(-7.901, 52.4, 0)
@@ -18,10 +18,10 @@ if CLIENT then
 	
 	SWEP.MuzzleEffect = "swb_rifle_small"
 	
-	SWEP.HUD3DBone = "smdimport"
+	SWEP.HUD3DBone = "ValveBiped.Gun"
 	SWEP.HUD3DPos = Vector(1.5, -5.25, 2.3)
 	SWEP.HUD3DAng = Angle(180, 0, 270)
-	SWEP.HUD3DScale = 0.02
+	SWEP.HUD3DScale = 0.03
 end
 
 SWEP.FadeCrosshairOnAim = true
@@ -54,6 +54,7 @@ SWEP.ViewModelFOV	= 55
 SWEP.ViewModelFlip	= false
 SWEP.ViewModel 		= "models/weapons/smg2/c_smg2.mdl"
 SWEP.WorldModel 	= "models/weapons/smg2/w_smg2.mdl"
+SWEP.UseHands = true
 
 SWEP.Spawnable			= true
 SWEP.AdminSpawnable		= true
@@ -88,5 +89,5 @@ SWEP.Damage = 13
 SWEP.DeployTime = .85
 SWEP.BurstCooldownMul = 3
 
-SWB_RegisterSound("Weapon_Sparkler.Fire", "weapons/1smg2/npc_smg2_fire1", 100)
+SWB_RegisterSound("Weapon_Sparkler.Fire", "weapons/1smg2/npc_smg2_fire1.wav", 100)
 SWB_RegisterSound("Weapon_Sparkler.Reload", "weapons/smg1_mantuna/smg1_reload.wav", 100)
