@@ -19,7 +19,7 @@ if CLIENT then
 	SWEP.MuzzleEffect = "swb_rifle_small"
 	
 	SWEP.HUD3DBone = "ValveBiped.base"
-	SWEP.HUD3DPos = Vector(1.5, -4.25, 0)
+	SWEP.HUD3DPos = Vector(1.5, -4.25, -4)
 	SWEP.HUD3DAng = Angle(180, 0, 0)
 	SWEP.HUD3DScale = 0.03
 end
