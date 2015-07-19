@@ -6,7 +6,7 @@ if CLIENT then
 	SWEP.Description = "An alternate to the 'Tosser' SMG. Fires faster, has more mag capacity but lacks the same stopping power and recoils more and more after sustained fire."
 	SWEP.CSMuzzleFlashes = true
 
-	SWEP.AimPos = Vector(-6.481, -15.478, 2.72)
+	SWEP.AimPos = Vector(-3.481, -15.478, 2.72)
 	SWEP.AimAng = Vector(0, 0, 0)
 	
 	SWEP.SprintPos = Vector(3.799, -9.28, 1.679)
