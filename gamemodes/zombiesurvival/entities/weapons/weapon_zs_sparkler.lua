@@ -50,10 +50,10 @@ SWEP.Contact		= ""
 SWEP.Purpose		= ""
 SWEP.Instructions	= ""
 
-SWEP.ViewModelFOV	= 60
+SWEP.ViewModelFOV	= 55
 SWEP.ViewModelFlip	= false
-SWEP.ViewModel 		= "models/weapons/c_mantuna_smg1.mdl"
-SWEP.WorldModel 	= "models/weapons/w_smg1.mdl"
+SWEP.ViewModel 		= "models/weapons/smg2/c_smg2.mdl"
+SWEP.WorldModel 	= "models/weapons/smg2/w_smg2.mdl"
 
 SWEP.Spawnable			= true
 SWEP.AdminSpawnable		= true
@@ -70,12 +70,12 @@ SWEP.ReloadGesture = ACT_HL2MP_GESTURE_RELOAD_SMG1
 SWEP.ConeMax = 0.075
 SWEP.ConeMin = 0.022
 
-SWEP.WalkSpeed = SPEED_NORMAL
+SWEP.WalkSpeed = SPEED_FASTER
 
 SWEP.ReloadSound = Sound("Weapon_Sparkler.Reload")
-SWEP.FireDelay = 0.11
+SWEP.FireDelay = 0.115
 SWEP.FireSound = Sound("Weapon_Sparkler.Fire")
-SWEP.Recoil = 1.1
+SWEP.Recoil = 1.25
 
 SWEP.HipSpread = 0.05
 SWEP.AimSpread = 0.017
@@ -88,5 +88,5 @@ SWEP.Damage = 13
 SWEP.DeployTime = .85
 SWEP.BurstCooldownMul = 3
 
-SWB_RegisterSound("Weapon_Sparkler.Fire", {"weapons/ar1/ar1_dist1.wav", "weapons/ar1/ar1_dist2.wav"}, 100)
+SWB_RegisterSound("Weapon_Sparkler.Fire", "weapons/1smg2/npc_smg2_fire1", 100)
 SWB_RegisterSound("Weapon_Sparkler.Reload", "weapons/smg1_mantuna/smg1_reload.wav", 100)
